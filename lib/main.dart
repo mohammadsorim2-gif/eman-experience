@@ -1,512 +1,386 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const EmanExperienceApp());
-}
+void main() => runApp(const EmanExperienceApp());
 
 class EmanExperienceApp extends StatelessWidget {
   const EmanExperienceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    const blue = Color(0xFF0057B8);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Eman Experience',
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF7F3EC),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF14372F),
-          brightness: Brightness.light,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: blue),
+        scaffoldBackgroundColor: const Color(0xFFF5F8FC),
         fontFamily: 'Arial',
       ),
-      home: const ExperienceHomePage(),
+      home: const CatalogHomePage(),
     );
   }
 }
 
-class ExperienceHomePage extends StatelessWidget {
-  const ExperienceHomePage({super.key});
+class CatalogHomePage extends StatefulWidget {
+  const CatalogHomePage({super.key});
+
+  @override
+  State<CatalogHomePage> createState() => _CatalogHomePageState();
+}
+
+class _CatalogHomePageState extends State<CatalogHomePage> {
+  static const blue = Color(0xFF0057B8);
+  static const navy = Color(0xFF052A55);
+  final Set<String> inquiry = {};
+
+  final products = const [
+    Product('Valori Orange', 'Valori', 'Juice Drink', 'assets/images/products/valori_orange.png'),
+    Product('Valori Mango', 'Valori', 'Juice Drink', 'assets/images/products/valori_mango.png'),
+    Product('Fresh Cocktail', 'Fresh', 'Fruit Beverage', 'assets/images/products/fresh_cocktail.png'),
+    Product('Roya Cola', 'Roya', 'Carbonated Drink', 'assets/images/products/roya_cola.png'),
+    Product('Frio Cup', 'Frio', 'Cup Beverage', 'assets/images/products/frio_cup.png'),
+    Product('Private Label', 'Eman', 'Made for your brand', 'assets/images/products/private_label.png'),
+  ];
+
+  void toggleInquiry(String name) {
+    setState(() => inquiry.contains(name) ? inquiry.remove(name) : inquiry.add(name));
+  }
+
+  void openInquiry() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => InquirySheet(items: inquiry.toList()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFF8F5EF),
-                    Color(0xFFEDE3D1),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: -170,
-            right: -120,
-            child: _GlowOrb(
-              size: 520,
-              color: const Color(0xFFB9D3C4).withValues(alpha: .48),
-            ),
-          ),
-          Positioned(
-            bottom: -180,
-            left: -120,
-            child: _GlowOrb(
-              size: 430,
-              color: const Color(0xFFD5B06E).withValues(alpha: .28),
-            ),
-          ),
-          SafeArea(
-            child: LayoutBuilder(
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _header()),
+          SliverToBoxAdapter(child: _hero()),
+          SliverToBoxAdapter(child: _sectionTitle()),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(28, 0, 28, 72),
+            sliver: SliverLayoutBuilder(
               builder: (context, constraints) {
-                final compact = constraints.maxWidth < 900;
-                return SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: compact ? 24 : 64,
-                    vertical: 24,
+                final width = constraints.crossAxisExtent;
+                final count = width > 1200 ? 3 : width > 720 ? 2 : 1;
+                return SliverGrid.builder(
+                  itemCount: products.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: count,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    childAspectRatio: count == 1 ? 1.22 : 1.05,
                   ),
-                  child: Column(
-                    children: [
-                      _TopBar(compact: compact),
-                      SizedBox(height: compact ? 56 : 90),
-                      _HeroSection(compact: compact),
-                      const SizedBox(height: 56),
-                      const _BrandStrip(),
-                      const SizedBox(height: 36),
-                    ],
-                  ),
+                  itemBuilder: (_, index) {
+                    final product = products[index];
+                    return ProductCard(
+                      product: product,
+                      selected: inquiry.contains(product.name),
+                      onToggle: () => toggleInquiry(product.name),
+                    );
+                  },
                 );
               },
             ),
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: openInquiry,
+        backgroundColor: navy,
+        foregroundColor: Colors.white,
+        icon: Badge(
+          label: Text('${inquiry.length}'),
+          isLabelVisible: inquiry.isNotEmpty,
+          child: const Icon(Icons.request_quote_outlined),
+        ),
+        label: const Text('طلب عرض سعر'),
+      ),
     );
   }
-}
 
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.compact});
+  Widget _header() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final compact = c.maxWidth < 760;
+          return Row(
+            children: [
+              Image.asset(
+                'assets/logos/eman_logo.png',
+                height: 42,
+                errorBuilder: (_, __, ___) => const _LogoFallback(),
+              ),
+              const Spacer(),
+              if (!compact) ...[
+                const _NavText('الرئيسية'),
+                const _NavText('العلامات'),
+                const _NavText('المنتجات'),
+                const _NavText('Private Label'),
+                const SizedBox(width: 18),
+              ],
+              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+              FilledButton.icon(
+                onPressed: openInquiry,
+                style: FilledButton.styleFrom(backgroundColor: blue),
+                icon: const Icon(Icons.shopping_bag_outlined),
+                label: Text(compact ? '${inquiry.length}' : 'طلبات الأسعار ${inquiry.length}'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 46,
-          height: 46,
-          decoration: BoxDecoration(
-            color: const Color(0xFF14372F),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'E',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
+  Widget _hero() {
+    return Container(
+      margin: const EdgeInsets.all(28),
+      constraints: const BoxConstraints(minHeight: 510),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(34),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF062C59), Color(0xFF0057B8), Color(0xFF1A78D4)],
         ),
-        const SizedBox(width: 14),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'EMAN',
-              style: TextStyle(
-                color: Color(0xFF14372F),
-                fontSize: 20,
-                height: 1,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 2.4,
+        boxShadow: const [BoxShadow(color: Color(0x33002F67), blurRadius: 40, offset: Offset(0, 18))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final compact = c.maxWidth < 850;
+          final copy = Padding(
+            padding: EdgeInsets.all(compact ? 30 : 56),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('EMAN DIGITAL CATALOG', style: TextStyle(color: Color(0xFFBFDFFF), fontWeight: FontWeight.w800, letterSpacing: 2)),
+                const SizedBox(height: 22),
+                Text(
+                  'اكتشف المنتجات.\nاختر الكميات.\nواطلب عرض السعر.',
+                  style: TextStyle(color: Colors.white, fontSize: compact ? 42 : 64, height: 1.08, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 22),
+                const Text('كتالوج تفاعلي احترافي لمنتجات Eman مع نظام طلب مباشر للعملاء والموزعين.', style: TextStyle(color: Colors.white70, fontSize: 18, height: 1.6)),
+                const SizedBox(height: 30),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () {},
+                      style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: navy, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)),
+                      icon: const Icon(Icons.grid_view_rounded),
+                      label: const Text('تصفح المنتجات'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: openInquiry,
+                      style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.white54), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)),
+                      icon: const Icon(Icons.request_quote_outlined),
+                      label: const Text('طلب عرض سعر'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+
+          final visual = Padding(
+            padding: const EdgeInsets.all(34),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: .10), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white24)),
+              child: Image.asset(
+                'assets/images/hero/hero_products.png',
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.inventory_2_outlined, size: 150, color: Colors.white54)),
               ),
             ),
-            SizedBox(height: 4),
-            Text(
-              'AGRO EXPERIENCE',
-              style: TextStyle(
-                color: Color(0xFF6D756F),
-                fontSize: 9,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.7,
-              ),
-            ),
-          ],
-        ),
-        const Spacer(),
-        if (!compact) ...[
-          const _NavItem('Brands'),
-          const _NavItem('Products'),
-          const _NavItem('Private Label'),
-          const _NavItem('About'),
-          const SizedBox(width: 22),
+          );
+
+          return compact
+              ? Column(children: [copy, SizedBox(height: 360, child: visual)])
+              : Row(children: [Expanded(flex: 11, child: copy), Expanded(flex: 9, child: visual)]);
+        },
+      ),
+    );
+  }
+
+  Widget _sectionTitle() {
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(28, 32, 28, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('الكتالوج', style: TextStyle(color: navy, fontSize: 38, fontWeight: FontWeight.w900)),
+          SizedBox(height: 8),
+          Text('اختر المنتجات التي تهمك وأضفها إلى طلب عرض السعر.', style: TextStyle(color: Color(0xFF5E7187), fontSize: 17)),
         ],
-        FilledButton(
-          onPressed: () {},
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF14372F),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-          child: Text(compact ? 'Explore' : 'Start the experience'),
-        ),
-      ],
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Color(0xFF3F4D47),
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }
 }
 
-class _HeroSection extends StatelessWidget {
-  const _HeroSection({required this.compact});
-
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context) {
-    final copy = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: .7),
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: Colors.white),
-          ),
-          child: const Text(
-            'A NEW DIGITAL SHOWROOM',
-            style: TextStyle(
-              color: Color(0xFF7B6848),
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.7,
-            ),
-          ),
-        ),
-        const SizedBox(height: 26),
-        Text(
-          'Taste the future\nof food brands.',
-          style: TextStyle(
-            color: const Color(0xFF14372F),
-            fontSize: compact ? 48 : 74,
-            height: .98,
-            fontWeight: FontWeight.w900,
-            letterSpacing: -2.8,
-          ),
-        ),
-        const SizedBox(height: 26),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 560),
-          child: const Text(
-            'Explore Eman Agro through an immersive premium catalog built for products, partners and private-label opportunities.',
-            style: TextStyle(
-              color: Color(0xFF5D6862),
-              fontSize: 18,
-              height: 1.6,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        const SizedBox(height: 34),
-        Wrap(
-          spacing: 14,
-          runSpacing: 14,
-          children: [
-            FilledButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.arrow_forward_rounded),
-              label: const Text('Discover our brands'),
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF14372F),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-            OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.play_circle_outline_rounded),
-              label: const Text('Watch presentation'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF14372F),
-                side: const BorderSide(color: Color(0xFFBAC6BE)),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-
-    const visual = _ShowroomVisual();
-
-    if (compact) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [copy, const SizedBox(height: 48), visual],
-      );
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(flex: 11, child: copy),
-        const SizedBox(width: 46),
-        const Expanded(flex: 9, child: visual),
-      ],
-    );
-  }
+class Product {
+  const Product(this.name, this.brand, this.category, this.image);
+  final String name;
+  final String brand;
+  final String category;
+  final String image;
 }
 
-class _ShowroomVisual extends StatelessWidget {
-  const _ShowroomVisual();
+class ProductCard extends StatefulWidget {
+  const ProductCard({super.key, required this.product, required this.selected, required this.onToggle});
+  final Product product;
+  final bool selected;
+  final VoidCallback onToggle;
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: .95,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF14372F),
-              borderRadius: BorderRadius.circular(44),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x3014372F),
-                  blurRadius: 60,
-                  offset: Offset(0, 24),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 28,
-            left: 28,
-            right: 28,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'CURATED\nCOLLECTION 01',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
-                    height: 1.35,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: .1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.north_east_rounded, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 34,
-            right: 34,
-            bottom: 34,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4E9D6),
-                borderRadius: BorderRadius.circular(28),
+    return MouseRegion(
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        transform: Matrix4.translationValues(0, hovered ? -8 : 0, 0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: widget.selected ? const Color(0xFF0057B8) : const Color(0xFFE4EBF3), width: widget.selected ? 2 : 1),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: hovered ? .12 : .05), blurRadius: hovered ? 30 : 16, offset: const Offset(0, 12))],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: const Color(0xFFF1F6FC),
+                padding: const EdgeInsets.all(22),
+                child: Image.asset(widget.product.image, fit: BoxFit.contain, errorBuilder: (_, __, ___) => const Icon(Icons.local_drink_outlined, size: 100, color: Color(0xFF8FB7DF))),
               ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(22),
+              child: Row(
                 children: [
-                  Text(
-                    'VALORI',
-                    style: TextStyle(
-                      color: Color(0xFF14372F),
-                      fontSize: 44,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 4,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.product.brand.toUpperCase(), style: const TextStyle(color: Color(0xFF0057B8), fontWeight: FontWeight.w800, letterSpacing: 1.4)),
+                        const SizedBox(height: 7),
+                        Text(widget.product.name, style: const TextStyle(color: Color(0xFF052A55), fontSize: 22, fontWeight: FontWeight.w900)),
+                        const SizedBox(height: 5),
+                        Text(widget.product.category, style: const TextStyle(color: Color(0xFF72869A))),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Refreshing ideas.\nMade for everyday moments.',
-                    style: TextStyle(
-                      color: Color(0xFF52625B),
-                      fontSize: 17,
-                      height: 1.35,
-                    ),
+                  IconButton.filled(
+                    onPressed: widget.onToggle,
+                    style: IconButton.styleFrom(backgroundColor: widget.selected ? const Color(0xFF0057B8) : const Color(0xFFEAF3FC), foregroundColor: widget.selected ? Colors.white : const Color(0xFF0057B8)),
+                    icon: Icon(widget.selected ? Icons.check : Icons.add_shopping_cart_outlined),
                   ),
                 ],
               ),
             ),
-          ),
-          Positioned(
-            top: 116,
-            right: 46,
-            child: Transform.rotate(
-              angle: -.08,
-              child: Container(
-                width: 170,
-                height: 230,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFFF2B454), Color(0xFFE26635)],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InquirySheet extends StatelessWidget {
+  const InquirySheet({super.key, required this.items});
+  final List<String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: 720,
+        constraints: const BoxConstraints(maxHeight: 650),
+        padding: const EdgeInsets.all(28),
+        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              const Expanded(child: Text('طلب عرض السعر', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFF052A55)))),
+              IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+            ]),
+            const SizedBox(height: 16),
+            if (items.isEmpty)
+              const Padding(padding: EdgeInsets.symmetric(vertical: 70), child: Center(child: Text('لم تضف أي منتج بعد.')))
+            else
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemBuilder: (_, i) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const CircleAvatar(backgroundColor: Color(0xFFEAF3FC), child: Icon(Icons.inventory_2_outlined, color: Color(0xFF0057B8))),
+                    title: Text(items[i], style: const TextStyle(fontWeight: FontWeight.w800)),
+                    subtitle: const Text('الكمية تحدد لاحقاً'),
+                    trailing: const Icon(Icons.chevron_right),
                   ),
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: Colors.white54, width: 2),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x40000000),
-                      blurRadius: 30,
-                      offset: Offset(0, 16),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(20),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'V',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 54,
-                        height: 1,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      'JUICE\nDRINK',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        height: 1.05,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
                 ),
               ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: items.isEmpty ? null : () {},
+                style: FilledButton.styleFrom(backgroundColor: const Color(0xFF0057B8), padding: const EdgeInsets.symmetric(vertical: 20)),
+                icon: const Icon(Icons.send_outlined),
+                label: const Text('متابعة وإرسال الطلب'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _BrandStrip extends StatelessWidget {
-  const _BrandStrip();
-
+class _LogoFallback extends StatelessWidget {
+  const _LogoFallback();
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .62),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white),
-      ),
-      child: const Wrap(
-        alignment: WrapAlignment.spaceAround,
-        spacing: 38,
-        runSpacing: 18,
-        children: [
-          _BrandName('VALORI'),
-          _BrandName('FRIO'),
-          _BrandName('ROYA'),
-          _BrandName('FRESH'),
-          _BrandName('PRIVATE LABEL'),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const Row(children: [
+        CircleAvatar(backgroundColor: Color(0xFF0057B8), child: Text('E', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900))),
+        SizedBox(width: 10),
+        Text('EMAN', style: TextStyle(color: Color(0xFF052A55), fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: 2)),
+      ]);
 }
 
-class _BrandName extends StatelessWidget {
-  const _BrandName(this.label);
-
-  final String label;
-
+class _NavText extends StatelessWidget {
+  const _NavText(this.text);
+  final String text;
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: const TextStyle(
-        color: Color(0xFF6A756F),
-        fontSize: 13,
-        fontWeight: FontWeight.w900,
-        letterSpacing: 2.1,
-      ),
-    );
-  }
-}
-
-class _GlowOrb extends StatelessWidget {
-  const _GlowOrb({required this.size, required this.color});
-
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Text(text, style: const TextStyle(color: Color(0xFF294C70), fontWeight: FontWeight.w700)),
+      );
 }
