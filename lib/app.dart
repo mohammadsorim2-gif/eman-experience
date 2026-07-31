@@ -1,1719 +1,291 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class EmanExperienceApp extends StatelessWidget {
+class EmanExperienceApp extends StatefulWidget {
   const EmanExperienceApp({super.key});
 
-  static const ink = Color(0xFF071A2D);
-  static const blue = Color(0xFF146CFF);
-  static const cyan = Color(0xFF4ED6C8);
-  static const canvas = Color(0xFFF3F6F8);
-  static const muted = Color(0xFF5D6A76);
+  @override
+  State<EmanExperienceApp> createState() => _EmanExperienceAppState();
+}
+
+class _EmanExperienceAppState extends State<EmanExperienceApp> {
+  String language = 'en';
+
+  @override
+  void initState() {
+    super.initState();
+    _restore();
+  }
+
+  Future<void> _restore() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString('eman_language');
+    if (saved != null && Copy.languages.contains(saved) && mounted) {
+      setState(() => language = saved);
+    }
+  }
+
+  Future<void> _changeLanguage(String value) async {
+    setState(() => language = value);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('eman_language', value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Eman — Beverage Manufacturing Partner',
+      locale: Locale(language),
+      supportedLocales: Copy.languages.map(Locale.new).toList(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFFFFBF5),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0878C9)),
         fontFamily: 'Arial',
-        scaffoldBackgroundColor: canvas,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: blue,
-          primary: blue,
-          surface: Colors.white,
-        ),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: ink,
-            fontSize: 72,
-            height: .98,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -3.2,
-          ),
-          displayMedium: TextStyle(
-            color: ink,
-            fontSize: 48,
-            height: 1.02,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -1.8,
-          ),
-          headlineMedium: TextStyle(
-            color: ink,
-            fontSize: 26,
-            height: 1.15,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -.6,
-          ),
-          bodyLarge: TextStyle(color: muted, fontSize: 18, height: 1.65),
-          bodyMedium: TextStyle(color: muted, fontSize: 15, height: 1.55),
-        ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            textStyle: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            side: const BorderSide(color: Color(0xFFD4DCE3)),
-            textStyle: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
       ),
-      home: const HomePage(),
+      home: Directionality(
+        textDirection: language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        child: HomePage(language: language, onLanguageChanged: _changeLanguage),
+      ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, required this.language, required this.onLanguageChanged});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
+  final String language;
+  final ValueChanged<String> onLanguageChanged;
 
-class _HomePageState extends State<HomePage> {
-  final _capabilitiesKey = GlobalKey();
-  final _portfolioKey = GlobalKey();
-  final _processKey = GlobalKey();
-  final _partnershipKey = GlobalKey();
+  Copy get t => Copy(language);
 
-  void _scrollTo(GlobalKey key) {
-    final target = key.currentContext;
-    if (target == null) return;
-    Scrollable.ensureVisible(
-      target,
-      duration: const Duration(milliseconds: 700),
-      curve: Curves.easeOutCubic,
-      alignment: .04,
-    );
-  }
-
-  void _openInquiry([String interest = 'General partnership']) {
-    showDialog<void>(
-      context: context,
-      barrierColor: EmanExperienceApp.ink.withValues(alpha: .72),
-      builder: (_) => InquiryDialog(initialInterest: interest),
-    );
-  }
+  static const logo = 'assets/logos/Eman logo.png';
+  static const brands = [
+    'assets/brands/valore/Valore Logo.png',
+    'assets/brands/friocups/Frio Cups Logo.png',
+    'assets/brands/royac/ROya c Logo.png',
+    'assets/brands/fullfresh/Full Fresh Logo.png',
+  ];
+  static const products = [
+    'assets/products/friocups/9g-orange-flavored-powder-drink-friocups.png',
+    'assets/products/friocups/9g-mango-flavored-powder-drink-friocups.png',
+    'assets/products/friocups/9g-berries-flavored-powder-drink-friocups.png',
+    'assets/products/friocups/9g-coconut-flavored-powder-drink-friocups.png',
+    'assets/products/friocups/9g-grape-flavored-powder-drink-friocups.png',
+    'assets/products/friocups/9g-banana-flavored-powder-drink-friocups.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SelectionArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _announcement()),
-            SliverToBoxAdapter(child: _navigation()),
-            SliverToBoxAdapter(child: _hero()),
-            SliverToBoxAdapter(child: _trustStrip()),
-            SliverToBoxAdapter(key: _capabilitiesKey, child: _capabilities()),
-            SliverToBoxAdapter(key: _portfolioKey, child: _portfolio()),
-            SliverToBoxAdapter(child: _marketReach()),
-            SliverToBoxAdapter(key: _processKey, child: _process()),
-            SliverToBoxAdapter(key: _partnershipKey, child: _partnership()),
-            const SliverToBoxAdapter(child: SiteFooter()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _announcement() {
-    return Container(
-      color: EmanExperienceApp.ink,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      child: const Wrap(
-        alignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 8,
-        children: [
-          Icon(Icons.public, color: EmanExperienceApp.cyan, size: 16),
-          Text(
-            'Now onboarding distribution and private-label partners for 2026',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: .2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navigation() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: SizedBox(
-            height: 82,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final compact = constraints.maxWidth < 860;
-                return Row(
-                  children: [
-                    const EmanMark(dark: true),
-                    const Spacer(),
-                    if (!compact) ...[
-                      _navLink(
-                        'Capabilities',
-                        () => _scrollTo(_capabilitiesKey),
-                      ),
-                      _navLink('Portfolio', () => _scrollTo(_portfolioKey)),
-                      _navLink('How we work', () => _scrollTo(_processKey)),
-                      _navLink('Company', () => _scrollTo(_partnershipKey)),
-                      const SizedBox(width: 18),
-                    ],
-                    FilledButton(
-                      onPressed: _openInquiry,
-                      child: Text(compact ? 'Get in touch' : 'Start a project'),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navLink(String label, VoidCallback onPressed) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        foregroundColor: EmanExperienceApp.ink,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
-        textStyle: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      child: Text(label),
-    );
-  }
-
-  Widget _hero() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(24, 50, 24, 86),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 900;
-              final copy = Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Eyebrow('BEVERAGE INNOVATION · BUILT TO SCALE'),
-                  const SizedBox(height: 26),
-                  Text(
-                    'From bold idea\nto global shelf.',
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontSize: compact ? 52 : 76,
-                    ),
-                  ),
-                  const SizedBox(height: 26),
-                  Text(
-                    'Eman develops, manufactures and exports high-performing '
-                    'powdered beverages for ambitious brands and distributors.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 32),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      FilledButton.icon(
-                        onPressed: _openInquiry,
-                        icon: const Icon(Icons.arrow_outward, size: 19),
-                        label: const Text('Build your product'),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => _scrollTo(_portfolioKey),
-                        icon: const Icon(Icons.grid_view_rounded, size: 18),
-                        label: const Text('Explore portfolio'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                  const Wrap(
-                    spacing: 26,
-                    runSpacing: 12,
-                    children: [
-                      MiniProof(
-                        icon: Icons.verified_user_outlined,
-                        label: 'Quality-led production',
-                      ),
-                      MiniProof(
-                        icon: Icons.language,
-                        label: 'Export-ready operations',
-                      ),
-                    ],
-                  ),
-                ],
-              );
-              final visual = const ProductStage();
-              if (compact) {
-                return Column(
-                  children: [
-                    copy,
-                    const SizedBox(height: 58),
-                    const SizedBox(height: 540, child: ProductStage()),
-                  ],
-                );
-              }
-              return SizedBox(
-                height: 650,
-                child: Row(
-                  children: [
-                    Expanded(flex: 10, child: copy),
-                    const SizedBox(width: 64),
-                    Expanded(flex: 9, child: visual),
-                  ],
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 92,
+            backgroundColor: Colors.white.withValues(alpha: .97),
+            surfaceTintColor: Colors.transparent,
+            title: Image.asset(logo, height: 54, fit: BoxFit.contain),
+            actions: [
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: language,
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  items: const {
+                    'en': 'EN', 'tr': 'TR', 'ar': 'AR',
+                    'es': 'ES', 'pt': 'PT', 'ru': 'RU',
+                  }.entries.map((e) => DropdownMenuItem(value: e.key, child: Text(e.value))).toList(),
+                  onChanged: (value) { if (value != null) onLanguageChanged(value); },
                 ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _trustStrip() {
-    return Container(
-      color: EmanExperienceApp.ink,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: const Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            runAlignment: WrapAlignment.center,
-            spacing: 44,
-            runSpacing: 26,
-            children: [
-              TrustItem(value: '20+', label: 'Markets served'),
-              TrustItem(value: '4', label: 'Portfolio brands'),
-              TrustItem(value: '30+', label: 'Flavor concepts'),
-              TrustItem(value: 'B2B', label: 'Partner-first model'),
+              ),
+              const SizedBox(width: 12),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _capabilities() {
-    const cards = [
-      CapabilityData(
-        number: '01',
-        icon: Icons.science_outlined,
-        title: 'Product development',
-        text:
-            'Build differentiated flavor profiles, formats and specifications '
-            'around your consumer and commercial goals.',
-      ),
-      CapabilityData(
-        number: '02',
-        icon: Icons.precision_manufacturing_outlined,
-        title: 'Scaled manufacturing',
-        text:
-            'Move from validated concept to consistent production with a '
-            'quality-led manufacturing partner.',
-      ),
-      CapabilityData(
-        number: '03',
-        icon: Icons.inventory_2_outlined,
-        title: 'Private label',
-        text:
-            'Create a complete branded proposition with packaging, portfolio '
-            'architecture and go-to-market support.',
-      ),
-      CapabilityData(
-        number: '04',
-        icon: Icons.local_shipping_outlined,
-        title: 'Export enablement',
-        text:
-            'Prepare products and documentation for efficient international '
-            'distribution and market entry.',
-      ),
-    ];
-    return SectionShell(
-      dark: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionIntro(
-            eyebrow: 'WHAT WE DO',
-            title: 'One partner from concept\nto commercialization.',
-            text:
-                'A connected operating model reduces handoffs, protects quality '
-                'and gets your beverage proposition to market with confidence.',
-          ),
-          const SizedBox(height: 52),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = constraints.maxWidth >= 1040
-                  ? 4
-                  : constraints.maxWidth >= 620
-                  ? 2
-                  : 1;
-              final width =
-                  (constraints.maxWidth - (columns - 1) * 18) / columns;
-              return Wrap(
-                spacing: 18,
-                runSpacing: 18,
-                children: cards
-                    .map(
-                      (card) => SizedBox(
-                        width: width,
-                        child: CapabilityCard(
-                          data: card,
-                          onPressed: () => _openInquiry(card.title),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-          ),
+          SliverToBoxAdapter(child: _hero(context)),
+          SliverToBoxAdapter(child: _brands(context)),
+          SliverToBoxAdapter(child: _products(context)),
+          SliverToBoxAdapter(child: _privateLabel(context)),
+          SliverToBoxAdapter(child: _export(context)),
+          SliverToBoxAdapter(child: _contact(context)),
+          SliverToBoxAdapter(child: _footer()),
         ],
       ),
     );
   }
 
-  Widget _portfolio() {
-    const products = [
-      PortfolioData(
-        brand: 'VALORE',
-        format: 'Instant drink sachets',
-        flavor: 'Citrus collection',
-        color: Color(0xFFFFC84B),
-        accent: Color(0xFFFF7A45),
-        icon: Icons.wb_sunny_outlined,
-      ),
-      PortfolioData(
-        brand: 'FRIO CUPS',
-        format: 'Single-serve refreshment',
-        flavor: 'Tropical collection',
-        color: Color(0xFF43D4C4),
-        accent: Color(0xFF087F8C),
-        icon: Icons.local_drink_outlined,
-      ),
-      PortfolioData(
-        brand: 'ROYA C',
-        format: 'Foodservice solutions',
-        flavor: 'Professional range',
-        color: Color(0xFF8BA7FF),
-        accent: Color(0xFF3049B5),
-        icon: Icons.restaurant_outlined,
-      ),
-      PortfolioData(
-        brand: 'FULL FRESH',
-        format: 'Flavored powder drinks',
-        flavor: 'Family collection',
-        color: Color(0xFFFF849E),
-        accent: Color(0xFFA92058),
-        icon: Icons.favorite_outline,
-      ),
-    ];
-    return SectionShell(
-      background: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Expanded(
-                child: SectionIntro(
-                  eyebrow: 'OUR PORTFOLIO',
-                  title: 'Formats built for\nreal-world demand.',
-                  text:
-                      'A flexible product platform for retail, foodservice and '
-                      'distribution channels.',
-                ),
-              ),
-              if (MediaQuery.sizeOf(context).width > 760)
-                TextButton.icon(
-                  onPressed: () => _openInquiry('Portfolio and distribution'),
-                  iconAlignment: IconAlignment.end,
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Discuss distribution'),
-                ),
-            ],
-          ),
-          const SizedBox(height: 52),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = constraints.maxWidth >= 950 ? 2 : 1;
-              final width =
-                  (constraints.maxWidth - (columns - 1) * 20) / columns;
-              return Wrap(
-                spacing: 20,
-                runSpacing: 20,
-                children: products
-                    .map(
-                      (product) => SizedBox(
-                        width: width,
-                        child: PortfolioCard(
-                          data: product,
-                          onPressed: () =>
-                              _openInquiry('${product.brand} distribution'),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _marketReach() {
+  Widget _hero(BuildContext context) {
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 110),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: Container(
-            decoration: BoxDecoration(
-              color: EmanExperienceApp.ink,
-              borderRadius: BorderRadius.circular(28),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final compact = constraints.maxWidth < 800;
-                final copy = Padding(
-                  padding: EdgeInsets.all(compact ? 34 : 62),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Eyebrow('BUILT FOR INTERNATIONAL BUSINESS'),
-                      const SizedBox(height: 22),
-                      Text(
-                        'Local insight.\nGlobal ambition.',
-                        style: Theme.of(context).textTheme.displayMedium
-                            ?.copyWith(
-                              color: Colors.white,
-                              fontSize: compact ? 40 : 54,
-                            ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'We help partners translate regional taste, channel and '
-                        'price-point needs into scalable beverage propositions.',
-                        style: TextStyle(
-                          color: Color(0xFFB7C2CC),
-                          fontSize: 17,
-                          height: 1.6,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-                const map = MarketGraphic();
-                return compact
-                    ? Column(
-                        children: [
-                          copy,
-                          const SizedBox(height: 350, child: map),
-                        ],
-                      )
-                    : SizedBox(
-                        height: 490,
-                        child: Row(
-                          children: [
-                            Expanded(child: copy),
-                            const Expanded(child: map),
-                          ],
-                        ),
-                      );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _process() {
-    const steps = [
-      ProcessData(
-        '01',
-        'Align',
-        'We define the market, consumer, channel and commercial brief.',
-      ),
-      ProcessData(
-        '02',
-        'Create',
-        'Our team shapes the formulation, format and brand proposition.',
-      ),
-      ProcessData(
-        '03',
-        'Validate',
-        'Samples, specifications and production requirements are confirmed.',
-      ),
-      ProcessData(
-        '04',
-        'Scale',
-        'Manufacturing and export coordination move the product to market.',
-      ),
-    ];
-    return SectionShell(
-      dark: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionIntro(
-            eyebrow: 'HOW WE WORK',
-            title: 'Clarity at every stage.',
-            text:
-                'A pragmatic development path designed for faster decisions and '
-                'stronger commercial outcomes.',
-          ),
-          const SizedBox(height: 56),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final columns = constraints.maxWidth >= 920 ? 4 : 1;
-              final width =
-                  (constraints.maxWidth - (columns - 1) * 36) / columns;
-              return Wrap(
-                spacing: 36,
-                runSpacing: 32,
-                children: steps
-                    .map(
-                      (step) => SizedBox(
-                        width: width,
-                        child: ProcessStep(data: step),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _partnership() {
-    return Container(
-      color: EmanExperienceApp.blue,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 110),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1000),
-          child: Column(
-            children: [
-              const Eyebrow('LET’S BUILD WHAT’S NEXT', light: true),
-              const SizedBox(height: 28),
-              Text(
-                'A better beverage business\nstarts with the right partner.',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: Colors.white,
-                  fontSize: MediaQuery.sizeOf(context).width < 620 ? 40 : 58,
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Tell us where you want to compete. We’ll show you how to get there.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFFDDE9FF),
-                  fontSize: 18,
-                  height: 1.6,
-                ),
-              ),
-              const SizedBox(height: 36),
-              FilledButton.icon(
-                onPressed: _openInquiry,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: EmanExperienceApp.ink,
-                ),
-                icon: const Icon(Icons.arrow_outward),
-                label: const Text('Start the conversation'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ProductStage extends StatelessWidget {
-  const ProductStage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFF4FBFF), Color(0xFFFFF6E9)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFE6F0F4), Color(0xFFDAF0ED)],
-        ),
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            right: -100,
-            top: -80,
-            child: Container(
-              width: 310,
-              height: 310,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white54, width: 54),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 28,
-            top: 28,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Text(
-                'POWDERED BEVERAGE PLATFORM',
-                style: TextStyle(
-                  color: EmanExperienceApp.ink,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1,
-                ),
-              ),
-            ),
-          ),
-          const Align(alignment: Alignment(0, .15), child: ProductPack()),
-          const Positioned(
-            right: 28,
-            bottom: 28,
-            child: StatTile(value: '30+', label: 'flavor concepts'),
-          ),
-          const Positioned(
-            left: 28,
-            bottom: 28,
-            child: StatTile(value: '4', label: 'flexible brands'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductPack extends StatelessWidget {
-  const ProductPack({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: -.06,
-      child: Container(
-        width: 248,
-        height: 358,
-        decoration: BoxDecoration(
-          color: EmanExperienceApp.blue,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(28),
-            bottomRight: Radius.circular(28),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: EmanExperienceApp.ink.withValues(alpha: .24),
-              blurRadius: 40,
-              offset: const Offset(12, 24),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              left: -84,
-              top: 76,
-              child: Container(
-                width: 300,
-                height: 300,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: EmanExperienceApp.cyan,
-                ),
-              ),
-            ),
-            Positioned(
-              right: -60,
-              bottom: -50,
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFFC84B),
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EmanMark(),
-                  Spacer(),
-                  Text(
-                    'CITRUS',
-                    style: TextStyle(
-                      color: EmanExperienceApp.ink,
-                      fontSize: 38,
-                      height: .9,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1.8,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'INSTANT POWDER DRINK',
-                    style: TextStyle(
-                      color: EmanExperienceApp.ink,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.1,
-                    ),
-                  ),
-                  SizedBox(height: 12),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
-    );
-  }
-}
-
-class EmanMark extends StatelessWidget {
-  const EmanMark({super.key, this.dark = false});
-
-  final bool dark;
-
-  @override
-  Widget build(BuildContext context) {
-    final foreground = dark ? EmanExperienceApp.ink : Colors.white;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 28,
-          height: 28,
-          decoration: BoxDecoration(
-            color: dark ? EmanExperienceApp.blue : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.water_drop_rounded,
-            color: dark ? Colors.white : EmanExperienceApp.blue,
-            size: 17,
-          ),
-        ),
-        const SizedBox(width: 9),
-        Text(
-          'EMAN',
-          style: TextStyle(
-            color: foreground,
-            fontSize: 19,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.5,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class MiniProof extends StatelessWidget {
-  const MiniProof({super.key, required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: EmanExperienceApp.blue, size: 20),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            color: EmanExperienceApp.ink,
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class StatTile extends StatelessWidget {
-  const StatTile({super.key, required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .94),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: EmanExperienceApp.ink,
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          Text(
-            label,
-            style: const TextStyle(
-              color: EmanExperienceApp.muted,
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TrustItem extends StatelessWidget {
-  const TrustItem({super.key, required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 190,
-      child: Row(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 27,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                color: Color(0xFF9FADB9),
-                fontSize: 12,
-                height: 1.3,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SectionShell extends StatelessWidget {
-  const SectionShell({
-    super.key,
-    required this.child,
-    this.background,
-    this.dark = false,
-  });
-
-  final Widget child;
-  final Color? background;
-  final bool dark;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color:
-          background ??
-          (dark ? EmanExperienceApp.ink : EmanExperienceApp.canvas),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 110),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 52),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class Eyebrow extends StatelessWidget {
-  const Eyebrow(this.text, {super.key, this.light = false});
-
-  final String text;
-  final bool light;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 28,
-          height: 2,
-          color: light ? Colors.white : EmanExperienceApp.blue,
-        ),
-        const SizedBox(width: 10),
-        Flexible(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: light ? Colors.white : EmanExperienceApp.blue,
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.6,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SectionIntro extends StatelessWidget {
-  const SectionIntro({
-    super.key,
-    required this.eyebrow,
-    required this.title,
-    required this.text,
-  });
-
-  final String eyebrow;
-  final String title;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final compact = constraints.maxWidth < 820;
-        final heading = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Eyebrow(eyebrow),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.displayMedium?.copyWith(fontSize: compact ? 39 : 50),
-            ),
-          ],
-        );
-        final detail = Text(text, style: Theme.of(context).textTheme.bodyLarge);
-        return compact
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [heading, const SizedBox(height: 22), detail],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(flex: 3, child: heading),
-                  const SizedBox(width: 80),
-                  Expanded(flex: 2, child: detail),
-                ],
-              );
-      },
-    );
-  }
-}
-
-class CapabilityData {
-  const CapabilityData({
-    required this.number,
-    required this.icon,
-    required this.title,
-    required this.text,
-  });
-
-  final String number;
-  final IconData icon;
-  final String title;
-  final String text;
-}
-
-class CapabilityCard extends StatefulWidget {
-  const CapabilityCard({
-    super.key,
-    required this.data,
-    required this.onPressed,
-  });
-
-  final CapabilityData data;
-  final VoidCallback onPressed;
-
-  @override
-  State<CapabilityCard> createState() => _CapabilityCardState();
-}
-
-class _CapabilityCardState extends State<CapabilityCard> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        transform: Matrix4.translationValues(0, _hovered ? -6 : 0, 0),
-        height: 330,
-        padding: const EdgeInsets.all(26),
-        decoration: BoxDecoration(
-          color: _hovered ? EmanExperienceApp.ink : Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFDDE3E8)),
-          boxShadow: [
-            if (_hovered)
-              BoxShadow(
-                color: EmanExperienceApp.ink.withValues(alpha: .18),
-                blurRadius: 28,
-                offset: const Offset(0, 15),
-              ),
-          ],
-        ),
-        child: InkWell(
-          onTap: widget.onPressed,
-          borderRadius: BorderRadius.circular(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: _hovered
-                          ? EmanExperienceApp.blue
-                          : const Color(0xFFEAF1FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      widget.data.icon,
-                      color: _hovered ? Colors.white : EmanExperienceApp.blue,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    widget.data.number,
-                    style: TextStyle(
-                      color: _hovered
-                          ? Colors.white38
-                          : const Color(0xFFADB7C0),
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                widget.data.title,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: _hovered ? Colors.white : EmanExperienceApp.ink,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                widget.data.text,
-                style: TextStyle(
-                  color: _hovered
-                      ? const Color(0xFFAFBCC7)
-                      : EmanExperienceApp.muted,
-                  fontSize: 14,
-                  height: 1.55,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Icon(
-                Icons.arrow_forward,
-                color: _hovered
-                    ? EmanExperienceApp.cyan
-                    : EmanExperienceApp.blue,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PortfolioData {
-  const PortfolioData({
-    required this.brand,
-    required this.format,
-    required this.flavor,
-    required this.color,
-    required this.accent,
-    required this.icon,
-  });
-
-  final String brand;
-  final String format;
-  final String flavor;
-  final Color color;
-  final Color accent;
-  final IconData icon;
-}
-
-class PortfolioCard extends StatelessWidget {
-  const PortfolioCard({super.key, required this.data, required this.onPressed});
-
-  final PortfolioData data;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 390,
-      decoration: BoxDecoration(
-        color: data.color.withValues(alpha: .22),
-        borderRadius: BorderRadius.circular(22),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          Positioned(
-            right: -65,
-            top: -75,
-            child: Container(
-              width: 260,
-              height: 260,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: data.color.withValues(alpha: .55),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 44,
-            bottom: 24,
-            child: Transform.rotate(
-              angle: .08,
-              child: Container(
-                width: 150,
-                height: 230,
-                decoration: BoxDecoration(
-                  color: data.accent,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
-                    bottomLeft: Radius.circular(22),
-                    bottomRight: Radius.circular(22),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: data.accent.withValues(alpha: .28),
-                      blurRadius: 28,
-                      offset: const Offset(8, 14),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(data.icon, color: Colors.white, size: 52),
-                    const SizedBox(height: 18),
-                    Text(
-                      data.brand,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 7,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: .8),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      data.brand,
-                      style: const TextStyle(
-                        color: EmanExperienceApp.ink,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 240,
-                    child: Text(
-                      data.format,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineMedium?.copyWith(fontSize: 28),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    data.flavor,
-                    style: const TextStyle(
-                      color: EmanExperienceApp.muted,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  IconButton.filled(
-                    onPressed: onPressed,
-                    style: IconButton.styleFrom(
-                      backgroundColor: EmanExperienceApp.ink,
-                      foregroundColor: Colors.white,
-                    ),
-                    icon: const Icon(Icons.arrow_outward),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MarketGraphic extends StatelessWidget {
-  const MarketGraphic({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: CustomPaint(painter: DotGridPainter())),
-        const MarketPoint(alignment: Alignment(-.62, -.2), label: 'Europe'),
-        const MarketPoint(alignment: Alignment(.16, -.08), label: 'MENA'),
-        const MarketPoint(alignment: Alignment(.58, .38), label: 'Asia'),
-        Align(
-          alignment: const Alignment(-.08, .15),
-          child: Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              color: EmanExperienceApp.blue.withValues(alpha: .18),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: EmanExperienceApp.cyan.withValues(alpha: .65),
-              ),
-            ),
-            child: const Center(child: EmanMark()),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class DotGridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0xFF294057);
-    const gap = 18.0;
-    for (double x = 9; x < size.width; x += gap) {
-      for (double y = 9; y < size.height; y += gap) {
-        canvas.drawCircle(Offset(x, y), 1.2, paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class MarketPoint extends StatelessWidget {
-  const MarketPoint({super.key, required this.alignment, required this.label});
-
-  final Alignment alignment;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: alignment,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(100),
-          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 14)],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 7,
-              height: 7,
-              decoration: const BoxDecoration(
-                color: EmanExperienceApp.cyan,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 7),
-            Text(
-              label,
-              style: const TextStyle(
-                color: EmanExperienceApp.ink,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ProcessData {
-  const ProcessData(this.number, this.title, this.text);
-
-  final String number;
-  final String title;
-  final String text;
-}
-
-class ProcessStep extends StatelessWidget {
-  const ProcessStep({super.key, required this.data});
-
-  final ProcessData data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 3,
-          decoration: BoxDecoration(
-            color: data.number == '01'
-                ? EmanExperienceApp.blue
-                : const Color(0xFFD5DDE3),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          data.number,
-          style: const TextStyle(
-            color: EmanExperienceApp.blue,
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(data.title, style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 12),
-        Text(data.text, style: Theme.of(context).textTheme.bodyMedium),
-      ],
-    );
-  }
-}
-
-class InquiryDialog extends StatefulWidget {
-  const InquiryDialog({super.key, required this.initialInterest});
-
-  final String initialInterest;
-
-  @override
-  State<InquiryDialog> createState() => _InquiryDialogState();
-}
-
-class _InquiryDialogState extends State<InquiryDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _company = TextEditingController();
-  final _email = TextEditingController();
-  final _message = TextEditingController();
-  bool _submitted = false;
-
-  @override
-  void dispose() {
-    _name.dispose();
-    _company.dispose();
-    _email.dispose();
-    _message.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    setState(() => _submitted = true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.all(18),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 650),
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: _submitted ? _success() : _form(),
-        ),
-      ),
-    );
-  }
-
-  Widget _form() {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          constraints: const BoxConstraints(maxWidth: 1280),
+          child: LayoutBuilder(builder: (context, c) {
+            final compact = c.maxWidth < 900;
+            final text = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Expanded(
-                  child: Text(
-                    'Start a conversation',
-                    style: TextStyle(
-                      color: EmanExperienceApp.ink,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -1,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
+                Text(t['eyebrow'], style: const TextStyle(color: Color(0xFF0878C9), fontWeight: FontWeight.w800, letterSpacing: 1.7)),
+                const SizedBox(height: 20),
+                Text(t['hero'], style: TextStyle(fontSize: compact ? 48 : 74, height: .98, fontWeight: FontWeight.w900, color: const Color(0xFF07304F))),
+                const SizedBox(height: 24),
+                Text(t['heroBody'], style: const TextStyle(fontSize: 18, height: 1.65, color: Color(0xFF536674))),
+                const SizedBox(height: 30),
+                Wrap(spacing: 12, runSpacing: 12, children: [
+                  FilledButton(onPressed: () {}, child: Text(t['explore'])),
+                  OutlinedButton(onPressed: () {}, child: Text(t['privateLabel'])),
+                ]),
               ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Interest: ${widget.initialInterest}',
-              style: const TextStyle(color: EmanExperienceApp.blue),
-            ),
-            const SizedBox(height: 26),
-            _field(_name, 'Your name', Icons.person_outline),
-            const SizedBox(height: 14),
-            _field(_company, 'Company', Icons.business_outlined),
-            const SizedBox(height: 14),
-            _field(_email, 'Work email', Icons.mail_outline, email: true),
-            const SizedBox(height: 14),
-            TextFormField(
-              controller: _message,
-              maxLines: 4,
-              decoration: _decoration(
-                'Tell us about your market or project',
-                Icons.notes_outlined,
-              ),
-            ),
-            const SizedBox(height: 22),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _submit,
-                icon: const Icon(Icons.arrow_outward),
-                label: const Text('Send partnership brief'),
-              ),
-            ),
-          ],
+            );
+            final visual = Container(
+              height: compact ? 500 : 620,
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(36), boxShadow: const [BoxShadow(blurRadius: 40, color: Color(0x18000000), offset: Offset(0, 18))]),
+              child: Stack(alignment: Alignment.center, children: [
+                Positioned.fill(child: ClipRRect(borderRadius: BorderRadius.circular(36), child: const DecoratedBox(decoration: BoxDecoration(gradient: RadialGradient(colors: [Color(0xFFFFE8A6), Color(0xFFFFF8E8)]))))),
+                Positioned(left: 18, bottom: 18, child: Image.asset(products[2], width: compact ? 175 : 220)),
+                Image.asset(products[0], width: compact ? 230 : 300),
+                Positioned(right: 12, bottom: 18, child: Image.asset(products[1], width: compact ? 175 : 220)),
+              ]),
+            );
+            if (compact) return Column(children: [text, const SizedBox(height: 42), visual]);
+            return SizedBox(height: 650, child: Row(children: [Expanded(child: text), const SizedBox(width: 58), Expanded(child: visual)]));
+          }),
         ),
       ),
     );
   }
 
-  Widget _field(
-    TextEditingController controller,
-    String label,
-    IconData icon, {
-    bool email = false,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: email ? TextInputType.emailAddress : TextInputType.text,
-      decoration: _decoration(label, icon),
-      validator: (value) {
-        final input = value?.trim() ?? '';
-        if (input.isEmpty) return 'Please complete this field';
-        if (email && (!input.contains('@') || !input.contains('.'))) {
-          return 'Enter a valid work email';
-        }
-        return null;
-      },
-    );
-  }
+  Widget _brands(BuildContext context) => _section(
+    context,
+    title: t['brands'],
+    subtitle: t['brandsBody'],
+    child: LayoutBuilder(builder: (_, c) {
+      final width = c.maxWidth > 850 ? (c.maxWidth - 54) / 4 : (c.maxWidth - 18) / 2;
+      return Wrap(spacing: 18, runSpacing: 18, children: brands.map((path) => Container(
+        width: width,
+        height: 160,
+        padding: const EdgeInsets.all(26),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: const Color(0xFFE7EBEE))),
+        child: Image.asset(path, fit: BoxFit.contain),
+      )).toList());
+    }),
+  );
 
-  InputDecoration _decoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      filled: true,
-      fillColor: const Color(0xFFF4F7F9),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-    );
-  }
+  Widget _products(BuildContext context) => _section(
+    context,
+    title: t['products'],
+    subtitle: t['productsBody'],
+    background: const Color(0xFFF5FAFD),
+    child: LayoutBuilder(builder: (_, c) {
+      final columns = c.maxWidth > 950 ? 3 : c.maxWidth > 600 ? 2 : 1;
+      final width = (c.maxWidth - (columns - 1) * 20) / columns;
+      return Wrap(spacing: 20, runSpacing: 20, children: products.map((path) => Container(
+        width: width,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
+        child: Column(children: [
+          SizedBox(height: 260, child: Image.asset(path, fit: BoxFit.contain)),
+          const SizedBox(height: 16),
+          Text(t['instant'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF07304F))),
+          const SizedBox(height: 8),
+          Text(t['singleServe'], style: const TextStyle(color: Color(0xFF677986))),
+        ]),
+      )).toList());
+    }),
+  );
 
-  Widget _success() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 70,
-          height: 70,
-          decoration: const BoxDecoration(
-            color: Color(0xFFE5F8F4),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.check_rounded,
-            color: Color(0xFF078F79),
-            size: 36,
-          ),
-        ),
-        const SizedBox(height: 22),
-        const Text(
-          'Brief received',
-          style: TextStyle(
-            color: EmanExperienceApp.ink,
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: 12),
-        const Text(
-          'Thank you. Our partnership team will review your opportunity and '
-          'follow up with the right next step.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: EmanExperienceApp.muted, height: 1.6),
-        ),
-        const SizedBox(height: 24),
-        FilledButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Back to the website'),
-        ),
-      ],
-    );
-  }
+  Widget _privateLabel(BuildContext context) => _section(
+    context,
+    title: t['privateLabel'],
+    subtitle: t['privateBody'],
+    child: Container(
+      padding: const EdgeInsets.all(36),
+      decoration: BoxDecoration(color: const Color(0xFF07304F), borderRadius: BorderRadius.circular(34)),
+      child: LayoutBuilder(builder: (_, c) => Wrap(spacing: 18, runSpacing: 18, children: [
+        _feature(Icons.science_outlined, t['formula']),
+        _feature(Icons.palette_outlined, t['packaging']),
+        _feature(Icons.precision_manufacturing_outlined, t['production']),
+        _feature(Icons.public, t['exportReady']),
+      ])),
+    ),
+  );
+
+  Widget _feature(IconData icon, String label) => Container(
+    width: 245,
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(color: Colors.white.withValues(alpha: .08), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white24)),
+    child: Row(children: [Icon(icon, color: const Color(0xFFFFCF65)), const SizedBox(width: 14), Expanded(child: Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))]),
+  );
+
+  Widget _export(BuildContext context) => _section(
+    context,
+    title: t['export'],
+    subtitle: t['exportBody'],
+    background: const Color(0xFFFFF7EA),
+    child: Wrap(spacing: 18, runSpacing: 18, alignment: WrapAlignment.center, children: [
+      _stat('20+', t['markets']), _stat('30+', t['flavors']), _stat('4', t['brandsCount']), _stat('6', t['languages']),
+    ]),
+  );
+
+  Widget _stat(String value, String label) => Container(
+    width: 220,
+    padding: const EdgeInsets.all(28),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+    child: Column(children: [Text(value, style: const TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: Color(0xFF0878C9))), Text(label, textAlign: TextAlign.center)]),
+  );
+
+  Widget _contact(BuildContext context) => _section(
+    context,
+    title: t['contact'],
+    subtitle: t['contactBody'],
+    child: Center(child: FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.arrow_outward), label: Text(t['startProject']))),
+  );
+
+  Widget _section(BuildContext context, {required String title, required String subtitle, required Widget child, Color background = Colors.white}) => Container(
+    color: background,
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 96),
+    child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 1280), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(title, style: const TextStyle(fontSize: 46, height: 1.05, fontWeight: FontWeight.w900, color: Color(0xFF07304F))),
+      const SizedBox(height: 14),
+      ConstrainedBox(constraints: const BoxConstraints(maxWidth: 720), child: Text(subtitle, style: const TextStyle(fontSize: 17, height: 1.6, color: Color(0xFF657985)))),
+      const SizedBox(height: 46),
+      child,
+    ]))),
+  );
+
+  Widget _footer() => Container(
+    color: const Color(0xFF05283F),
+    padding: const EdgeInsets.all(42),
+    child: Row(children: [Image.asset(logo, height: 50), const Spacer(), Text(t['footer'], style: const TextStyle(color: Colors.white70))]),
+  );
 }
 
-class SiteFooter extends StatelessWidget {
-  const SiteFooter({super.key});
+class Copy {
+  Copy(this.language);
+  final String language;
+  static const languages = ['en', 'tr', 'ar', 'es', 'pt', 'ru'];
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: EmanExperienceApp.ink,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 700;
-              const brand = Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EmanMark(),
-                  SizedBox(height: 16),
-                  Text(
-                    'Beverage innovation, manufacturing\nand export partnerships.',
-                    style: TextStyle(color: Color(0xFF9DABB7), height: 1.55),
-                  ),
-                ],
-              );
-              const legal = Text(
-                '© 2026 Eman Experience  ·  B2B partnerships',
-                style: TextStyle(color: Color(0xFF7C8D9B), fontSize: 12),
-              );
-              return compact
-                  ? const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [brand, SizedBox(height: 36), legal],
-                    )
-                  : const Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [brand, Spacer(), legal],
-                    );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  String operator [](String key) => (_data[language] ?? _data['en']!)[key] ?? key;
+
+  static const Map<String, Map<String, String>> _data = {
+    'en': {'eyebrow':'GLOBAL BEVERAGE MANUFACTURER','hero':'Flavor made for the world.','heroBody':'EMAN creates colorful, high-performing powdered beverages for retail, foodservice, distributors and private-label partners.','explore':'Explore products','privateLabel':'Private Label','brands':'Our brands','brandsBody':'Four distinctive brands built for different channels, markets and consumer moments.','products':'Featured products','productsBody':'Real products, real flavors and flexible formats for everyday refreshment.','instant':'Instant powdered drink','singleServe':'Single-serve retail format','privateBody':'From formulation to shelf-ready packaging, we build complete beverage programs for your brand.','formula':'Custom formulation','packaging':'Packaging design','production':'Scalable production','exportReady':'Export support','export':'Made to travel','exportBody':'A multilingual, export-focused partner prepared for international distribution and long-term growth.','markets':'Markets served','flavors':'Flavor concepts','brandsCount':'Portfolio brands','languages':'Website languages','contact':'Let’s create your next beverage line.','contactBody':'Tell us about your market, target format and business goals.','startProject':'Start a project','footer':'EMAN · Beverage innovation and manufacturing'},
+    'tr': {'eyebrow':'KÜRESEL İÇECEK ÜRETİCİSİ','hero':'Dünya için üretilen lezzet.','heroBody':'EMAN; perakende, horeca, distribütör ve private label ortakları için renkli ve güçlü toz içecekler üretir.','explore':'Ürünleri keşfet','privateLabel':'Özel Marka','brands':'Markalarımız','brandsBody':'Farklı kanallar ve pazarlar için geliştirilen dört güçlü marka.','products':'Öne çıkan ürünler','productsBody':'Günlük ferahlık için gerçek ürünler, gerçek aromalar ve esnek formatlar.','instant':'Toz içecek','singleServe':'Tek kullanımlık perakende formatı','privateBody':'Formülden raf hazır ambalaja kadar markanız için eksiksiz içecek programları oluşturuyoruz.','formula':'Özel formül','packaging':'Ambalaj tasarımı','production':'Ölçeklenebilir üretim','exportReady':'İhracat desteği','export':'Dünyaya hazır','exportBody':'Uluslararası dağıtım ve uzun vadeli büyüme için çok dilli, ihracat odaklı ortak.','markets':'Hizmet verilen pazar','flavors':'Aroma konsepti','brandsCount':'Portföy markası','languages':'Site dili','contact':'Yeni içecek serinizi birlikte oluşturalım.','contactBody':'Pazarınızı, formatınızı ve hedeflerinizi bize anlatın.','startProject':'Projeye başla','footer':'EMAN · İçecek inovasyonu ve üretimi'},
+    'ar': {'eyebrow':'مصنّع مشروبات عالمي','hero':'نكهات صُنعت للعالم.','heroBody':'تطوّر EMAN مشروبات بودرة ملونة وعالية الجودة لقطاع التجزئة والمطاعم والموزعين وشركاء العلامة الخاصة.','explore':'استكشف المنتجات','privateLabel':'العلامة الخاصة','brands':'علاماتنا التجارية','brandsBody':'أربع علامات مميزة مصممة لقنوات وأسواق وتجارب استهلاكية مختلفة.','products':'منتجات مختارة','productsBody':'منتجات حقيقية ونكهات متنوعة وأحجام مرنة للانتعاش اليومي.','instant':'مشروب بودرة سريع التحضير','singleServe':'عبوة فردية للبيع بالتجزئة','privateBody':'من تطوير الوصفة إلى التغليف الجاهز للعرض، نبني برنامج مشروبات متكاملًا لعلامتك.','formula':'تطوير وصفة خاصة','packaging':'تصميم التغليف','production':'إنتاج قابل للتوسع','exportReady':'دعم التصدير','export':'مصمم للأسواق العالمية','exportBody':'شريك متعدد اللغات يركز على التصدير والتوزيع الدولي والنمو طويل الأمد.','markets':'سوقًا نخدمه','flavors':'فكرة نكهة','brandsCount':'علامات تجارية','languages':'لغات الموقع','contact':'لنصنع خط مشروباتك القادم.','contactBody':'أخبرنا عن سوقك والحجم المطلوب وأهداف مشروعك.','startProject':'ابدأ مشروعك','footer':'EMAN · ابتكار وتصنيع المشروبات'},
+    'es': {'eyebrow':'FABRICANTE GLOBAL DE BEBIDAS','hero':'Sabor creado para el mundo.','heroBody':'EMAN crea bebidas en polvo coloridas para retail, foodservice, distribuidores y marcas privadas.','explore':'Ver productos','privateLabel':'Marca privada','brands':'Nuestras marcas','brandsBody':'Cuatro marcas para distintos canales y mercados.','products':'Productos destacados','productsBody':'Productos reales, sabores diversos y formatos flexibles.','instant':'Bebida instantánea en polvo','singleServe':'Formato individual','privateBody':'De la fórmula al envase listo para vender.','formula':'Fórmula personalizada','packaging':'Diseño de envase','production':'Producción escalable','exportReady':'Apoyo a exportación','export':'Listo para el mundo','exportBody':'Socio multilingüe orientado a la distribución internacional.','markets':'Mercados','flavors':'Sabores','brandsCount':'Marcas','languages':'Idiomas','contact':'Creemos su próxima línea.','contactBody':'Cuéntenos su mercado y objetivos.','startProject':'Iniciar proyecto','footer':'EMAN · Innovación y fabricación de bebidas'},
+    'pt': {'eyebrow':'FABRICANTE GLOBAL DE BEBIDAS','hero':'Sabor feito para o mundo.','heroBody':'A EMAN cria bebidas em pó para varejo, foodservice, distribuidores e marcas próprias.','explore':'Ver produtos','privateLabel':'Marca própria','brands':'Nossas marcas','brandsBody':'Quatro marcas para diferentes canais e mercados.','products':'Produtos em destaque','productsBody':'Produtos reais, sabores variados e formatos flexíveis.','instant':'Bebida instantânea em pó','singleServe':'Formato individual','privateBody':'Da fórmula à embalagem pronta para venda.','formula':'Fórmula personalizada','packaging':'Design de embalagem','production':'Produção escalável','exportReady':'Suporte à exportação','export':'Pronto para o mundo','exportBody':'Parceiro multilíngue focado em distribuição internacional.','markets':'Mercados','flavors':'Sabores','brandsCount':'Marcas','languages':'Idiomas','contact':'Vamos criar sua próxima linha.','contactBody':'Conte-nos sobre seu mercado e objetivos.','startProject':'Iniciar projeto','footer':'EMAN · Inovação e fabricação de bebidas'},
+    'ru': {'eyebrow':'МЕЖДУНАРОДНЫЙ ПРОИЗВОДИТЕЛЬ НАПИТКОВ','hero':'Вкус, созданный для мира.','heroBody':'EMAN производит порошковые напитки для розницы, HoReCa, дистрибьюторов и частных марок.','explore':'Смотреть продукты','privateLabel':'Частная марка','brands':'Наши бренды','brandsBody':'Четыре бренда для разных каналов и рынков.','products':'Популярные продукты','productsBody':'Реальные продукты, яркие вкусы и гибкие форматы.','instant':'Растворимый порошковый напиток','singleServe':'Порционный формат','privateBody':'От рецептуры до готовой упаковки.','formula':'Индивидуальная рецептура','packaging':'Дизайн упаковки','production':'Масштабируемое производство','exportReady':'Экспортная поддержка','export':'Готово для мира','exportBody':'Многоязычный партнер для международной дистрибуции.','markets':'Рынков','flavors':'Вкусов','brandsCount':'Бренда','languages':'Языков','contact':'Создадим вашу следующую линейку.','contactBody':'Расскажите о рынке и целях проекта.','startProject':'Начать проект','footer':'EMAN · Инновации и производство напитков'},
+  };
 }
