@@ -1,30 +1,48 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:eman_experience/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:eman_experience/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('renders the international manufacturer homepage', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const EmanExperienceApp());
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.text('EMAN'), findsWidgets);
+    expect(find.text('Quality beverages. Made for the world.'), findsOneWidget);
+    expect(find.text('Explore Products'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('switches to Arabic with RTL layout', (tester) async {
+    await tester.pumpWidget(const EmanExperienceApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('English'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('العربية').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('مشروبات عالية الجودة. صُنعت للعالم.'), findsOneWidget);
+    final hasRtl = tester
+        .widgetList<Directionality>(find.byType(Directionality))
+        .any((widget) => widget.textDirection == TextDirection.rtl);
+    expect(hasRtl, isTrue);
+  });
+
+  testWidgets('persists the selected language', (tester) async {
+    SharedPreferences.setMockInitialValues({'eman_language': 'tr'});
+    await tester.pumpWidget(const EmanExperienceApp());
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Kaliteli içecekler. Dünya için üretildi.'),
+      findsOneWidget,
+    );
   });
 }
