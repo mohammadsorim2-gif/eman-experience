@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -129,9 +131,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
   }
 
   void _scrollTo(GlobalKey key) {
-    final context = key.currentContext;
-    if (context == null) return;
-    Scrollable.ensureVisible(context, duration: const Duration(milliseconds: 650), curve: Curves.easeOutCubic);
+    final target = key.currentContext;
+    if (target == null) return;
+    Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 650), curve: Curves.easeOutCubic);
   }
 
   void _openQuote() {
@@ -210,11 +212,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         onPressed: _openQuote,
         backgroundColor: EmanExperienceApp.navy,
         foregroundColor: Colors.white,
-        icon: Badge(
-          isLabelVisible: _quote.isNotEmpty,
-          label: Text('${_quote.length}'),
-          child: const Icon(Icons.request_quote_outlined),
-        ),
+        icon: Badge(isLabelVisible: _quote.isNotEmpty, label: Text('${_quote.length}'), child: const Icon(Icons.request_quote_outlined)),
         label: const Text('Request Quote'),
       ),
     );
@@ -234,11 +232,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               TextButton(onPressed: () => _scrollTo(_privateLabelKey), child: const Text('Private Label')),
               const SizedBox(width: 10),
             ],
-            FilledButton.icon(
-              onPressed: _openQuote,
-              icon: const Icon(Icons.request_quote_outlined),
-              label: Text(compact ? '${_quote.length}' : 'Quote List ${_quote.length}'),
-            ),
+            FilledButton.icon(onPressed: _openQuote, icon: const Icon(Icons.request_quote_outlined), label: Text(compact ? '${_quote.length}' : 'Quote List ${_quote.length}')),
           ]);
         }),
       );
@@ -265,28 +259,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
             const Text('Discover our beverage portfolio, explore every flavor and create your quotation request in seconds.', style: TextStyle(color: Colors.white70, fontSize: 18, height: 1.6)),
             const SizedBox(height: 30),
             Wrap(spacing: 12, runSpacing: 12, children: [
-              FilledButton.icon(
-                onPressed: () => _scrollTo(_productsKey),
-                style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: EmanExperienceApp.navy, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)),
-                icon: const Icon(Icons.grid_view_rounded),
-                label: const Text('Explore Products'),
-              ),
-              OutlinedButton.icon(
-                onPressed: _openQuote,
-                style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.white54), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)),
-                icon: const Icon(Icons.request_quote_outlined),
-                label: const Text('Request a Quote'),
-              ),
+              FilledButton.icon(onPressed: () => _scrollTo(_productsKey), style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: EmanExperienceApp.navy, padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)), icon: const Icon(Icons.grid_view_rounded), label: const Text('Explore Products')),
+              OutlinedButton.icon(onPressed: _openQuote, style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.white54), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)), icon: const Icon(Icons.request_quote_outlined), label: const Text('Request a Quote')),
             ]),
           ]),
         );
         final visual = Stack(alignment: Alignment.center, children: [
           Container(width: 390, height: 390, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: .08), border: Border.all(color: Colors.white24))),
           for (var i = 0; i < samples.length; i++)
-            Transform.translate(
-              offset: Offset((i - 1) * 95, i == 1 ? -18 : 38),
-              child: Transform.rotate(angle: (i - 1) * .10, child: SizedBox(width: i == 1 ? 210 : 175, height: i == 1 ? 350 : 300, child: Image.asset(samples[i], fit: BoxFit.contain))),
-            ),
+            Transform.translate(offset: Offset((i - 1) * 95, i == 1 ? -18 : 38), child: Transform.rotate(angle: (i - 1) * .10, child: SizedBox(width: i == 1 ? 210 : 175, height: i == 1 ? 350 : 300, child: Image.asset(samples[i], fit: BoxFit.contain)))),
         ]);
         return compact ? Column(children: [copy, SizedBox(height: 390, child: visual)]) : Row(children: [Expanded(flex: 11, child: copy), Expanded(flex: 9, child: visual)]);
       }),
@@ -409,7 +390,7 @@ class _ProductCardState extends State<ProductCard> {
                   const SizedBox(height: 7),
                   Text(widget.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: EmanExperienceApp.navy, fontSize: 20, fontWeight: FontWeight.w900)),
                   const SizedBox(height: 8),
-                  const Text('View details', style: TextStyle(color: Color(0xFF77899B), fontSize: 12)),
+                  const Text('Click to rotate 360°', style: TextStyle(color: Color(0xFF77899B), fontSize: 12)),
                 ])),
                 IconButton.filled(onPressed: widget.onToggle, style: IconButton.styleFrom(backgroundColor: widget.selected ? EmanExperienceApp.primary : const Color(0xFFE7F2FF), foregroundColor: widget.selected ? Colors.white : EmanExperienceApp.primary), icon: Icon(widget.selected ? Icons.check : Icons.add)),
               ]),
@@ -421,7 +402,7 @@ class _ProductCardState extends State<ProductCard> {
   }
 }
 
-class ProductDialog extends StatelessWidget {
+class ProductDialog extends StatefulWidget {
   const ProductDialog({super.key, required this.path, required this.name, required this.brand, required this.selected, required this.onToggle});
   final String path;
   final String name;
@@ -430,29 +411,128 @@ class ProductDialog extends StatelessWidget {
   final VoidCallback onToggle;
 
   @override
+  State<ProductDialog> createState() => _ProductDialogState();
+}
+
+class _ProductDialogState extends State<ProductDialog> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  double _rotation = 0;
+  double _dragStart = 0;
+  double _rotationStart = 0;
+  bool _autoSpin = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 7))
+      ..addListener(() {
+        if (_autoSpin && mounted) setState(() => _rotation = _controller.value * math.pi * 2);
+      })
+      ..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _startDrag(DragStartDetails details) {
+    setState(() => _autoSpin = false);
+    _dragStart = details.localPosition.dx;
+    _rotationStart = _rotation;
+  }
+
+  void _drag(DragUpdateDetails details) {
+    setState(() => _rotation = _rotationStart + (details.localPosition.dx - _dragStart) * .012);
+  }
+
+  void _toggleSpin() {
+    setState(() {
+      _autoSpin = !_autoSpin;
+      if (_autoSpin) {
+        _controller.value = ((_rotation % (math.pi * 2)) / (math.pi * 2)).clamp(0, 1);
+        _controller.repeat();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: const EdgeInsets.all(24),
+      insetPadding: const EdgeInsets.all(18),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 920),
+        constraints: const BoxConstraints(maxWidth: 980),
         child: Padding(
           padding: const EdgeInsets.all(28),
           child: LayoutBuilder(builder: (_, c) {
             final compact = c.maxWidth < 700;
-            final image = Container(height: compact ? 330 : 500, padding: const EdgeInsets.all(26), decoration: BoxDecoration(color: const Color(0xFFF0F7FE), borderRadius: BorderRadius.circular(24)), child: Hero(tag: path, child: Image.asset(path, fit: BoxFit.contain)));
+            final viewer = Container(
+              height: compact ? 390 : 540,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F7FE),
+                borderRadius: BorderRadius.circular(24),
+                gradient: const RadialGradient(colors: [Colors.white, Color(0xFFE5F1FC)]),
+              ),
+              child: Stack(children: [
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragStart: _startDrag,
+                    onHorizontalDragUpdate: _drag,
+                    child: Center(
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, .0016)
+                          ..rotateY(_rotation),
+                        child: Padding(
+                          padding: const EdgeInsets.all(38),
+                          child: Image.asset(widget.path, fit: BoxFit.contain),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 16,
+                  left: 16,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: .9), borderRadius: BorderRadius.circular(30)),
+                    child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.threesixty, size: 20, color: EmanExperienceApp.primary), SizedBox(width: 7), Text('360° VIEW', style: TextStyle(fontWeight: FontWeight.w900, color: EmanExperienceApp.navy))]),
+                  ),
+                ),
+                Positioned(
+                  right: 14,
+                  top: 14,
+                  child: IconButton.filledTonal(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+                ),
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    FilledButton.tonalIcon(onPressed: _toggleSpin, icon: Icon(_autoSpin ? Icons.pause : Icons.play_arrow), label: Text(_autoSpin ? 'Pause rotation' : 'Auto rotate')),
+                    const SizedBox(width: 10),
+                    const Flexible(child: Text('Drag left or right to rotate', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF60758A), fontWeight: FontWeight.w600))),
+                  ]),
+                ),
+              ]),
+            );
             final info = Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(brand.toUpperCase(), style: const TextStyle(color: EmanExperienceApp.primary, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+              Text(widget.brand.toUpperCase(), style: const TextStyle(color: EmanExperienceApp.primary, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
               const SizedBox(height: 12),
-              Text(name, style: const TextStyle(color: EmanExperienceApp.navy, fontSize: 36, fontWeight: FontWeight.w900)),
+              Text(widget.name, style: const TextStyle(color: EmanExperienceApp.navy, fontSize: 36, fontWeight: FontWeight.w900)),
               const SizedBox(height: 18),
-              const Text('Instant flavored powder drink developed for reliable taste, easy preparation and international distribution.', style: TextStyle(color: Color(0xFF64788D), fontSize: 16, height: 1.6)),
+              const Text('Interactive product presentation. Rotate the package with your mouse or finger and inspect it from every direction.', style: TextStyle(color: Color(0xFF64788D), fontSize: 16, height: 1.6)),
               const SizedBox(height: 24),
-              const Wrap(spacing: 10, runSpacing: 10, children: [Chip(label: Text('Instant drink')), Chip(label: Text('Export ready')), Chip(label: Text('Multiple markets'))]),
+              const Wrap(spacing: 10, runSpacing: 10, children: [Chip(label: Text('Interactive 360°')), Chip(label: Text('Export ready')), Chip(label: Text('Multiple markets'))]),
               const SizedBox(height: 26),
-              SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: onToggle, icon: Icon(selected ? Icons.check : Icons.add), label: Text(selected ? 'Added to Quote' : 'Add to Quote'), style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 18)))),
+              SizedBox(width: double.infinity, child: FilledButton.icon(onPressed: widget.onToggle, icon: Icon(widget.selected ? Icons.check : Icons.add), label: Text(widget.selected ? 'Added to Quote' : 'Add to Quote'), style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 18)))),
             ]);
-            return compact ? SingleChildScrollView(child: Column(children: [image, const SizedBox(height: 26), info])) : Row(children: [Expanded(child: image), const SizedBox(width: 34), Expanded(child: info)]);
+            return compact ? SingleChildScrollView(child: Column(children: [viewer, const SizedBox(height: 26), info])) : Row(children: [Expanded(flex: 11, child: viewer), const SizedBox(width: 34), Expanded(flex: 9, child: info)]);
           }),
         ),
       ),
