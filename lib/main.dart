@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/app_i18n.dart';
 import 'core/app_language.dart';
+import 'screens/factory/advanced_factory_dashboard.dart';
 import 'screens/home/localized_home.dart';
 import 'screens/localized/localized_dashboards.dart';
 import 'screens/partner/advanced_partner_dashboard.dart';
@@ -118,7 +119,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
     LocalizedBecomePartnerPage(),
     LocalizedRfqBuilder(),
     AdvancedPartnerDashboard(),
-    LocalizedFactoryDashboard(),
+    AdvancedFactoryDashboard(),
     LocalizedExecutiveDashboard(),
     LocalizedAdminDashboard(),
   ];
