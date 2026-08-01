@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'screens/executive/executive_dashboard.dart';
 import 'screens/factory/factory_dashboard.dart';
 
 void main() {
@@ -52,6 +53,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
     ProductsPage(),
     BecomePartnerPage(),
     PartnerDashboard(),
+    ExecutiveDashboard(),
     FactoryDashboard(),
     AdminPreviewPage(),
   ];
@@ -61,6 +63,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
     (Icons.inventory_2_outlined, Icons.inventory_2, 'Products'),
     (Icons.person_add_alt_outlined, Icons.person_add_alt, 'Partner'),
     (Icons.dashboard_outlined, Icons.dashboard, 'Partner Dashboard'),
+    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'Executive Center'),
     (Icons.factory_outlined, Icons.factory, 'EMAN Factory'),
     (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'Admin'),
   ];
@@ -115,7 +118,12 @@ class _EmanOneShellState extends State<EmanOneShell> {
                   .toList(),
             ),
             const VerticalDivider(width: 1),
-            Expanded(child: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: pages[currentIndex])),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: pages[currentIndex],
+              ),
+            ),
           ],
         ),
       );
@@ -146,14 +154,24 @@ class _EmanOneShellState extends State<EmanOneShell> {
         children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 24, 16, 12),
-            child: Text('EMAN ONE', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+            child: Text(
+              'EMAN ONE',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+            ),
           ),
           ...destinations.map(
-            (item) => NavigationDrawerDestination(icon: Icon(item.$1), selectedIcon: Icon(item.$2), label: Text(item.$3)),
+            (item) => NavigationDrawerDestination(
+              icon: Icon(item.$1),
+              selectedIcon: Icon(item.$2),
+              label: Text(item.$3),
+            ),
           ),
         ],
       ),
-      body: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: pages[currentIndex]),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: pages[currentIndex],
+      ),
     );
   }
 }
