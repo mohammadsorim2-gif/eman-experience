@@ -90,16 +90,16 @@ class FactoryDashboard extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final stacked = constraints.maxWidth < 980;
-            final production = const _ProductionBoard();
-            final alerts = const _FactoryAlerts();
+            const production = _ProductionBoard();
+            const alerts = _FactoryAlerts();
             if (stacked) {
-              return const Column(
-                children: [production, SizedBox(height: 18), alerts],
+              return Column(
+                children: [production, const SizedBox(height: 18), alerts],
               );
             }
-            return const Row(
+            return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Expanded(flex: 3, child: production),
                 SizedBox(width: 18),
                 Expanded(flex: 2, child: alerts),
