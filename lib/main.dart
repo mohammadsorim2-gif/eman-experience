@@ -7,6 +7,7 @@ import 'core/app_i18n.dart';
 import 'core/app_language.dart';
 import 'screens/home/localized_home.dart';
 import 'screens/localized/localized_dashboards.dart';
+import 'screens/products/advanced_product_catalog.dart';
 import 'screens/public/localized_commerce_pages.dart';
 import 'screens/rfq/localized_rfq_builder.dart';
 
@@ -112,7 +113,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
 
   static const pages = [
     LocalizedHome(),
-    LocalizedProductsPage(),
+    AdvancedProductCatalog(),
     LocalizedBecomePartnerPage(),
     LocalizedRfqBuilder(),
     LocalizedPartnerDashboard(),
