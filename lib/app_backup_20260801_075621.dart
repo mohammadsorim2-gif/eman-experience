@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(const EmanExperienceApp());
@@ -31,27 +30,23 @@ class Home extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             Container(
-              padding: const EdgeInsets.symmetric(horizontal:40,vertical:22),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
               color: Colors.white,
               child: Row(
                 children: [
-                  Image.asset(
-                    "assets/logos/Eman logo.png",
-                    height: 42,
-                  ),
+                  Image.asset("assets/logos/Eman logo.png", height: 42),
                   const Spacer(),
                   const Text("Products"),
-                  const SizedBox(width:30),
+                  const SizedBox(width: 30),
                   const Text("Private Label"),
-                  const SizedBox(width:30),
+                  const SizedBox(width: 30),
                   const Text("Export"),
-                  const SizedBox(width:30),
+                  const SizedBox(width: 30),
                   FilledButton(
-                    onPressed: (){},
+                    onPressed: () {},
                     child: const Text("Request Quote"),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -60,54 +55,52 @@ class Home extends StatelessWidget {
               padding: const EdgeInsets.all(70),
               child: Row(
                 children: [
-
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         const Text(
                           "GLOBAL FOOD MANUFACTURER",
                           style: TextStyle(
-                            letterSpacing:2,
+                            letterSpacing: 2,
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
 
-                        const SizedBox(height:25),
+                        const SizedBox(height: 25),
 
                         const Text(
                           "Manufacturing\nfor the world.",
                           style: TextStyle(
-                            fontSize:62,
+                            fontSize: 62,
                             fontWeight: FontWeight.w900,
-                            height:1,
+                            height: 1,
                           ),
                         ),
 
-                        const SizedBox(height:25),
+                        const SizedBox(height: 25),
 
                         const Text(
                           "Premium beverage manufacturer supplying wholesalers, distributors and private label partners.",
-                          style: TextStyle(fontSize:20),
+                          style: TextStyle(fontSize: 20),
                         ),
 
-                        const SizedBox(height:40),
+                        const SizedBox(height: 40),
 
                         Row(
-                          children:[
+                          children: [
                             FilledButton(
-                              onPressed:(){},
-                              child:const Text("Explore Products"),
+                              onPressed: () {},
+                              child: const Text("Explore Products"),
                             ),
-                            const SizedBox(width:20),
+                            const SizedBox(width: 20),
                             OutlinedButton(
-                              onPressed:(){},
-                              child:const Text("Become Partner"),
-                            )
+                              onPressed: () {},
+                              child: const Text("Become Partner"),
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -116,9 +109,8 @@ class Home extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-
                         Container(
-                          height:520,
+                          height: 520,
                           decoration: BoxDecoration(
                             color: const Color(0xffeef6ff),
                             borderRadius: BorderRadius.circular(35),
@@ -127,17 +119,14 @@ class Home extends StatelessWidget {
 
                         Image.asset(
                           "assets/products/friocups/9g-orange-flavored-powder-drink-friocups.png",
-                          height:340,
+                          height: 340,
                         ),
-
                       ],
                     ),
-                  )
-
+                  ),
                 ],
               ),
             ),
-
           ],
         ),
       ),

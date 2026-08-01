@@ -63,7 +63,10 @@ class _HomePage extends StatelessWidget {
             actions: [
               if (MediaQuery.sizeOf(context).width > 800) ...[
                 TextButton(onPressed: () {}, child: const Text('Products')),
-                TextButton(onPressed: () {}, child: const Text('Private Label')),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Private Label'),
+                ),
                 TextButton(onPressed: () {}, child: const Text('Export')),
               ],
               const SizedBox(width: 16),
@@ -121,15 +124,25 @@ class _HomePage extends StatelessWidget {
                   const SizedBox(height: 24),
                   const Text(
                     'EMAN creates high-performing powdered beverages for distributors, wholesalers, foodservice and private-label partners.',
-                    style: TextStyle(fontSize: 18, height: 1.6, color: Color(0xFF5B6D79)),
+                    style: TextStyle(
+                      fontSize: 18,
+                      height: 1.6,
+                      color: Color(0xFF5B6D79),
+                    ),
                   ),
                   const SizedBox(height: 30),
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
                     children: [
-                      FilledButton(onPressed: () {}, child: const Text('Explore products')),
-                      OutlinedButton(onPressed: () {}, child: const Text('Private Label')),
+                      FilledButton(
+                        onPressed: () {},
+                        child: const Text('Explore products'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {},
+                        child: const Text('Private Label'),
+                      ),
                     ],
                   ),
                 ],
@@ -140,7 +153,11 @@ class _HomePage extends StatelessWidget {
                   color: EmanRemoteApp._cream,
                   borderRadius: BorderRadius.circular(36),
                   boxShadow: const [
-                    BoxShadow(color: Color(0x18000000), blurRadius: 40, offset: Offset(0, 18)),
+                    BoxShadow(
+                      color: Color(0x18000000),
+                      blurRadius: 40,
+                      offset: Offset(0, 18),
+                    ),
                   ],
                 ),
                 child: Stack(
@@ -149,19 +166,30 @@ class _HomePage extends StatelessWidget {
                     Positioned(
                       left: 12,
                       bottom: 12,
-                      child: _RemoteImage(EmanRemoteApp.media(products[2]), width: compact ? 150 : 210),
+                      child: _RemoteImage(
+                        EmanRemoteApp.media(products[2]),
+                        width: compact ? 150 : 210,
+                      ),
                     ),
-                    _RemoteImage(EmanRemoteApp.media(products[0]), width: compact ? 220 : 300),
+                    _RemoteImage(
+                      EmanRemoteApp.media(products[0]),
+                      width: compact ? 220 : 300,
+                    ),
                     Positioned(
                       right: 12,
                       bottom: 12,
-                      child: _RemoteImage(EmanRemoteApp.media(products[1]), width: compact ? 150 : 210),
+                      child: _RemoteImage(
+                        EmanRemoteApp.media(products[1]),
+                        width: compact ? 150 : 210,
+                      ),
                     ),
                   ],
                 ),
               );
               if (compact) {
-                return Column(children: [copy, const SizedBox(height: 42), visual]);
+                return Column(
+                  children: [copy, const SizedBox(height: 42), visual],
+                );
               }
               return SizedBox(
                 height: 650,
@@ -183,10 +211,13 @@ class _HomePage extends StatelessWidget {
   Widget _brands(BuildContext context) {
     return _section(
       title: 'Our brands',
-      subtitle: 'Four distinctive brands built for different channels, markets and consumer moments.',
+      subtitle:
+          'Four distinctive brands built for different channels, markets and consumer moments.',
       child: LayoutBuilder(
         builder: (_, c) {
-          final w = c.maxWidth > 850 ? (c.maxWidth - 54) / 4 : (c.maxWidth - 18) / 2;
+          final w = c.maxWidth > 850
+              ? (c.maxWidth - 54) / 4
+              : (c.maxWidth - 18) / 2;
           return Wrap(
             spacing: 18,
             runSpacing: 18,
@@ -201,7 +232,10 @@ class _HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(color: const Color(0xFFE5EBEF)),
                     ),
-                    child: _RemoteImage(EmanRemoteApp.media(path), fit: BoxFit.contain),
+                    child: _RemoteImage(
+                      EmanRemoteApp.media(path),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 )
                 .toList(),
@@ -215,10 +249,15 @@ class _HomePage extends StatelessWidget {
     return _section(
       background: const Color(0xFFF4FAFD),
       title: 'Featured products',
-      subtitle: 'Real products, real flavors and flexible formats for international distribution.',
+      subtitle:
+          'Real products, real flavors and flexible formats for international distribution.',
       child: LayoutBuilder(
         builder: (_, c) {
-          final columns = c.maxWidth > 950 ? 3 : c.maxWidth > 600 ? 2 : 1;
+          final columns = c.maxWidth > 950
+              ? 3
+              : c.maxWidth > 600
+              ? 2
+              : 1;
           final w = (c.maxWidth - (columns - 1) * 20) / columns;
           return Wrap(
             spacing: 20,
@@ -228,14 +267,33 @@ class _HomePage extends StatelessWidget {
                   (path) => Container(
                     width: w,
                     padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                    ),
                     child: Column(
                       children: [
-                        SizedBox(height: 260, child: _RemoteImage(EmanRemoteApp.media(path), fit: BoxFit.contain)),
+                        SizedBox(
+                          height: 260,
+                          child: _RemoteImage(
+                            EmanRemoteApp.media(path),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                         const SizedBox(height: 16),
-                        const Text('Instant powdered drink', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: EmanRemoteApp._navy)),
+                        const Text(
+                          'Instant powdered drink',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: EmanRemoteApp._navy,
+                          ),
+                        ),
                         const SizedBox(height: 8),
-                        const Text('Wholesale and export format', style: TextStyle(color: Color(0xFF697B87))),
+                        const Text(
+                          'Wholesale and export format',
+                          style: TextStyle(color: Color(0xFF697B87)),
+                        ),
                       ],
                     ),
                   ),
@@ -247,7 +305,12 @@ class _HomePage extends StatelessWidget {
     );
   }
 
-  Widget _section({required String title, required String subtitle, required Widget child, Color background = Colors.white}) {
+  Widget _section({
+    required String title,
+    required String subtitle,
+    required Widget child,
+    Color background = Colors.white,
+  }) {
     return Container(
       color: background,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 92),
@@ -257,11 +320,26 @@ class _HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 46, height: 1.05, fontWeight: FontWeight.w900, color: EmanRemoteApp._navy)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 46,
+                  height: 1.05,
+                  fontWeight: FontWeight.w900,
+                  color: EmanRemoteApp._navy,
+                ),
+              ),
               const SizedBox(height: 14),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 720),
-                child: Text(subtitle, style: const TextStyle(fontSize: 17, height: 1.6, color: Color(0xFF657985))),
+                child: Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    height: 1.6,
+                    color: Color(0xFF657985),
+                  ),
+                ),
               ),
               const SizedBox(height: 46),
               child,
@@ -286,13 +364,26 @@ class _PrivateLabel extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1260),
           child: Container(
             padding: const EdgeInsets.all(42),
-            decoration: BoxDecoration(color: EmanRemoteApp._navy, borderRadius: BorderRadius.circular(34)),
+            decoration: BoxDecoration(
+              color: EmanRemoteApp._navy,
+              borderRadius: BorderRadius.circular(34),
+            ),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Private Label', style: TextStyle(color: Colors.white, fontSize: 44, fontWeight: FontWeight.w900)),
+                Text(
+                  'Private Label',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 44,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 SizedBox(height: 14),
-                Text('From formulation and packaging to scalable production and export support.', style: TextStyle(color: Colors.white70, fontSize: 18)),
+                Text(
+                  'From formulation and packaging to scalable production and export support.',
+                  style: TextStyle(color: Colors.white70, fontSize: 18),
+                ),
               ],
             ),
           ),
@@ -311,7 +402,14 @@ class _ExportSection extends StatelessWidget {
       color: EmanRemoteApp._cream,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 92),
       child: const Center(
-        child: Text('Built for global distribution', style: TextStyle(fontSize: 46, fontWeight: FontWeight.w900, color: EmanRemoteApp._navy)),
+        child: Text(
+          'Built for global distribution',
+          style: TextStyle(
+            fontSize: 46,
+            fontWeight: FontWeight.w900,
+            color: EmanRemoteApp._navy,
+          ),
+        ),
       ),
     );
   }
@@ -326,14 +424,27 @@ class _ContactSection extends StatelessWidget {
       color: EmanRemoteApp._navy,
       padding: const EdgeInsets.all(56),
       child: const Center(
-        child: Text('Let’s create your next beverage line.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 38, fontWeight: FontWeight.w900)),
+        child: Text(
+          'Let’s create your next beverage line.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 38,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
       ),
     );
   }
 }
 
 class _RemoteImage extends StatelessWidget {
-  const _RemoteImage(this.url, {this.width, this.height, this.fit = BoxFit.contain});
+  const _RemoteImage(
+    this.url, {
+    this.width,
+    this.height,
+    this.fit = BoxFit.contain,
+  });
 
   final String url;
   final double? width;
@@ -347,7 +458,11 @@ class _RemoteImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported_outlined, size: 42, color: Color(0xFFB7C5CE)),
+      errorBuilder: (_, __, ___) => const Icon(
+        Icons.image_not_supported_outlined,
+        size: 42,
+        color: Color(0xFFB7C5CE),
+      ),
       loadingBuilder: (_, child, progress) => progress == null
           ? child
           : const Center(child: CircularProgressIndicator(strokeWidth: 2)),
