@@ -7,10 +7,9 @@ import 'core/app_i18n.dart';
 import 'core/app_language.dart';
 import 'screens/executive/executive_dashboard.dart';
 import 'screens/factory/factory_dashboard.dart';
+import 'screens/home/localized_home.dart';
 
-void main() {
-  runApp(const EmanOneApp());
-}
+void main() => runApp(const EmanOneApp());
 
 class EmanOneApp extends StatefulWidget {
   const EmanOneApp({super.key});
@@ -54,22 +53,20 @@ class _EmanOneAppState extends State<EmanOneApp> {
       ],
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         if (deviceLocale == null) return AppLanguage.defaultLanguage.locale;
-        final isSupported = AppLanguage.supported.any(
+        final supported = AppLanguage.supported.any(
           (language) => language.code == deviceLocale.languageCode,
         );
-        return isSupported
+        return supported
             ? AppLanguage.fromCode(deviceLocale.languageCode).locale
             : AppLanguage.defaultLanguage.locale;
       },
-      builder: (context, child) {
-        return AppLocaleScope(
-          languageCode: _language.code,
-          child: Directionality(
-            textDirection: _language.rtl ? TextDirection.rtl : TextDirection.ltr,
-            child: child ?? const SizedBox.shrink(),
-          ),
-        );
-      },
+      builder: (context, child) => AppLocaleScope(
+        languageCode: _language.code,
+        child: Directionality(
+          textDirection: _language.rtl ? TextDirection.rtl : TextDirection.ltr,
+          child: child ?? const SizedBox.shrink(),
+        ),
+      ),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -113,7 +110,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
   int currentIndex = 0;
 
   static const pages = [
-    PublicHome(),
+    LocalizedHome(),
     ProductsPage(),
     BecomePartnerPage(),
     PartnerDashboard(),
@@ -134,10 +131,14 @@ class _EmanOneShellState extends State<EmanOneShell> {
 
   String _label(String key) => AppI18n.text(key, widget.language.code);
 
+  Widget _currentPage() => KeyedSubtree(
+        key: ValueKey('${widget.language.code}-$currentIndex'),
+        child: pages[currentIndex],
+      );
+
   @override
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 980;
-
     if (desktop) {
       return Scaffold(
         body: Row(
@@ -155,7 +156,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
                     Image.asset(
                       'assets/logos/Eman logo.png',
                       height: 52,
-                      errorBuilder: (context, error, stackTrace) => const Text(
+                      errorBuilder: (_, _, _) => const Text(
                         'EMAN',
                         style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
                       ),
@@ -193,10 +194,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 260),
-                child: KeyedSubtree(
-                  key: ValueKey('${widget.language.code}-$currentIndex'),
-                  child: pages[currentIndex],
-                ),
+                child: _currentPage(),
               ),
             ),
           ],
@@ -213,7 +211,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
             Image.asset(
               'assets/logos/Eman logo.png',
               height: 38,
-              errorBuilder: (context, error, stackTrace) => const Text('EMAN'),
+              errorBuilder: (_, _, _) => const Text('EMAN'),
             ),
             const SizedBox(width: 10),
             const Text('ONE', style: TextStyle(fontWeight: FontWeight.w900)),
@@ -253,10 +251,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 260),
-        child: KeyedSubtree(
-          key: ValueKey('${widget.language.code}-$currentIndex'),
-          child: pages[currentIndex],
-        ),
+        child: _currentPage(),
       ),
     );
   }
@@ -319,10 +314,7 @@ class _LanguageSelector extends StatelessWidget {
             const Icon(Icons.language, size: 19),
             if (!compact) ...[
               const SizedBox(width: 8),
-              Text(
-                language.nativeName,
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
+              Text(language.nativeName, style: const TextStyle(fontWeight: FontWeight.w800)),
             ],
             const SizedBox(width: 4),
             const Icon(Icons.expand_more, size: 18),
