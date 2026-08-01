@@ -17,9 +17,16 @@ class AppLanguage {
 
   Locale get locale => Locale(code, countryCode);
 
+  static const defaultLanguage = AppLanguage(
+    code: 'tr',
+    name: 'Turkish',
+    nativeName: 'Türkçe',
+    countryCode: 'TR',
+  );
+
   static const supported = <AppLanguage>[
+    defaultLanguage,
     AppLanguage(code: 'en', name: 'English', nativeName: 'English', countryCode: 'US'),
-    AppLanguage(code: 'tr', name: 'Turkish', nativeName: 'Türkçe', countryCode: 'TR'),
     AppLanguage(code: 'ar', name: 'Arabic', nativeName: 'العربية', countryCode: 'SA', rtl: true),
     AppLanguage(code: 'es', name: 'Spanish', nativeName: 'Español', countryCode: 'ES'),
     AppLanguage(code: 'pt', name: 'Portuguese', nativeName: 'Português', countryCode: 'BR'),
@@ -43,50 +50,51 @@ class AppLanguage {
   static AppLanguage fromCode(String? code) {
     return supported.firstWhere(
       (language) => language.code == code,
-      orElse: () => supported.first,
+      orElse: () => defaultLanguage,
     );
   }
 }
 
+@Deprecated('Use AppI18n and context.t instead.')
 class AppWords {
   const AppWords._();
 
   static const _labels = <String, Map<String, String>>{
     'home': {
-      'en': 'Home', 'tr': 'Ana Sayfa', 'ar': 'الرئيسية', 'es': 'Inicio',
+      'tr': 'Ana Sayfa', 'en': 'Home', 'ar': 'الرئيسية', 'es': 'Inicio',
       'pt': 'Início', 'ru': 'Главная', 'fr': 'Accueil', 'de': 'Startseite',
     },
     'products': {
-      'en': 'Products', 'tr': 'Ürünler', 'ar': 'المنتجات', 'es': 'Productos',
+      'tr': 'Ürünler', 'en': 'Products', 'ar': 'المنتجات', 'es': 'Productos',
       'pt': 'Produtos', 'ru': 'Продукты', 'fr': 'Produits', 'de': 'Produkte',
     },
     'partner': {
-      'en': 'Become Partner', 'tr': 'Partner Ol', 'ar': 'كن شريكاً',
+      'tr': 'Satış Ortağı Ol', 'en': 'Become Partner', 'ar': 'كن شريكاً',
       'es': 'Ser socio', 'pt': 'Seja parceiro', 'ru': 'Стать партнёром',
       'fr': 'Devenir partenaire', 'de': 'Partner werden',
     },
     'partnerDashboard': {
-      'en': 'Partner Dashboard', 'tr': 'Partner Paneli', 'ar': 'لوحة الشريك',
+      'tr': 'Partner Paneli', 'en': 'Partner Dashboard', 'ar': 'لوحة الشريك',
       'es': 'Panel del socio', 'pt': 'Painel do parceiro',
       'ru': 'Панель партнёра', 'fr': 'Espace partenaire', 'de': 'Partnerbereich',
     },
     'factory': {
-      'en': 'EMAN Factory', 'tr': 'EMAN Fabrika', 'ar': 'إدارة المعمل',
+      'tr': 'EMAN Fabrika', 'en': 'EMAN Factory', 'ar': 'إدارة المعمل',
       'es': 'Fábrica EMAN', 'pt': 'Fábrica EMAN', 'ru': 'Фабрика EMAN',
       'fr': 'Usine EMAN', 'de': 'EMAN Werk',
     },
     'executive': {
-      'en': 'Executive Center', 'tr': 'Yönetim Merkezi', 'ar': 'مركز الإدارة',
+      'tr': 'Yönetim Merkezi', 'en': 'Executive Center', 'ar': 'مركز الإدارة',
       'es': 'Centro ejecutivo', 'pt': 'Centro executivo',
       'ru': 'Центр управления', 'fr': 'Centre exécutif', 'de': 'Management Center',
     },
     'admin': {
-      'en': 'Admin', 'tr': 'Yönetici', 'ar': 'الإدارة', 'es': 'Administración',
+      'tr': 'Yönetici Paneli', 'en': 'Admin', 'ar': 'الإدارة', 'es': 'Administración',
       'pt': 'Administração', 'ru': 'Администрирование', 'fr': 'Administration',
       'de': 'Administration',
     },
     'language': {
-      'en': 'Language', 'tr': 'Dil', 'ar': 'اللغة', 'es': 'Idioma',
+      'tr': 'Dil', 'en': 'Language', 'ar': 'اللغة', 'es': 'Idioma',
       'pt': 'Idioma', 'ru': 'Язык', 'fr': 'Langue', 'de': 'Sprache',
     },
   };
@@ -94,6 +102,6 @@ class AppWords {
   static String get(String key, String languageCode) {
     final values = _labels[key];
     if (values == null) return key;
-    return values[languageCode] ?? values['en'] ?? key;
+    return values[languageCode] ?? values['tr'] ?? key;
   }
 }
