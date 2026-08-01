@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'core/app_i18n.dart';
 import 'core/app_language.dart';
 import 'screens/executive/executive_dashboard.dart';
 import 'screens/factory/factory_dashboard.dart';
@@ -19,7 +20,7 @@ class EmanOneApp extends StatefulWidget {
 }
 
 class _EmanOneAppState extends State<EmanOneApp> {
-  AppLanguage _language = AppLanguage.supported.first;
+  AppLanguage _language = AppLanguage.defaultLanguage;
 
   @override
   void initState() {
@@ -43,7 +44,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'EMAN ONE',
+      title: AppI18n.text('app.title', _language.code),
       locale: _language.locale,
       supportedLocales: AppLanguage.supported.map((item) => item.locale).toList(),
       localizationsDelegates: const [
@@ -51,10 +52,22 @@ class _EmanOneAppState extends State<EmanOneApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      localeResolutionCallback: (deviceLocale, supportedLocales) {
+        if (deviceLocale == null) return AppLanguage.defaultLanguage.locale;
+        final isSupported = AppLanguage.supported.any(
+          (language) => language.code == deviceLocale.languageCode,
+        );
+        return isSupported
+            ? AppLanguage.fromCode(deviceLocale.languageCode).locale
+            : AppLanguage.defaultLanguage.locale;
+      },
       builder: (context, child) {
-        return Directionality(
-          textDirection: _language.rtl ? TextDirection.rtl : TextDirection.ltr,
-          child: child ?? const SizedBox.shrink(),
+        return AppLocaleScope(
+          languageCode: _language.code,
+          child: Directionality(
+            textDirection: _language.rtl ? TextDirection.rtl : TextDirection.ltr,
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
       theme: ThemeData(
@@ -110,16 +123,16 @@ class _EmanOneShellState extends State<EmanOneShell> {
   ];
 
   static const destinationData = [
-    (Icons.home_outlined, Icons.home, 'home'),
-    (Icons.inventory_2_outlined, Icons.inventory_2, 'products'),
-    (Icons.person_add_alt_outlined, Icons.person_add_alt, 'partner'),
-    (Icons.dashboard_outlined, Icons.dashboard, 'partnerDashboard'),
-    (Icons.factory_outlined, Icons.factory, 'factory'),
-    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'executive'),
-    (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'admin'),
+    (Icons.home_outlined, Icons.home, 'nav.home'),
+    (Icons.inventory_2_outlined, Icons.inventory_2, 'nav.products'),
+    (Icons.person_add_alt_outlined, Icons.person_add_alt, 'nav.partner'),
+    (Icons.dashboard_outlined, Icons.dashboard, 'nav.partnerDashboard'),
+    (Icons.factory_outlined, Icons.factory, 'nav.factory'),
+    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'nav.executive'),
+    (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'nav.admin'),
   ];
 
-  String _label(String key) => AppWords.get(key, widget.language.code);
+  String _label(String key) => AppI18n.text(key, widget.language.code);
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +161,9 @@ class _EmanOneShellState extends State<EmanOneShell> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'ONE PLATFORM',
-                      style: TextStyle(
+                    Text(
+                      _label('app.platform'),
+                      style: const TextStyle(
                         fontSize: 10,
                         letterSpacing: 2,
                         fontWeight: FontWeight.w900,
@@ -181,7 +194,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 260),
                 child: KeyedSubtree(
-                  key: ValueKey(currentIndex),
+                  key: ValueKey('${widget.language.code}-$currentIndex'),
                   child: pages[currentIndex],
                 ),
               ),
@@ -222,11 +235,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
           Navigator.pop(context);
         },
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(28, 24, 16, 12),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 24, 16, 12),
             child: Text(
-              'EMAN ONE',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              _label('app.title'),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
             ),
           ),
           ...destinationData.map(
@@ -241,7 +254,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 260),
         child: KeyedSubtree(
-          key: ValueKey(currentIndex),
+          key: ValueKey('${widget.language.code}-$currentIndex'),
           child: pages[currentIndex],
         ),
       ),
@@ -263,7 +276,7 @@ class _LanguageSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<AppLanguage>(
-      tooltip: AppWords.get('language', language.code),
+      tooltip: AppI18n.text('common.language', language.code),
       onSelected: onChanged,
       constraints: const BoxConstraints(maxHeight: 520, minWidth: 250),
       itemBuilder: (context) => AppLanguage.supported
