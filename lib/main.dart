@@ -8,6 +8,7 @@ import 'core/app_language.dart';
 import 'screens/home/localized_home.dart';
 import 'screens/localized/localized_dashboards.dart';
 import 'screens/public/localized_commerce_pages.dart';
+import 'screens/rfq/localized_rfq_builder.dart';
 
 void main() => runApp(const EmanOneApp());
 
@@ -113,6 +114,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
     LocalizedHome(),
     LocalizedProductsPage(),
     LocalizedBecomePartnerPage(),
+    LocalizedRfqBuilder(),
     LocalizedPartnerDashboard(),
     LocalizedFactoryDashboard(),
     LocalizedExecutiveDashboard(),
@@ -123,13 +125,17 @@ class _EmanOneShellState extends State<EmanOneShell> {
     (Icons.home_outlined, Icons.home, 'nav.home'),
     (Icons.inventory_2_outlined, Icons.inventory_2, 'nav.products'),
     (Icons.person_add_alt_outlined, Icons.person_add_alt, 'nav.partner'),
+    (Icons.request_quote_outlined, Icons.request_quote, 'RFQ'),
     (Icons.dashboard_outlined, Icons.dashboard, 'nav.partnerDashboard'),
     (Icons.factory_outlined, Icons.factory, 'nav.factory'),
     (Icons.monitor_heart_outlined, Icons.monitor_heart, 'nav.executive'),
     (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'nav.admin'),
   ];
 
-  String _label(String key) => AppI18n.text(key, widget.language.code);
+  String _label(String key) {
+    if (key == 'RFQ') return key;
+    return AppI18n.text(key, widget.language.code);
+  }
 
   Widget _currentPage() => KeyedSubtree(
         key: ValueKey('${widget.language.code}-$currentIndex'),
