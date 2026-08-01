@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'app.dart';
+import 'app_remote.dart';
 
 void main() {
-  runApp(const EmanExperienceApp());
+  runApp(const EmanRemoteApp());
 }
