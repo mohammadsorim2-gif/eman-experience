@@ -7,7 +7,7 @@ import 'core/app_i18n.dart';
 import 'core/app_language.dart';
 import 'screens/executive/advanced_executive_dashboard.dart';
 import 'screens/factory/advanced_factory_dashboard.dart';
-import 'screens/home/localized_home.dart';
+import 'screens/home/polished_home.dart';
 import 'screens/localized/localized_dashboards.dart';
 import 'screens/partner/advanced_partner_dashboard.dart';
 import 'screens/products/advanced_product_catalog.dart';
@@ -44,6 +44,61 @@ class _EmanOneAppState extends State<EmanOneApp> {
     await preferences.setString('app_language', language.code);
   }
 
+  ThemeData _theme() {
+    final arabic = const {'ar', 'fa', 'ur'}.contains(_language.code);
+    final base = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: EmanExperienceApp.blue,
+        primary: EmanExperienceApp.blue,
+      ),
+      scaffoldBackgroundColor: EmanExperienceApp.background,
+      fontFamily: arabic ? 'Noto Sans Arabic' : 'Inter',
+      fontFamilyFallback: arabic
+          ? const ['Tahoma', 'Arial', 'sans-serif']
+          : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+      iconTheme: const IconThemeData(size: 20),
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+          side: const BorderSide(color: Color(0xFFE4ECF1)),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+      ),
+      navigationRailTheme: const NavigationRailThemeData(
+        useIndicator: true,
+        indicatorColor: Color(0xFFE8F4FA),
+        selectedIconTheme: IconThemeData(size: 21, color: EmanExperienceApp.blue),
+        unselectedIconTheme: IconThemeData(size: 20, color: Color(0xFF6B7E89)),
+        selectedLabelTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: EmanExperienceApp.navy),
+        unselectedLabelTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF607480)),
+      ),
+    );
+    return base.copyWith(
+      textTheme: base.textTheme.apply(
+        fontFamily: arabic ? 'Noto Sans Arabic' : 'Inter',
+        fontFamilyFallback: arabic
+            ? const ['Tahoma', 'Arial', 'sans-serif']
+            : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -72,23 +127,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
           child: child ?? const SizedBox.shrink(),
         ),
       ),
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: EmanExperienceApp.blue,
-          primary: EmanExperienceApp.blue,
-        ),
-        scaffoldBackgroundColor: EmanExperienceApp.background,
-        fontFamily: 'Arial',
-        cardTheme: CardThemeData(
-          color: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-            side: const BorderSide(color: Color(0xFFE7EDF3)),
-          ),
-        ),
-      ),
+      theme: _theme(),
       home: EmanOneShell(
         language: _language,
         onLanguageChanged: _setLanguage,
@@ -115,7 +154,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
   int currentIndex = 0;
 
   static const pages = [
-    LocalizedHome(),
+    PolishedHome(),
     AdvancedProductCatalog(),
     LocalizedBecomePartnerPage(),
     LocalizedRfqBuilder(),
@@ -126,14 +165,14 @@ class _EmanOneShellState extends State<EmanOneShell> {
   ];
 
   static const destinationData = [
-    (Icons.home_outlined, Icons.home, 'nav.home'),
-    (Icons.inventory_2_outlined, Icons.inventory_2, 'nav.products'),
-    (Icons.person_add_alt_outlined, Icons.person_add_alt, 'nav.partner'),
-    (Icons.request_quote_outlined, Icons.request_quote, 'RFQ'),
-    (Icons.dashboard_outlined, Icons.dashboard, 'nav.partnerDashboard'),
-    (Icons.factory_outlined, Icons.factory, 'nav.factory'),
-    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'nav.executive'),
-    (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'nav.admin'),
+    (Icons.home_rounded, 'nav.home'),
+    (Icons.grid_view_rounded, 'nav.products'),
+    (Icons.person_add_alt_1_rounded, 'nav.partner'),
+    (Icons.request_quote_rounded, 'RFQ'),
+    (Icons.space_dashboard_rounded, 'nav.partnerDashboard'),
+    (Icons.precision_manufacturing_rounded, 'nav.factory'),
+    (Icons.insights_rounded, 'nav.executive'),
+    (Icons.admin_panel_settings_rounded, 'nav.admin'),
   ];
 
   String _label(String key) {
@@ -155,33 +194,33 @@ class _EmanOneShellState extends State<EmanOneShell> {
           children: [
             NavigationRail(
               extended: true,
-              minExtendedWidth: 246,
+              minExtendedWidth: 226,
               backgroundColor: Colors.white,
               selectedIndex: currentIndex,
               onDestinationSelected: (value) => setState(() => currentIndex = value),
               leading: Padding(
-                padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
+                padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
                 child: Column(
                   children: [
                     Image.asset(
                       'assets/logos/Eman logo.png',
-                      height: 52,
+                      height: 46,
                       errorBuilder: (_, _, _) => const Text(
                         'EMAN',
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
+                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 7),
                     Text(
                       _label('app.platform'),
                       style: const TextStyle(
-                        fontSize: 10,
-                        letterSpacing: 2,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 9,
+                        letterSpacing: 1.5,
+                        fontWeight: FontWeight.w800,
                         color: Color(0xFF72838E),
                       ),
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 15),
                     _LanguageSelector(
                       language: widget.language,
                       onChanged: widget.onLanguageChanged,
@@ -194,8 +233,8 @@ class _EmanOneShellState extends State<EmanOneShell> {
                   .map(
                     (item) => NavigationRailDestination(
                       icon: Icon(item.$1),
-                      selectedIcon: Icon(item.$2),
-                      label: Text(_label(item.$3)),
+                      selectedIcon: Icon(item.$1),
+                      label: Text(_label(item.$2)),
                     ),
                   )
                   .toList(),
@@ -203,7 +242,9 @@ class _EmanOneShellState extends State<EmanOneShell> {
             const VerticalDivider(width: 1),
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 260),
+                duration: const Duration(milliseconds: 280),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
                 child: _currentPage(),
               ),
             ),
@@ -220,11 +261,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
           children: [
             Image.asset(
               'assets/logos/Eman logo.png',
-              height: 38,
+              height: 34,
               errorBuilder: (_, _, _) => const Text('EMAN'),
             ),
-            const SizedBox(width: 10),
-            const Text('ONE', style: TextStyle(fontWeight: FontWeight.w900)),
+            const SizedBox(width: 8),
+            const Text('ONE', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
           ],
         ),
         actions: [
@@ -247,20 +288,20 @@ class _EmanOneShellState extends State<EmanOneShell> {
             padding: const EdgeInsets.fromLTRB(28, 24, 16, 12),
             child: Text(
               _label('app.title'),
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
           ),
           ...destinationData.map(
             (item) => NavigationDrawerDestination(
-              icon: Icon(item.$1),
-              selectedIcon: Icon(item.$2),
-              label: Text(_label(item.$3)),
+              icon: Icon(item.$1, size: 20),
+              selectedIcon: Icon(item.$1, size: 20),
+              label: Text(_label(item.$2)),
             ),
           ),
         ],
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 260),
+        duration: const Duration(milliseconds: 280),
         child: _currentPage(),
       ),
     );
@@ -283,7 +324,7 @@ class _LanguageSelector extends StatelessWidget {
     return PopupMenuButton<AppLanguage>(
       tooltip: AppI18n.text('common.language', language.code),
       onSelected: onChanged,
-      constraints: const BoxConstraints(maxHeight: 520, minWidth: 250),
+      constraints: const BoxConstraints(maxHeight: 520, minWidth: 240),
       itemBuilder: (context) => AppLanguage.supported
           .map(
             (item) => PopupMenuItem<AppLanguage>(
@@ -295,14 +336,15 @@ class _LanguageSelector extends StatelessWidget {
                     child: Text(
                       item.code.toUpperCase(),
                       style: const TextStyle(
+                        fontSize: 12,
                         color: EmanExperienceApp.blue,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
                   Expanded(child: Text(item.nativeName)),
                   if (item.code == language.code)
-                    const Icon(Icons.check, size: 18, color: EmanExperienceApp.blue),
+                    const Icon(Icons.check_rounded, size: 17, color: EmanExperienceApp.blue),
                 ],
               ),
             ),
@@ -310,24 +352,24 @@ class _LanguageSelector extends StatelessWidget {
           .toList(),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: compact ? 10 : 14,
-          vertical: compact ? 8 : 10,
+          horizontal: compact ? 9 : 12,
+          vertical: compact ? 7 : 9,
         ),
         decoration: BoxDecoration(
-          color: const Color(0xFFF2F7FA),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE0E9EF)),
+          color: const Color(0xFFF1F6F9),
+          borderRadius: BorderRadius.circular(13),
+          border: Border.all(color: const Color(0xFFDFE8ED)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.language, size: 19),
+            const Icon(Icons.language_rounded, size: 17),
             if (!compact) ...[
-              const SizedBox(width: 8),
-              Text(language.nativeName, style: const TextStyle(fontWeight: FontWeight.w800)),
+              const SizedBox(width: 7),
+              Text(language.nativeName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
             ],
-            const SizedBox(width: 4),
-            const Icon(Icons.expand_more, size: 18),
+            const SizedBox(width: 3),
+            const Icon(Icons.expand_more_rounded, size: 17),
           ],
         ),
       ),
