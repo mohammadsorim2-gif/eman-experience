@@ -1,3 +1,14 @@
+from pathlib import Path
+from datetime import datetime
+
+app_file = Path("lib/app.dart")
+backup = Path(f"lib/app_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.dart")
+
+if app_file.exists():
+    backup.write_text(app_file.read_text())
+    print(f"Backup created: {backup}")
+
+app_file.write_text(r'''
 import 'package:flutter/material.dart';
 
 class EmanExperienceApp extends StatelessWidget {
@@ -15,7 +26,10 @@ class EmanExperienceApp extends StatelessWidget {
       title: 'EMAN Global Partner',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: blue, primary: blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: blue,
+          primary: blue,
+        ),
         scaffoldBackgroundColor: background,
         fontFamily: 'Arial',
         cardTheme: CardThemeData(
@@ -73,7 +87,10 @@ class _PlatformHomeState extends State<PlatformHome> {
                   height: 55,
                   errorBuilder: (_, __, ___) => const Text(
                     'EMAN',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ),
@@ -121,22 +138,10 @@ class _PlatformHomeState extends State<PlatformHome> {
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
-          NavigationDestination(
-            icon: Icon(Icons.inventory_2_outlined),
-            label: 'Products',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_add_alt),
-            label: 'Partner',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.admin_panel_settings_outlined),
-            label: 'Admin',
-          ),
+          NavigationDestination(icon: Icon(Icons.inventory_2_outlined), label: 'Products'),
+          NavigationDestination(icon: Icon(Icons.person_add_alt), label: 'Partner'),
+          NavigationDestination(icon: Icon(Icons.dashboard_outlined), label: 'Dashboard'),
+          NavigationDestination(icon: Icon(Icons.admin_panel_settings_outlined), label: 'Admin'),
         ],
       ),
     );
@@ -248,18 +253,9 @@ class PublicHome extends StatelessWidget {
                         spacing: 20,
                         runSpacing: 12,
                         children: [
-                          _Proof(
-                            icon: Icons.language,
-                            text: 'Work from any country',
-                          ),
-                          _Proof(
-                            icon: Icons.link,
-                            text: 'Personal referral link',
-                          ),
-                          _Proof(
-                            icon: Icons.payments_outlined,
-                            text: 'Track commissions',
-                          ),
+                          _Proof(icon: Icons.language, text: 'Work from any country'),
+                          _Proof(icon: Icons.link, text: 'Personal referral link'),
+                          _Proof(icon: Icons.payments_outlined, text: 'Track commissions'),
                         ],
                       ),
                     ],
@@ -314,7 +310,11 @@ class PublicHome extends StatelessWidget {
 
                   if (compact) {
                     return Column(
-                      children: [copy, const SizedBox(height: 45), visual],
+                      children: [
+                        copy,
+                        const SizedBox(height: 45),
+                        visual,
+                      ],
                     );
                   }
 
@@ -340,36 +340,12 @@ class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
 
   static const products = [
-    (
-      'Orange',
-      'Frio Cups',
-      'assets/products/friocups/9g-orange-flavored-powder-drink-friocups.png',
-    ),
-    (
-      'Mango',
-      'Frio Cups',
-      'assets/products/friocups/9g-mango-flavored-powder-drink-friocups.png',
-    ),
-    (
-      'Berries',
-      'Frio Cups',
-      'assets/products/friocups/9g-berries-flavored-powder-drink-friocups.png',
-    ),
-    (
-      'Banana',
-      'Frio Cups',
-      'assets/products/friocups/9g-banana-flavored-powder-drink-friocups.png',
-    ),
-    (
-      'Strawberry',
-      'Full Fresh',
-      'assets/products/fullfresh/Full-fresh-9g-drink-powder-strawberry.png',
-    ),
-    (
-      'Orange',
-      'Valore',
-      'assets/products/valore/orange-flavored-powder-drink-valore-10grams.png',
-    ),
+    ('Orange', 'Frio Cups', 'assets/products/friocups/9g-orange-flavored-powder-drink-friocups.png'),
+    ('Mango', 'Frio Cups', 'assets/products/friocups/9g-mango-flavored-powder-drink-friocups.png'),
+    ('Berries', 'Frio Cups', 'assets/products/friocups/9g-berries-flavored-powder-drink-friocups.png'),
+    ('Banana', 'Frio Cups', 'assets/products/friocups/9g-banana-flavored-powder-drink-friocups.png'),
+    ('Strawberry', 'Full Fresh', 'assets/products/fullfresh/Full-fresh-9g-drink-powder-strawberry.png'),
+    ('Orange', 'Valore', 'assets/products/valore/orange-flavored-powder-drink-valore-10grams.png'),
   ];
 
   @override
@@ -409,11 +385,10 @@ class ProductsPage extends StatelessWidget {
             final columns = constraints.maxWidth >= 1100
                 ? 3
                 : constraints.maxWidth >= 650
-                ? 2
-                : 1;
+                    ? 2
+                    : 1;
 
-            final width =
-                (constraints.maxWidth - ((columns - 1) * 18)) / columns;
+            final width = (constraints.maxWidth - ((columns - 1) * 18)) / columns;
 
             return Wrap(
               spacing: 18,
@@ -543,8 +518,8 @@ class _BecomePartnerPageState extends State<BecomePartnerPage> {
                             ),
                             validator: (value) =>
                                 value == null || value.trim().isEmpty
-                                ? 'Required'
-                                : null,
+                                    ? 'Required'
+                                    : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -554,8 +529,8 @@ class _BecomePartnerPageState extends State<BecomePartnerPage> {
                             ),
                             validator: (value) =>
                                 value == null || !value.contains('@')
-                                ? 'Enter a valid email'
-                                : null,
+                                    ? 'Enter a valid email'
+                                    : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -571,23 +546,22 @@ class _BecomePartnerPageState extends State<BecomePartnerPage> {
                               labelText: 'Country',
                               prefixIcon: Icon(Icons.public),
                             ),
-                            items:
-                                const [
-                                  'Türkiye',
-                                  'Germany',
-                                  'Spain',
-                                  'Portugal',
-                                  'Brazil',
-                                  'Russia',
-                                  'Saudi Arabia',
-                                  'United Arab Emirates',
-                                  'Other',
-                                ].map((item) {
-                                  return DropdownMenuItem(
-                                    value: item,
-                                    child: Text(item),
-                                  );
-                                }).toList(),
+                            items: const [
+                              'Türkiye',
+                              'Germany',
+                              'Spain',
+                              'Portugal',
+                              'Brazil',
+                              'Russia',
+                              'Saudi Arabia',
+                              'United Arab Emirates',
+                              'Other',
+                            ].map((item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                child: Text(item),
+                              );
+                            }).toList(),
                             onChanged: (value) {
                               if (value != null) {
                                 setState(() => country = value);
@@ -666,8 +640,8 @@ class PartnerDashboard extends StatelessWidget {
             final width = constraints.maxWidth >= 900
                 ? (constraints.maxWidth - 54) / 4
                 : constraints.maxWidth >= 520
-                ? (constraints.maxWidth - 18) / 2
-                : constraints.maxWidth;
+                    ? (constraints.maxWidth - 18) / 2
+                    : constraints.maxWidth;
 
             return Wrap(
               spacing: 18,
@@ -907,8 +881,8 @@ class _HowItWorks extends StatelessWidget {
                   final width = constraints.maxWidth >= 900
                       ? (constraints.maxWidth - 54) / 4
                       : constraints.maxWidth >= 520
-                      ? (constraints.maxWidth - 18) / 2
-                      : constraints.maxWidth;
+                          ? (constraints.maxWidth - 18) / 2
+                          : constraints.maxWidth;
 
                   return Wrap(
                     spacing: 18,
@@ -933,16 +907,14 @@ class _HowItWorks extends StatelessWidget {
                         number: '03',
                         icon: Icons.share_outlined,
                         title: 'Refer buyers',
-                        text:
-                            'Share your personal link with qualified companies.',
+                        text: 'Share your personal link with qualified companies.',
                       ),
                       _StepCard(
                         width: width,
                         number: '04',
                         icon: Icons.payments_outlined,
                         title: 'Earn',
-                        text:
-                            'Receive approved commission after a completed deal.',
+                        text: 'Receive approved commission after a completed deal.',
                       ),
                     ],
                   );
@@ -1256,10 +1228,29 @@ class _ApprovalRow extends StatelessWidget {
         spacing: 10,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text(commission, style: const TextStyle(fontWeight: FontWeight.w900)),
-          FilledButton(onPressed: () {}, child: const Text('Approve')),
+          Text(
+            commission,
+            style: const TextStyle(fontWeight: FontWeight.w900),
+          ),
+          FilledButton(
+            onPressed: () {},
+            child: const Text('Approve'),
+          ),
         ],
       ),
     );
   }
 }
+''')
+
+main_file = Path("lib/main.dart")
+main_file.write_text("""import 'package:flutter/material.dart';
+
+import 'app.dart';
+
+void main() {
+  runApp(const EmanExperienceApp());
+}
+""")
+
+print("EMAN Global Partner prototype created successfully.")

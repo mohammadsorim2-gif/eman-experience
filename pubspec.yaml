@@ -25,10 +25,6 @@ flutter:
 
   assets:
     - assets/logos/
-    - assets/hero/
-    - assets/backgrounds/
-    - assets/lifestyle/
-    - assets/certificates/
     - assets/brands/valore/
     - assets/brands/friocups/
     - assets/brands/royac/
