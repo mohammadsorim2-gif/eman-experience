@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'core/app_language.dart';
 import 'screens/executive/executive_dashboard.dart';
 import 'screens/factory/factory_dashboard.dart';
 
@@ -8,14 +11,52 @@ void main() {
   runApp(const EmanOneApp());
 }
 
-class EmanOneApp extends StatelessWidget {
+class EmanOneApp extends StatefulWidget {
   const EmanOneApp({super.key});
+
+  @override
+  State<EmanOneApp> createState() => _EmanOneAppState();
+}
+
+class _EmanOneAppState extends State<EmanOneApp> {
+  AppLanguage _language = AppLanguage.supported.first;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    final preferences = await SharedPreferences.getInstance();
+    final language = AppLanguage.fromCode(preferences.getString('app_language'));
+    if (mounted) setState(() => _language = language);
+  }
+
+  Future<void> _setLanguage(AppLanguage language) async {
+    setState(() => _language = language);
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString('app_language', language.code);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EMAN ONE',
+      locale: _language.locale,
+      supportedLocales: AppLanguage.supported.map((item) => item.locale).toList(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      builder: (context, child) {
+        return Directionality(
+          textDirection: _language.rtl ? TextDirection.rtl : TextDirection.ltr,
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -33,13 +74,23 @@ class EmanOneApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const EmanOneShell(),
+      home: EmanOneShell(
+        language: _language,
+        onLanguageChanged: _setLanguage,
+      ),
     );
   }
 }
 
 class EmanOneShell extends StatefulWidget {
-  const EmanOneShell({super.key});
+  const EmanOneShell({
+    required this.language,
+    required this.onLanguageChanged,
+    super.key,
+  });
+
+  final AppLanguage language;
+  final ValueChanged<AppLanguage> onLanguageChanged;
 
   @override
   State<EmanOneShell> createState() => _EmanOneShellState();
@@ -53,20 +104,22 @@ class _EmanOneShellState extends State<EmanOneShell> {
     ProductsPage(),
     BecomePartnerPage(),
     PartnerDashboard(),
-    ExecutiveDashboard(),
     FactoryDashboard(),
+    ExecutiveDashboard(),
     AdminPreviewPage(),
   ];
 
-  static const destinations = [
-    (Icons.home_outlined, Icons.home, 'Home'),
-    (Icons.inventory_2_outlined, Icons.inventory_2, 'Products'),
-    (Icons.person_add_alt_outlined, Icons.person_add_alt, 'Partner'),
-    (Icons.dashboard_outlined, Icons.dashboard, 'Partner Dashboard'),
-    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'Executive Center'),
-    (Icons.factory_outlined, Icons.factory, 'EMAN Factory'),
-    (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'Admin'),
+  static const destinationData = [
+    (Icons.home_outlined, Icons.home, 'home'),
+    (Icons.inventory_2_outlined, Icons.inventory_2, 'products'),
+    (Icons.person_add_alt_outlined, Icons.person_add_alt, 'partner'),
+    (Icons.dashboard_outlined, Icons.dashboard, 'partnerDashboard'),
+    (Icons.factory_outlined, Icons.factory, 'factory'),
+    (Icons.monitor_heart_outlined, Icons.monitor_heart, 'executive'),
+    (Icons.admin_panel_settings_outlined, Icons.admin_panel_settings, 'admin'),
   ];
+
+  String _label(String key) => AppWords.get(key, widget.language.code);
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +131,12 @@ class _EmanOneShellState extends State<EmanOneShell> {
           children: [
             NavigationRail(
               extended: true,
-              minExtendedWidth: 238,
+              minExtendedWidth: 246,
               backgroundColor: Colors.white,
               selectedIndex: currentIndex,
               onDestinationSelected: (value) => setState(() => currentIndex = value),
               leading: Padding(
-                padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
+                padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
                 child: Column(
                   children: [
                     Image.asset(
@@ -104,15 +157,21 @@ class _EmanOneShellState extends State<EmanOneShell> {
                         color: Color(0xFF72838E),
                       ),
                     ),
+                    const SizedBox(height: 18),
+                    _LanguageSelector(
+                      language: widget.language,
+                      onChanged: widget.onLanguageChanged,
+                      compact: false,
+                    ),
                   ],
                 ),
               ),
-              destinations: destinations
+              destinations: destinationData
                   .map(
                     (item) => NavigationRailDestination(
                       icon: Icon(item.$1),
                       selectedIcon: Icon(item.$2),
-                      label: Text(item.$3),
+                      label: Text(_label(item.$3)),
                     ),
                   )
                   .toList(),
@@ -120,8 +179,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
             const VerticalDivider(width: 1),
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: pages[currentIndex],
+                duration: const Duration(milliseconds: 260),
+                child: KeyedSubtree(
+                  key: ValueKey(currentIndex),
+                  child: pages[currentIndex],
+                ),
               ),
             ),
           ],
@@ -144,6 +206,14 @@ class _EmanOneShellState extends State<EmanOneShell> {
             const Text('ONE', style: TextStyle(fontWeight: FontWeight.w900)),
           ],
         ),
+        actions: [
+          _LanguageSelector(
+            language: widget.language,
+            onChanged: widget.onLanguageChanged,
+            compact: true,
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       drawer: NavigationDrawer(
         selectedIndex: currentIndex,
@@ -159,18 +229,92 @@ class _EmanOneShellState extends State<EmanOneShell> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
             ),
           ),
-          ...destinations.map(
+          ...destinationData.map(
             (item) => NavigationDrawerDestination(
               icon: Icon(item.$1),
               selectedIcon: Icon(item.$2),
-              label: Text(item.$3),
+              label: Text(_label(item.$3)),
             ),
           ),
         ],
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: pages[currentIndex],
+        duration: const Duration(milliseconds: 260),
+        child: KeyedSubtree(
+          key: ValueKey(currentIndex),
+          child: pages[currentIndex],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageSelector extends StatelessWidget {
+  const _LanguageSelector({
+    required this.language,
+    required this.onChanged,
+    required this.compact,
+  });
+
+  final AppLanguage language;
+  final ValueChanged<AppLanguage> onChanged;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<AppLanguage>(
+      tooltip: AppWords.get('language', language.code),
+      onSelected: onChanged,
+      constraints: const BoxConstraints(maxHeight: 520, minWidth: 250),
+      itemBuilder: (context) => AppLanguage.supported
+          .map(
+            (item) => PopupMenuItem<AppLanguage>(
+              value: item,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 34,
+                    child: Text(
+                      item.code.toUpperCase(),
+                      style: const TextStyle(
+                        color: EmanExperienceApp.blue,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Text(item.nativeName)),
+                  if (item.code == language.code)
+                    const Icon(Icons.check, size: 18, color: EmanExperienceApp.blue),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 10 : 14,
+          vertical: compact ? 8 : 10,
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF2F7FA),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFE0E9EF)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.language, size: 19),
+            if (!compact) ...[
+              const SizedBox(width: 8),
+              Text(
+                language.nativeName,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ],
+            const SizedBox(width: 4),
+            const Icon(Icons.expand_more, size: 18),
+          ],
+        ),
       ),
     );
   }
