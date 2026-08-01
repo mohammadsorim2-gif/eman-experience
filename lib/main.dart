@@ -5,9 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/app_i18n.dart';
 import 'core/app_language.dart';
-import 'screens/executive/executive_dashboard.dart';
-import 'screens/factory/factory_dashboard.dart';
 import 'screens/home/localized_home.dart';
+import 'screens/localized/localized_dashboards.dart';
 import 'screens/public/localized_commerce_pages.dart';
 
 void main() => runApp(const EmanOneApp());
@@ -114,10 +113,10 @@ class _EmanOneShellState extends State<EmanOneShell> {
     LocalizedHome(),
     LocalizedProductsPage(),
     LocalizedBecomePartnerPage(),
-    PartnerDashboard(),
-    FactoryDashboard(),
-    ExecutiveDashboard(),
-    AdminPreviewPage(),
+    LocalizedPartnerDashboard(),
+    LocalizedFactoryDashboard(),
+    LocalizedExecutiveDashboard(),
+    LocalizedAdminDashboard(),
   ];
 
   static const destinationData = [
