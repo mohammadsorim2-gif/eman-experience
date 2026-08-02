@@ -16,7 +16,12 @@ class ModernHomeDashboard extends StatelessWidget {
     return ColoredBox(
       color: const Color(0xFFF5F7FB),
       child: ListView(
-        padding: EdgeInsets.fromLTRB(compact ? 16 : 28, 22, compact ? 16 : 28, 48),
+        padding: EdgeInsets.fromLTRB(
+          compact ? 16 : 28,
+          22,
+          compact ? 16 : 28,
+          48,
+        ),
         children: [
           _TopWelcome(compact: compact, onNavigate: onNavigate),
           const SizedBox(height: 22),
@@ -39,7 +44,7 @@ class ModernHomeDashboard extends StatelessWidget {
                 children: [
                   Expanded(flex: 3, child: pipeline),
                   const SizedBox(width: 18),
-                  const Expanded(flex: 2, child: activity),
+                  Expanded(flex: 2, child: activity),
                 ],
               );
             },
@@ -76,7 +81,10 @@ class _TopWelcome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 7,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: .10),
                   borderRadius: BorderRadius.circular(999),
@@ -84,11 +92,17 @@ class _TopWelcome extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.auto_awesome_rounded, size: 16, color: Color(0xFFFFD477)),
+                    const Icon(
+                      Icons.auto_awesome_rounded,
+                      size: 16,
+                      color: Color(0xFFFFD477),
+                    ),
                     const SizedBox(width: 7),
                     Text(
                       context.t('app.platform'),
-                      style: theme.textTheme.labelMedium?.copyWith(color: Colors.white),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
@@ -154,7 +168,11 @@ class _TopWelcome extends StatelessWidget {
                 const Positioned(
                   right: 24,
                   top: 26,
-                  child: Icon(Icons.public_rounded, size: 84, color: Color(0x33FFFFFF)),
+                  child: Icon(
+                    Icons.public_rounded,
+                    size: 84,
+                    color: Color(0x33FFFFFF),
+                  ),
                 ),
                 Positioned(
                   left: 20,
@@ -163,11 +181,18 @@ class _TopWelcome extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('40+', style: theme.textTheme.displaySmall?.copyWith(color: Colors.white)),
+                      Text(
+                        '40+',
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         context.t('home.badgeCountriesLabel'),
-                        style: theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFFD8E8F2)),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFFD8E8F2),
+                        ),
                       ),
                     ],
                   ),
@@ -177,9 +202,18 @@ class _TopWelcome extends StatelessWidget {
           );
 
           if (stacked) {
-            return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [copy, const SizedBox(height: 24), visual]);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [copy, const SizedBox(height: 24), visual],
+            );
           }
-          return Row(children: [Expanded(child: copy), const SizedBox(width: 34), visual]);
+          return Row(
+            children: [
+              Expanded(child: copy),
+              const SizedBox(width: 34),
+              visual,
+            ],
+          );
         },
       ),
     );
@@ -195,10 +229,25 @@ class _QuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.add_business_rounded, context.t('home.becomePartner'), const Color(0xFF6E5AE6), 2),
+      (
+        Icons.add_business_rounded,
+        context.t('home.becomePartner'),
+        const Color(0xFF6E5AE6),
+        2,
+      ),
       (Icons.request_quote_rounded, 'RFQ', const Color(0xFF0B8DB5), 3),
-      (Icons.precision_manufacturing_rounded, context.t('nav.factory'), const Color(0xFFE57A32), 5),
-      (Icons.insights_rounded, context.t('nav.executive'), const Color(0xFF1C9A73), 6),
+      (
+        Icons.precision_manufacturing_rounded,
+        context.t('nav.factory'),
+        const Color(0xFFE57A32),
+        5,
+      ),
+      (
+        Icons.insights_rounded,
+        context.t('nav.executive'),
+        const Color(0xFF1C9A73),
+        6,
+      ),
     ];
     return Container(
       padding: const EdgeInsets.all(18),
@@ -206,24 +255,32 @@ class _QuickActions extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(context.t('app.platform'), style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            context.t('app.platform'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 14),
           LayoutBuilder(
             builder: (context, constraints) {
               final columns = compact ? 2 : 4;
-              final cardWidth = (constraints.maxWidth - (columns - 1) * 12) / columns;
+              final cardWidth =
+                  (constraints.maxWidth - (columns - 1) * 12) / columns;
               return Wrap(
                 spacing: 12,
                 runSpacing: 12,
-                children: items.map((item) => SizedBox(
-                  width: cardWidth,
-                  child: _ActionTile(
-                    icon: item.$1,
-                    label: item.$2,
-                    accent: item.$3,
-                    onTap: () => onNavigate(item.$4),
-                  ),
-                )).toList(),
+                children: items
+                    .map(
+                      (item) => SizedBox(
+                        width: cardWidth,
+                        child: _ActionTile(
+                          icon: item.$1,
+                          label: item.$2,
+                          accent: item.$3,
+                          onTap: () => onNavigate(item.$4),
+                        ),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
@@ -234,7 +291,12 @@ class _QuickActions extends StatelessWidget {
 }
 
 class _ActionTile extends StatefulWidget {
-  const _ActionTile({required this.icon, required this.label, required this.accent, required this.onTap});
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.accent,
+    required this.onTap,
+  });
   final IconData icon;
   final String label;
   final Color accent;
@@ -262,7 +324,9 @@ class _ActionTileState extends State<_ActionTile> {
             child: Ink(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: hover ? widget.accent.withValues(alpha: .10) : const Color(0xFFF8FAFC),
+                color: hover
+                    ? widget.accent.withValues(alpha: .10)
+                    : const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: widget.accent.withValues(alpha: .18)),
               ),
@@ -271,11 +335,20 @@ class _ActionTileState extends State<_ActionTile> {
                   Container(
                     width: 42,
                     height: 42,
-                    decoration: BoxDecoration(color: widget.accent.withValues(alpha: .12), borderRadius: BorderRadius.circular(13)),
+                    decoration: BoxDecoration(
+                      color: widget.accent.withValues(alpha: .12),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
                     child: Icon(widget.icon, color: widget.accent, size: 22),
                   ),
                   const SizedBox(width: 11),
-                  Expanded(child: Text(widget.label, maxLines: 2, overflow: TextOverflow.ellipsis)),
+                  Expanded(
+                    child: Text(
+                      widget.label,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   const Icon(Icons.arrow_forward_ios_rounded, size: 13),
                 ],
               ),
@@ -293,10 +366,28 @@ class _KpiGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ('24', context.t('nav.products'), '+8%', Icons.inventory_2_rounded, const Color(0xFF0B8DB5)),
+      (
+        '24',
+        context.t('nav.products'),
+        '+8%',
+        Icons.inventory_2_rounded,
+        const Color(0xFF0B8DB5),
+      ),
       ('12', 'RFQ', '+3', Icons.request_quote_rounded, const Color(0xFF6E5AE6)),
-      ('8', context.t('nav.partnerDashboard'), '+2', Icons.handshake_rounded, const Color(0xFF1C9A73)),
-      ('92%', context.t('nav.factory'), '+4%', Icons.precision_manufacturing_rounded, const Color(0xFFE57A32)),
+      (
+        '8',
+        context.t('nav.partnerDashboard'),
+        '+2',
+        Icons.handshake_rounded,
+        const Color(0xFF1C9A73),
+      ),
+      (
+        '92%',
+        context.t('nav.factory'),
+        '+4%',
+        Icons.precision_manufacturing_rounded,
+        const Color(0xFFE57A32),
+      ),
     ];
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -305,36 +396,63 @@ class _KpiGrid extends StatelessWidget {
         return Wrap(
           spacing: 14,
           runSpacing: 14,
-          children: items.map((item) => SizedBox(
-            width: width,
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: _surfaceDecoration(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(color: item.$5.withValues(alpha: .12), borderRadius: BorderRadius.circular(13)),
-                      child: Icon(item.$4, color: item.$5, size: 21),
+          children: items
+              .map(
+                (item) => SizedBox(
+                  width: width,
+                  child: Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: _surfaceDecoration(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: item.$5.withValues(alpha: .12),
+                                borderRadius: BorderRadius.circular(13),
+                              ),
+                              child: Icon(item.$4, color: item.$5, size: 21),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEAF8F3),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Text(
+                                item.$3,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF167A5B),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 18),
+                        Text(
+                          item.$1,
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          item.$2,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      decoration: BoxDecoration(color: const Color(0xFFEAF8F3), borderRadius: BorderRadius.circular(999)),
-                      child: Text(item.$3, style: const TextStyle(fontSize: 11, color: Color(0xFF167A5B))),
-                    ),
-                  ]),
-                  const SizedBox(height: 18),
-                  Text(item.$1, style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: 4),
-                  Text(item.$2, style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-            ),
-          )).toList(),
+                  ),
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -357,27 +475,67 @@ class _PipelinePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            Text('Pipeline', style: Theme.of(context).textTheme.titleLarge),
-            const Spacer(),
-            TextButton(onPressed: () => onNavigate(3), child: const Text('RFQ')),
-          ]),
-          const SizedBox(height: 8),
-          ...rows.map((row) => Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(16)),
-            child: Row(children: [
-              Container(width: 10, height: 10, decoration: BoxDecoration(color: row.$4, shape: BoxShape.circle)),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(row.$1), const SizedBox(height: 3), Text(row.$2, style: Theme.of(context).textTheme.bodySmall)])),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                decoration: BoxDecoration(color: row.$4.withValues(alpha: .10), borderRadius: BorderRadius.circular(999)),
-                child: Text(row.$3, style: TextStyle(fontSize: 11, color: row.$4)),
+          Row(
+            children: [
+              Text('Pipeline', style: Theme.of(context).textTheme.titleLarge),
+              const Spacer(),
+              TextButton(
+                onPressed: () => onNavigate(3),
+                child: const Text('RFQ'),
               ),
-            ]),
-          )),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...rows.map(
+            (row) => Container(
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: row.$4,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(row.$1),
+                        const SizedBox(height: 3),
+                        Text(
+                          row.$2,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: row.$4.withValues(alpha: .10),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      row.$3,
+                      style: TextStyle(fontSize: 11, color: row.$4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -389,10 +547,30 @@ class _ActivityPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.check_circle_rounded, const Color(0xFF1C9A73), 'RFQ approved', '5 min'),
-      (Icons.factory_rounded, const Color(0xFFE57A32), 'Production updated', '18 min'),
-      (Icons.description_rounded, const Color(0xFF0B8DB5), 'Document uploaded', '42 min'),
-      (Icons.person_add_alt_1_rounded, const Color(0xFF6E5AE6), 'New partner request', '1 h'),
+      (
+        Icons.check_circle_rounded,
+        const Color(0xFF1C9A73),
+        'RFQ approved',
+        '5 min',
+      ),
+      (
+        Icons.factory_rounded,
+        const Color(0xFFE57A32),
+        'Production updated',
+        '18 min',
+      ),
+      (
+        Icons.description_rounded,
+        const Color(0xFF0B8DB5),
+        'Document uploaded',
+        '42 min',
+      ),
+      (
+        Icons.person_add_alt_1_rounded,
+        const Color(0xFF6E5AE6),
+        'New partner request',
+        '1 h',
+      ),
     ];
     return Container(
       padding: const EdgeInsets.all(20),
@@ -402,15 +580,27 @@ class _ActivityPanel extends StatelessWidget {
         children: [
           Text('Activity', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
-          ...items.map((item) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(children: [
-              Container(width: 40, height: 40, decoration: BoxDecoration(color: item.$2.withValues(alpha: .12), borderRadius: BorderRadius.circular(13)), child: Icon(item.$1, color: item.$2, size: 20)),
-              const SizedBox(width: 11),
-              Expanded(child: Text(item.$3)),
-              Text(item.$4, style: Theme.of(context).textTheme.bodySmall),
-            ]),
-          )),
+          ...items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: item.$2.withValues(alpha: .12),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: Icon(item.$1, color: item.$2, size: 20),
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(child: Text(item.$3)),
+                  Text(item.$4, style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -421,5 +611,7 @@ BoxDecoration _surfaceDecoration() => BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.circular(22),
   border: Border.all(color: const Color(0xFFE7ECF2)),
-  boxShadow: const [BoxShadow(color: Color(0x0D062A46), blurRadius: 24, offset: Offset(0, 10))],
+  boxShadow: const [
+    BoxShadow(color: Color(0x0D062A46), blurRadius: 24, offset: Offset(0, 10)),
+  ],
 );

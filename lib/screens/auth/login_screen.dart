@@ -13,7 +13,8 @@ class LoginScreen extends StatefulWidget {
     required String email,
     required String password,
     AppRole? role,
-  }) onSignIn;
+  })
+  onSignIn;
   final String languageCode;
 
   @override
@@ -132,11 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         keyboardType: TextInputType.emailAddress,
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
-                          labelText: _tx(tr: 'E-posta', ar: 'البريد الإلكتروني', en: 'Email'),
+                          labelText: _tx(
+                            tr: 'E-posta',
+                            ar: 'البريد الإلكتروني',
+                            en: 'Email',
+                          ),
                           prefixIcon: const Icon(Icons.alternate_email_rounded),
                         ),
-                        validator: (value) => value == null || !value.contains('@')
-                            ? _tx(tr: 'Geçerli e-posta girin', ar: 'أدخل بريدًا صحيحًا', en: 'Enter a valid email')
+                        validator: (value) =>
+                            value == null || !value.contains('@')
+                            ? _tx(
+                                tr: 'Geçerli e-posta girin',
+                                ar: 'أدخل بريدًا صحيحًا',
+                                en: 'Enter a valid email',
+                              )
                             : null,
                       ),
                       const SizedBox(height: 16),
@@ -146,21 +156,38 @@ class _LoginScreenState extends State<LoginScreen> {
                         autofillHints: const [AutofillHints.password],
                         onFieldSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
-                          labelText: _tx(tr: 'Şifre', ar: 'كلمة المرور', en: 'Password'),
+                          labelText: _tx(
+                            tr: 'Şifre',
+                            ar: 'كلمة المرور',
+                            en: 'Password',
+                          ),
                           prefixIcon: const Icon(Icons.lock_outline_rounded),
                           suffixIcon: IconButton(
-                            onPressed: () => setState(() => _obscure = !_obscure),
-                            icon: Icon(_obscure ? Icons.visibility_rounded : Icons.visibility_off_rounded),
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility_rounded
+                                  : Icons.visibility_off_rounded,
+                            ),
                           ),
                         ),
                         validator: (value) => value == null || value.length < 6
-                            ? _tx(tr: 'En az 6 karakter', ar: '6 أحرف على الأقل', en: 'At least 6 characters')
+                            ? _tx(
+                                tr: 'En az 6 karakter',
+                                ar: '6 أحرف على الأقل',
+                                en: 'At least 6 characters',
+                              )
                             : null,
                       ),
                       if (_error != null) ...[
                         const SizedBox(height: 14),
                         Text(
-                          _tx(tr: 'Giriş bilgileri geçersiz', ar: 'بيانات الدخول غير صحيحة', en: 'Invalid sign-in details'),
+                          _tx(
+                            tr: 'Giriş bilgileri geçersiz',
+                            ar: 'بيانات الدخول غير صحيحة',
+                            en: 'Invalid sign-in details',
+                          ),
                           style: const TextStyle(color: Colors.redAccent),
                         ),
                       ],
@@ -171,11 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             ? const SizedBox(
                                 width: 18,
                                 height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Icon(Icons.login_rounded),
                         label: Text(
-                          _tx(tr: 'Giriş yap', ar: 'تسجيل الدخول', en: 'Sign in'),
+                          _tx(
+                            tr: 'Giriş yap',
+                            ar: 'تسجيل الدخول',
+                            en: 'Sign in',
+                          ),
                         ),
                       ),
                     ],

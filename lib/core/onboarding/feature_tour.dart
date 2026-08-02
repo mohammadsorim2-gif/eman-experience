@@ -140,7 +140,9 @@ class _FeatureTourDialogState extends State<_FeatureTourDialog> {
                 onPressed: last
                     ? widget.onDone
                     : () => setState(() => index += 1),
-                icon: Icon(last ? Icons.check_rounded : Icons.arrow_forward_rounded),
+                icon: Icon(
+                  last ? Icons.check_rounded : Icons.arrow_forward_rounded,
+                ),
                 label: Text(last ? widget.finishLabel : widget.nextLabel),
               ),
             ],

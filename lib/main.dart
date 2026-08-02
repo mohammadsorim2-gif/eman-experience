@@ -224,14 +224,46 @@ class _EmanOneShellState extends State<EmanOneShell> {
 
   List<AppSearchItem> _searchItems() {
     final subtitles = [
-      _ui(tr: 'Ana sayfa ve hızlı erişim', ar: 'الصفحة الرئيسية والوصول السريع', en: 'Home and quick access'),
-      _ui(tr: 'Ürünleri keşfedin ve karşılaştırın', ar: 'استكشف المنتجات وقارن بينها', en: 'Explore and compare products'),
-      _ui(tr: 'Global satış ortağı olun', ar: 'انضم كشريك مبيعات عالمي', en: 'Become a global sales partner'),
-      _ui(tr: 'Teklif talebi oluşturun', ar: 'أنشئ طلب عرض سعر', en: 'Create a request for quotation'),
-      _ui(tr: 'Siparişler, komisyonlar ve belgeler', ar: 'الطلبات والعمولات والمستندات', en: 'Orders, commissions and documents'),
-      _ui(tr: 'Canlı üretim ve makine takibi', ar: 'الإنتاج المباشر ومتابعة الآلات', en: 'Live production and machine monitoring'),
-      _ui(tr: 'KPI, analiz ve yönetim içgörüleri', ar: 'المؤشرات والتحليلات والرؤى الإدارية', en: 'KPIs, analytics and executive insights'),
-      _ui(tr: 'Kullanıcılar, roller ve içerik', ar: 'المستخدمون والصلاحيات والمحتوى', en: 'Users, roles and content'),
+      _ui(
+        tr: 'Ana sayfa ve hızlı erişim',
+        ar: 'الصفحة الرئيسية والوصول السريع',
+        en: 'Home and quick access',
+      ),
+      _ui(
+        tr: 'Ürünleri keşfedin ve karşılaştırın',
+        ar: 'استكشف المنتجات وقارن بينها',
+        en: 'Explore and compare products',
+      ),
+      _ui(
+        tr: 'Global satış ortağı olun',
+        ar: 'انضم كشريك مبيعات عالمي',
+        en: 'Become a global sales partner',
+      ),
+      _ui(
+        tr: 'Teklif talebi oluşturun',
+        ar: 'أنشئ طلب عرض سعر',
+        en: 'Create a request for quotation',
+      ),
+      _ui(
+        tr: 'Siparişler, komisyonlar ve belgeler',
+        ar: 'الطلبات والعمولات والمستندات',
+        en: 'Orders, commissions and documents',
+      ),
+      _ui(
+        tr: 'Canlı üretim ve makine takibi',
+        ar: 'الإنتاج المباشر ومتابعة الآلات',
+        en: 'Live production and machine monitoring',
+      ),
+      _ui(
+        tr: 'KPI, analiz ve yönetim içgörüleri',
+        ar: 'المؤشرات والتحليلات والرؤى الإدارية',
+        en: 'KPIs, analytics and executive insights',
+      ),
+      _ui(
+        tr: 'Kullanıcılar, roller ve içerik',
+        ar: 'المستخدمون والصلاحيات والمحتوى',
+        en: 'Users, roles and content',
+      ),
     ];
     return List.generate(destinationData.length, (index) {
       final item = destinationData[index];
@@ -269,7 +301,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
       context: context,
       steps: [
         FeatureTourStep(
-          title: _ui(tr: 'EMAN ONE’a hoş geldiniz', ar: 'مرحبًا بك في EMAN ONE', en: 'Welcome to EMAN ONE'),
+          title: _ui(
+            tr: 'EMAN ONE’a hoş geldiniz',
+            ar: 'مرحبًا بك في EMAN ONE',
+            en: 'Welcome to EMAN ONE',
+          ),
           body: _ui(
             tr: 'Satış, ürünler, üretim ve yönetimi tek platformdan yönetin.',
             ar: 'أدر المبيعات والمنتجات والإنتاج والإدارة من منصة واحدة.',
@@ -279,7 +315,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
           accent: const Color(0xFF0879B8),
         ),
         FeatureTourStep(
-          title: _ui(tr: 'Her şeye anında ulaşın', ar: 'الوصول الفوري إلى كل شيء', en: 'Reach everything instantly'),
+          title: _ui(
+            tr: 'Her şeye anında ulaşın',
+            ar: 'الوصول الفوري إلى كل شيء',
+            en: 'Reach everything instantly',
+          ),
           body: _ui(
             tr: 'Global arama ile ürünlere, RFQ’ya ve panellere saniyeler içinde gidin.',
             ar: 'استخدم البحث الشامل للوصول إلى المنتجات وطلبات الأسعار واللوحات خلال ثوانٍ.',
@@ -289,7 +329,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
           accent: const Color(0xFF7657D9),
         ),
         FeatureTourStep(
-          title: _ui(tr: 'Global satış ağı', ar: 'شبكة مبيعات عالمية', en: 'Global sales network'),
+          title: _ui(
+            tr: 'Global satış ağı',
+            ar: 'شبكة مبيعات عالمية',
+            en: 'Global sales network',
+          ),
           body: _ui(
             tr: 'Dünyanın her yerinden partnerler satış yapabilir ve komisyon kazanabilir.',
             ar: 'يمكن للشركاء من أي مكان في العالم البيع وكسب العمولة.',
@@ -299,7 +343,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
           accent: const Color(0xFF159776),
         ),
         FeatureTourStep(
-          title: _ui(tr: 'Canlı fabrika ve yönetim', ar: 'إدارة المعمل بشكل مباشر', en: 'Live factory and management'),
+          title: _ui(
+            tr: 'Canlı fabrika ve yönetim',
+            ar: 'إدارة المعمل بشكل مباشر',
+            en: 'Live factory and management',
+          ),
           body: _ui(
             tr: 'Üretimi, makineleri, KPI’ları ve kararları tek ekrandan takip edin.',
             ar: 'تابع الإنتاج والآلات والمؤشرات والقرارات من شاشة واحدة.',
@@ -330,7 +378,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
 
   Widget _searchButton({bool compact = false}) {
     return Tooltip(
-      message: _ui(tr: 'Her yerde ara', ar: 'بحث شامل', en: 'Search everywhere'),
+      message: _ui(
+        tr: 'Her yerde ara',
+        ar: 'بحث شامل',
+        en: 'Search everywhere',
+      ),
       child: Material(
         color: const Color(0xFFF1F6F9),
         borderRadius: BorderRadius.circular(14),
@@ -345,7 +397,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.search_rounded, size: 19, color: Color(0xFF0879B8)),
+                const Icon(
+                  Icons.search_rounded,
+                  size: 19,
+                  color: Color(0xFF0879B8),
+                ),
                 if (!compact) ...[
                   const SizedBox(width: 8),
                   Text(
@@ -383,7 +439,10 @@ class _EmanOneShellState extends State<EmanOneShell> {
                       height: 46,
                       errorBuilder: (_, _, _) => const Text(
                         'EMAN',
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 7),
@@ -411,7 +470,11 @@ class _EmanOneShellState extends State<EmanOneShell> {
                   .map(
                     (item) => NavigationRailDestination(
                       icon: _coloredIcon(item.$1, item.$3, selected: false),
-                      selectedIcon: _coloredIcon(item.$1, item.$3, selected: true),
+                      selectedIcon: _coloredIcon(
+                        item.$1,
+                        item.$3,
+                        selected: true,
+                      ),
                       label: Text(
                         _label(item.$2),
                         style: AppTypography.navigation(
@@ -448,7 +511,10 @@ class _EmanOneShellState extends State<EmanOneShell> {
               errorBuilder: (_, _, _) => const Text('EMAN'),
             ),
             const SizedBox(width: 8),
-            const Text('ONE', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+            const Text(
+              'ONE',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+            ),
           ],
         ),
         actions: [
@@ -566,7 +632,10 @@ class _LanguageSelector extends StatelessWidget {
               const SizedBox(width: 7),
               Text(
                 language.nativeName,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
             const SizedBox(width: 3),

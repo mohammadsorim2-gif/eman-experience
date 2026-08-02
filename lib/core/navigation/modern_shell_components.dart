@@ -85,10 +85,7 @@ class ModernSidebar extends StatelessWidget {
             ),
           ),
           const Divider(height: 1),
-          Padding(
-            padding: EdgeInsets.all(collapsed ? 12 : 16),
-            child: footer,
-          ),
+          Padding(padding: EdgeInsets.all(collapsed ? 12 : 16), child: footer),
         ],
       ),
     );
@@ -191,9 +188,9 @@ class _SidebarTileState extends State<_SidebarTile> {
                         ),
                         child: Text(
                           item.badge!,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: item.accent,
-                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(color: item.accent),
                         ),
                       ),
                   ],
@@ -269,10 +266,7 @@ class ModernTopBar extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.search_rounded,
-                      color: Color(0xFF4D6A79),
-                    ),
+                    const Icon(Icons.search_rounded, color: Color(0xFF4D6A79)),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(

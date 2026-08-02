@@ -144,9 +144,7 @@ class _SectionOnboardingSheetState extends State<_SectionOnboardingSheet> {
                 decoration: BoxDecoration(
                   color: step.accent.withValues(alpha: .08),
                   borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: step.accent.withValues(alpha: .16),
-                  ),
+                  border: Border.all(color: step.accent.withValues(alpha: .16)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

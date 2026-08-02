@@ -46,16 +46,16 @@ class AppUser {
   }
 
   Map<String, Object?> toMap() => {
-        'id': id,
-        'email': email,
-        'displayName': displayName,
-        'role': role.name,
-        'department': department,
-        'isActive': isActive,
-        'permissionsOverride': permissionsOverride
-            ?.map((permission) => permission.name)
-            .toList(),
-      };
+    'id': id,
+    'email': email,
+    'displayName': displayName,
+    'role': role.name,
+    'department': department,
+    'isActive': isActive,
+    'permissionsOverride': permissionsOverride
+        ?.map((permission) => permission.name)
+        .toList(),
+  };
 
   factory AppUser.fromMap(Map<String, Object?> map) {
     final roleName = map['role'] as String? ?? AppRole.worker.name;
@@ -66,14 +66,14 @@ class AppUser {
     final rawPermissions = map['permissionsOverride'];
     final override = rawPermissions is List
         ? rawPermissions
-            .whereType<String>()
-            .map(
-              (name) => AppPermission.values.firstWhere(
-                (item) => item.name == name,
-                orElse: () => AppPermission.viewDashboard,
-              ),
-            )
-            .toSet()
+              .whereType<String>()
+              .map(
+                (name) => AppPermission.values.firstWhere(
+                  (item) => item.name == name,
+                  orElse: () => AppPermission.viewDashboard,
+                ),
+              )
+              .toSet()
         : null;
 
     return AppUser(

@@ -75,8 +75,7 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool can(AppPermission permission) =>
-      _currentUser?.can(permission) ?? false;
+  bool can(AppPermission permission) => _currentUser?.can(permission) ?? false;
 
   AppRole _inferRole(String email) {
     if (email.startsWith('owner') || email.startsWith('admin')) {
