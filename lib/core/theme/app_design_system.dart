@@ -22,7 +22,10 @@ abstract final class AppDesignSystem {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFFF8FAFC),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 15,
+        ),
         hintStyle: base.textTheme.bodyMedium?.copyWith(
           color: const Color(0xFF81919A),
           fontWeight: FontWeight.w300,

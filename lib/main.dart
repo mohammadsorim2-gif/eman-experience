@@ -8,6 +8,7 @@ import 'core/app_language.dart';
 import 'core/onboarding/feature_tour.dart';
 import 'core/search/global_search.dart';
 import 'core/theme/app_typography.dart';
+import 'core/theme/app_design_system.dart';
 import 'screens/executive/advanced_executive_dashboard.dart';
 import 'screens/factory/advanced_factory_dashboard.dart';
 import 'screens/home/polished_home.dart';
@@ -109,7 +110,9 @@ class _EmanOneAppState extends State<EmanOneApp> {
         ),
       ),
     );
-    return base.copyWith(textTheme: AppTypography.textTheme(arabic: arabic));
+    return AppDesignSystem.apply(
+      base.copyWith(textTheme: AppTypography.textTheme(arabic: arabic)),
+    );
   }
 
   @override
