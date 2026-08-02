@@ -71,7 +71,7 @@ class _PlatformHomeState extends State<PlatformHome> {
                 child: Image.asset(
                   'assets/logos/Eman logo.png',
                   height: 55,
-                  errorBuilder: (_, __, ___) => const Text(
+                  errorBuilder: (_, _, _) => const Text(
                     'EMAN',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
                   ),
@@ -165,7 +165,7 @@ class PublicHome extends StatelessWidget {
               Image.asset(
                 'assets/logos/Eman logo.png',
                 height: 54,
-                errorBuilder: (_, __, ___) => const Text(
+                errorBuilder: (_, _, _) => const Text(
                   'EMAN',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
                 ),
@@ -302,7 +302,7 @@ class PublicHome extends StatelessWidget {
                         Image.asset(
                           products.first,
                           height: 335,
-                          errorBuilder: (_, __, ___) => const Icon(
+                          errorBuilder: (_, _, _) => const Icon(
                             Icons.local_drink,
                             size: 170,
                             color: EmanExperienceApp.blue,
@@ -437,7 +437,7 @@ class ProductsPage extends StatelessWidget {
                             child: Image.asset(
                               product.$3,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => const Icon(
+                              errorBuilder: (_, _, _) => const Icon(
                                 Icons.local_drink,
                                 size: 90,
                                 color: EmanExperienceApp.blue,

@@ -72,7 +72,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -81,11 +81,19 @@ class _EmanOneAppState extends State<EmanOneApp> {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
         ),
+      ),
+      navigationDrawerTheme: NavigationDrawerThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
+          return AppTypography.navigation(
+            languageCode: _language.code,
+            selected: states.contains(WidgetState.selected),
+          );
+        }),
       ),
       navigationRailTheme: NavigationRailThemeData(
         useIndicator: true,
@@ -248,12 +256,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
                     (item) => NavigationRailDestination(
                       icon: Icon(item.$1),
                       selectedIcon: Icon(item.$1),
-                      label: Text(
-                        _label(item.$2),
-                        style: AppTypography.navigation(
-                          languageCode: widget.language.code,
-                        ),
-                      ),
+                      label: Text(_label(item.$2)),
                     ),
                   )
                   .toList(),
@@ -317,12 +320,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
             (item) => NavigationDrawerDestination(
               icon: Icon(item.$1, size: 20),
               selectedIcon: Icon(item.$1, size: 20),
-              label: Text(
-                _label(item.$2),
-                style: AppTypography.navigation(
-                  languageCode: widget.language.code,
-                ),
-              ),
+              label: Text(_label(item.$2)),
             ),
           ),
         ],

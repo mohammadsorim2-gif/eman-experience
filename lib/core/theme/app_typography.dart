@@ -19,42 +19,42 @@ abstract final class AppTypography {
     return base.copyWith(
       displayLarge: base.displayLarge?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.18 : 1.08,
       ),
       displayMedium: base.displayMedium?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.20 : 1.10,
       ),
       displaySmall: base.displaySmall?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.22 : 1.12,
       ),
       headlineLarge: base.headlineLarge?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.28 : 1.16,
       ),
       headlineMedium: base.headlineMedium?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.30 : 1.18,
       ),
       headlineSmall: base.headlineSmall?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.32 : 1.20,
       ),
       titleLarge: base.titleLarge?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.35 : 1.22,
       ),
       titleMedium: base.titleMedium?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.38 : 1.24,
       ),
       titleSmall: base.titleSmall?.copyWith(
@@ -79,7 +79,7 @@ abstract final class AppTypography {
       ),
       labelLarge: base.labelLarge?.copyWith(
         fontFamily: family,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: arabic ? 1.35 : 1.20,
       ),
       labelMedium: base.labelMedium?.copyWith(
@@ -103,7 +103,7 @@ abstract final class AppTypography {
     return TextStyle(
       fontFamily: familyFor(languageCode),
       fontSize: 14,
-      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+      fontWeight: selected ? FontWeight.w400 : FontWeight.w300,
       height: arabic ? 1.42 : 1.25,
       color: selected ? const Color(0xFF052A45) : const Color(0xFF607480),
     );

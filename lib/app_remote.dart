@@ -458,7 +458,7 @@ class _RemoteImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      errorBuilder: (_, __, ___) => const Icon(
+      errorBuilder: (_, _, _) => const Icon(
         Icons.image_not_supported_outlined,
         size: 42,
         color: Color(0xFFB7C5CE),

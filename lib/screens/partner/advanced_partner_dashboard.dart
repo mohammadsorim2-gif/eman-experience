@@ -365,10 +365,11 @@ class AdvancedPartnerDashboard extends StatelessWidget {
                 _ActivityCard(t: _t),
               ],
             );
-            if (stacked)
+            if (stacked) {
               return Column(
                 children: [pipeline, const SizedBox(height: 18), side],
               );
+            }
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

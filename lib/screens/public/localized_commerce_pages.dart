@@ -504,8 +504,9 @@ class _LocalizedBecomePartnerPageState
                                     )
                                     .toList(),
                             onChanged: (value) {
-                              if (value != null)
+                              if (value != null) {
                                 setState(() => country = value);
+                              }
                             },
                           ),
                           const SizedBox(height: 16),
