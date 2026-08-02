@@ -1,0 +1,13 @@
+{
+  "name": "EMAN Experience",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "EMAN Flutter Web",
+      "onAutoForward": "openBrowser",
+      "protocol": "http",
+      "visibility": "public"
+    }
+  }
+}
