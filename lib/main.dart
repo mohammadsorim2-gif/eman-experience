@@ -34,7 +34,9 @@ class _EmanOneAppState extends State<EmanOneApp> {
 
   Future<void> _loadLanguage() async {
     final preferences = await SharedPreferences.getInstance();
-    final language = AppLanguage.fromCode(preferences.getString('app_language'));
+    final language = AppLanguage.fromCode(
+      preferences.getString('app_language'),
+    );
     if (mounted) setState(() => _language = language);
   }
 
@@ -53,7 +55,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
         primary: EmanExperienceApp.blue,
       ),
       scaffoldBackgroundColor: EmanExperienceApp.background,
-      fontFamily: arabic ? 'Noto Sans Arabic' : 'Inter',
+      fontFamily: arabic ? 'DINNextLTArabic' : 'NotoSans',
       fontFamilyFallback: arabic
           ? const ['Tahoma', 'Arial', 'sans-serif']
           : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
@@ -69,29 +71,44 @@ class _EmanOneAppState extends State<EmanOneApp> {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
       navigationRailTheme: const NavigationRailThemeData(
         useIndicator: true,
         indicatorColor: Color(0xFFE8F4FA),
-        selectedIconTheme: IconThemeData(size: 21, color: EmanExperienceApp.blue),
+        selectedIconTheme: IconThemeData(
+          size: 21,
+          color: EmanExperienceApp.blue,
+        ),
         unselectedIconTheme: IconThemeData(size: 20, color: Color(0xFF6B7E89)),
-        selectedLabelTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: EmanExperienceApp.navy),
-        unselectedLabelTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF607480)),
+        selectedLabelTextStyle: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: EmanExperienceApp.navy,
+        ),
+        unselectedLabelTextStyle: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF607480),
+        ),
       ),
     );
     return base.copyWith(
       textTheme: base.textTheme.apply(
-        fontFamily: arabic ? 'Noto Sans Arabic' : 'Inter',
+        fontFamily: arabic ? 'DINNextLTArabic' : 'NotoSans',
         fontFamilyFallback: arabic
             ? const ['Tahoma', 'Arial', 'sans-serif']
             : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
@@ -105,7 +122,9 @@ class _EmanOneAppState extends State<EmanOneApp> {
       debugShowCheckedModeBanner: false,
       title: AppI18n.text('app.title', _language.code),
       locale: _language.locale,
-      supportedLocales: AppLanguage.supported.map((item) => item.locale).toList(),
+      supportedLocales: AppLanguage.supported
+          .map((item) => item.locale)
+          .toList(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -128,10 +147,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
         ),
       ),
       theme: _theme(),
-      home: EmanOneShell(
-        language: _language,
-        onLanguageChanged: _setLanguage,
-      ),
+      home: EmanOneShell(language: _language, onLanguageChanged: _setLanguage),
     );
   }
 }
@@ -181,9 +197,9 @@ class _EmanOneShellState extends State<EmanOneShell> {
   }
 
   Widget _currentPage() => KeyedSubtree(
-        key: ValueKey('${widget.language.code}-$currentIndex'),
-        child: pages[currentIndex],
-      );
+    key: ValueKey('${widget.language.code}-$currentIndex'),
+    child: pages[currentIndex],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +213,8 @@ class _EmanOneShellState extends State<EmanOneShell> {
               minExtendedWidth: 226,
               backgroundColor: Colors.white,
               selectedIndex: currentIndex,
-              onDestinationSelected: (value) => setState(() => currentIndex = value),
+              onDestinationSelected: (value) =>
+                  setState(() => currentIndex = value),
               leading: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
                 child: Column(
@@ -207,7 +224,10 @@ class _EmanOneShellState extends State<EmanOneShell> {
                       height: 46,
                       errorBuilder: (_, _, _) => const Text(
                         'EMAN',
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 7),
@@ -216,7 +236,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
                       style: const TextStyle(
                         fontSize: 9,
                         letterSpacing: 1.5,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xFF72838E),
                       ),
                     ),
@@ -265,7 +285,10 @@ class _EmanOneShellState extends State<EmanOneShell> {
               errorBuilder: (_, _, _) => const Text('EMAN'),
             ),
             const SizedBox(width: 8),
-            const Text('ONE', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+            const Text(
+              'ONE',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+            ),
           ],
         ),
         actions: [
@@ -288,7 +311,7 @@ class _EmanOneShellState extends State<EmanOneShell> {
             padding: const EdgeInsets.fromLTRB(28, 24, 16, 12),
             child: Text(
               _label('app.title'),
-              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w500),
             ),
           ),
           ...destinationData.map(
@@ -338,13 +361,17 @@ class _LanguageSelector extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12,
                         color: EmanExperienceApp.blue,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                   Expanded(child: Text(item.nativeName)),
                   if (item.code == language.code)
-                    const Icon(Icons.check_rounded, size: 17, color: EmanExperienceApp.blue),
+                    const Icon(
+                      Icons.check_rounded,
+                      size: 17,
+                      color: EmanExperienceApp.blue,
+                    ),
                 ],
               ),
             ),
@@ -366,7 +393,13 @@ class _LanguageSelector extends StatelessWidget {
             const Icon(Icons.language_rounded, size: 17),
             if (!compact) ...[
               const SizedBox(width: 7),
-              Text(language.nativeName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+              Text(
+                language.nativeName,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
             const SizedBox(width: 3),
             const Icon(Icons.expand_more_rounded, size: 17),
