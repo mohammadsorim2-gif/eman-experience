@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/app_i18n.dart';
 import 'core/app_language.dart';
+import 'core/theme/app_typography.dart';
 import 'screens/executive/advanced_executive_dashboard.dart';
 import 'screens/factory/advanced_factory_dashboard.dart';
 import 'screens/home/polished_home.dart';
@@ -55,7 +56,7 @@ class _EmanOneAppState extends State<EmanOneApp> {
         primary: EmanExperienceApp.blue,
       ),
       scaffoldBackgroundColor: EmanExperienceApp.background,
-      fontFamily: arabic ? 'DINNextLTArabic' : 'NotoSans',
+      fontFamily: AppTypography.familyFor(_language.code),
       fontFamilyFallback: arabic
           ? const ['Tahoma', 'Arial', 'sans-serif']
           : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
@@ -86,34 +87,27 @@ class _EmanOneAppState extends State<EmanOneApp> {
           ),
         ),
       ),
-      navigationRailTheme: const NavigationRailThemeData(
+      navigationRailTheme: NavigationRailThemeData(
         useIndicator: true,
-        indicatorColor: Color(0xFFE8F4FA),
-        selectedIconTheme: IconThemeData(
+        indicatorColor: const Color(0xFFE8F4FA),
+        selectedIconTheme: const IconThemeData(
           size: 21,
           color: EmanExperienceApp.blue,
         ),
-        unselectedIconTheme: IconThemeData(size: 20, color: Color(0xFF6B7E89)),
-        selectedLabelTextStyle: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: EmanExperienceApp.navy,
+        unselectedIconTheme: const IconThemeData(
+          size: 20,
+          color: Color(0xFF6B7E89),
         ),
-        unselectedLabelTextStyle: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF607480),
+        selectedLabelTextStyle: AppTypography.navigation(
+          languageCode: _language.code,
+          selected: true,
+        ),
+        unselectedLabelTextStyle: AppTypography.navigation(
+          languageCode: _language.code,
         ),
       ),
     );
-    return base.copyWith(
-      textTheme: base.textTheme.apply(
-        fontFamily: arabic ? 'DINNextLTArabic' : 'NotoSans',
-        fontFamilyFallback: arabic
-            ? const ['Tahoma', 'Arial', 'sans-serif']
-            : const ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
-      ),
-    );
+    return base.copyWith(textTheme: AppTypography.textTheme(arabic: arabic));
   }
 
   @override
@@ -254,7 +248,12 @@ class _EmanOneShellState extends State<EmanOneShell> {
                     (item) => NavigationRailDestination(
                       icon: Icon(item.$1),
                       selectedIcon: Icon(item.$1),
-                      label: Text(_label(item.$2)),
+                      label: Text(
+                        _label(item.$2),
+                        style: AppTypography.navigation(
+                          languageCode: widget.language.code,
+                        ),
+                      ),
                     ),
                   )
                   .toList(),
@@ -318,7 +317,12 @@ class _EmanOneShellState extends State<EmanOneShell> {
             (item) => NavigationDrawerDestination(
               icon: Icon(item.$1, size: 20),
               selectedIcon: Icon(item.$1, size: 20),
-              label: Text(_label(item.$2)),
+              label: Text(
+                _label(item.$2),
+                style: AppTypography.navigation(
+                  languageCode: widget.language.code,
+                ),
+              ),
             ),
           ),
         ],

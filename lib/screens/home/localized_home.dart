@@ -68,26 +68,19 @@ class _LocalizedHomeState extends State<LocalizedHome>
           Positioned.fill(
             child: AnimatedBuilder(
               animation: _controller,
-              builder: (context, _) => CustomPaint(
-                painter: _OrbitPainter(_controller.value),
-              ),
+              builder: (context, _) =>
+                  CustomPaint(painter: _OrbitPainter(_controller.value)),
             ),
           ),
           Positioned(
             top: -100,
             right: -80,
-            child: _GlowOrb(
-              size: 360,
-              color: const Color(0x5526BDF5),
-            ),
+            child: _GlowOrb(size: 360, color: const Color(0x5526BDF5)),
           ),
           Positioned(
             bottom: -140,
             left: -80,
-            child: _GlowOrb(
-              size: 420,
-              color: const Color(0x44FFC857),
-            ),
+            child: _GlowOrb(size: 420, color: const Color(0x44FFC857)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 64),
@@ -107,11 +100,7 @@ class _LocalizedHomeState extends State<LocalizedHome>
                     if (compact) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          copy,
-                          const SizedBox(height: 46),
-                          visual,
-                        ],
+                        children: [copy, const SizedBox(height: 46), visual],
                       );
                     }
 
@@ -134,9 +123,21 @@ class _LocalizedHomeState extends State<LocalizedHome>
 
   Widget _metricsStrip(BuildContext context) {
     final metrics = [
-      (context.t('home.badgeCountriesValue'), context.t('home.badgeCountriesLabel'), Icons.public),
-      (context.t('home.badgePartnersValue'), context.t('home.badgePartnersLabel'), Icons.handshake_outlined),
-      ('250+', context.t('home.cardWholesaleTitle'), Icons.inventory_2_outlined),
+      (
+        context.t('home.badgeCountriesValue'),
+        context.t('home.badgeCountriesLabel'),
+        Icons.public,
+      ),
+      (
+        context.t('home.badgePartnersValue'),
+        context.t('home.badgePartnersLabel'),
+        Icons.handshake_outlined,
+      ),
+      (
+        '250+',
+        context.t('home.cardWholesaleTitle'),
+        Icons.inventory_2_outlined,
+      ),
       ('24/7', context.t('home.cardFactoryTitle'), Icons.factory_outlined),
     ];
 
@@ -192,10 +193,30 @@ class _LocalizedHomeState extends State<LocalizedHome>
 
   Widget _capabilities(BuildContext context) {
     final items = [
-      (Icons.storefront_outlined, 'home.cardWholesaleTitle', 'home.cardWholesaleText', const Color(0xFF0B7BC1)),
-      (Icons.groups_outlined, 'home.cardPartnerTitle', 'home.cardPartnerText', const Color(0xFF6D5CE7)),
-      (Icons.factory_outlined, 'home.cardFactoryTitle', 'home.cardFactoryText', const Color(0xFFEF7A31)),
-      (Icons.monitor_heart_outlined, 'home.cardExecutiveTitle', 'home.cardExecutiveText', const Color(0xFF15A277)),
+      (
+        Icons.storefront_outlined,
+        'home.cardWholesaleTitle',
+        'home.cardWholesaleText',
+        const Color(0xFF0B7BC1),
+      ),
+      (
+        Icons.groups_outlined,
+        'home.cardPartnerTitle',
+        'home.cardPartnerText',
+        const Color(0xFF6D5CE7),
+      ),
+      (
+        Icons.factory_outlined,
+        'home.cardFactoryTitle',
+        'home.cardFactoryText',
+        const Color(0xFFEF7A31),
+      ),
+      (
+        Icons.monitor_heart_outlined,
+        'home.cardExecutiveTitle',
+        'home.cardExecutiveText',
+        const Color(0xFF15A277),
+      ),
     ];
 
     return Container(
@@ -218,8 +239,8 @@ class _LocalizedHomeState extends State<LocalizedHome>
                   final columns = constraints.maxWidth >= 1080
                       ? 4
                       : constraints.maxWidth >= 650
-                          ? 2
-                          : 1;
+                      ? 2
+                      : 1;
                   final width =
                       (constraints.maxWidth - ((columns - 1) * 20)) / columns;
                   return Wrap(
@@ -271,15 +292,27 @@ class _LocalizedHomeState extends State<LocalizedHome>
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      _Pill(icon: Icons.verified_outlined, text: context.t('home.proofFactory')),
-                      _Pill(icon: Icons.public, text: context.t('home.proofGlobal')),
-                      _Pill(icon: Icons.payments_outlined, text: context.t('home.proofCommission')),
+                      _Pill(
+                        icon: Icons.verified_outlined,
+                        text: context.t('home.proofFactory'),
+                      ),
+                      _Pill(
+                        icon: Icons.public,
+                        text: context.t('home.proofGlobal'),
+                      ),
+                      _Pill(
+                        icon: Icons.payments_outlined,
+                        text: context.t('home.proofCommission'),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 30),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
                     ),
                     onPressed: () {},
                     icon: const Icon(Icons.arrow_forward),
@@ -374,7 +407,10 @@ class _LocalizedHomeState extends State<LocalizedHome>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 13,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: .1),
                         borderRadius: BorderRadius.circular(999),
@@ -384,7 +420,7 @@ class _LocalizedHomeState extends State<LocalizedHome>
                         style: const TextStyle(
                           color: Color(0xFFFFD477),
                           fontSize: 12,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w500,
                           letterSpacing: 1.3,
                         ),
                       ),
@@ -396,7 +432,7 @@ class _LocalizedHomeState extends State<LocalizedHome>
                         color: Colors.white,
                         fontSize: compact ? 34 : 44,
                         height: 1.05,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 15),
@@ -414,7 +450,10 @@ class _LocalizedHomeState extends State<LocalizedHome>
                   style: FilledButton.styleFrom(
                     backgroundColor: EmanExperienceApp.gold,
                     foregroundColor: EmanExperienceApp.navy,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 18,
+                    ),
                   ),
                   onPressed: () {},
                   icon: const Icon(Icons.arrow_forward),
@@ -472,7 +511,7 @@ class _HeroCopy extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.3,
                 ),
               ),
@@ -487,7 +526,7 @@ class _HeroCopy extends StatelessWidget {
             fontSize: compact ? 50 : 76,
             height: .98,
             letterSpacing: -2.5,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 26),
@@ -511,7 +550,10 @@ class _HeroCopy extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: EmanExperienceApp.navy,
-                padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 23,
+                  vertical: 18,
+                ),
               ),
               onPressed: () {},
               icon: const Icon(Icons.inventory_2_outlined),
@@ -521,7 +563,10 @@ class _HeroCopy extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
                 side: BorderSide(color: Colors.white.withValues(alpha: .42)),
-                padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 23,
+                  vertical: 18,
+                ),
               ),
               onPressed: () {},
               icon: const Icon(Icons.person_add_alt_outlined),
@@ -535,8 +580,14 @@ class _HeroCopy extends StatelessWidget {
           runSpacing: 12,
           children: [
             _HeroProof(icon: Icons.public, text: context.t('home.proofGlobal')),
-            _HeroProof(icon: Icons.factory_outlined, text: context.t('home.proofFactory')),
-            _HeroProof(icon: Icons.payments_outlined, text: context.t('home.proofCommission')),
+            _HeroProof(
+              icon: Icons.factory_outlined,
+              text: context.t('home.proofFactory'),
+            ),
+            _HeroProof(
+              icon: Icons.payments_outlined,
+              text: context.t('home.proofCommission'),
+            ),
           ],
         ),
       ],
@@ -586,7 +637,9 @@ class _HeroVisual extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(48),
                   color: Colors.white.withValues(alpha: .08),
-                  border: Border.all(color: Colors.white.withValues(alpha: .17)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: .17),
+                  ),
                   boxShadow: const [
                     BoxShadow(
                       blurRadius: 60,
@@ -650,7 +703,10 @@ class _HeroProof extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           text,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
@@ -700,14 +756,17 @@ class _FloatingGlassBadge extends StatelessWidget {
                   style: const TextStyle(
                     color: EmanExperienceApp.navy,
                     fontSize: 21,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   label,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFF607482), fontSize: 11),
+                  style: const TextStyle(
+                    color: Color(0xFF607482),
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -752,7 +811,7 @@ class _MetricTile extends StatelessWidget {
                   value,
                   style: const TextStyle(
                     fontSize: 25,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w500,
                     color: EmanExperienceApp.navy,
                   ),
                 ),
@@ -760,7 +819,10 @@ class _MetricTile extends StatelessWidget {
                   label,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFF647985), fontSize: 12),
+                  style: const TextStyle(
+                    color: Color(0xFF647985),
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -804,7 +866,9 @@ class _CapabilityCardState extends State<_CapabilityCard> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: hovered ? widget.accent.withValues(alpha: .35) : const Color(0xFFE2EBF1),
+            color: hovered
+                ? widget.accent.withValues(alpha: .35)
+                : const Color(0xFFE2EBF1),
           ),
           boxShadow: [
             BoxShadow(
@@ -833,24 +897,17 @@ class _CapabilityCardState extends State<_CapabilityCard> {
               widget.title,
               style: const TextStyle(
                 fontSize: 21,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w500,
                 color: EmanExperienceApp.navy,
               ),
             ),
             const SizedBox(height: 11),
             Text(
               widget.text,
-              style: const TextStyle(
-                height: 1.6,
-                color: Color(0xFF617684),
-              ),
+              style: const TextStyle(height: 1.6, color: Color(0xFF617684)),
             ),
             const SizedBox(height: 20),
-            Icon(
-              Icons.arrow_forward,
-              color: widget.accent,
-              size: 21,
-            ),
+            Icon(Icons.arrow_forward, color: widget.accent, size: 21),
           ],
         ),
       ),
@@ -879,7 +936,7 @@ class _SectionHeader extends StatelessWidget {
           style: const TextStyle(
             color: EmanExperienceApp.blue,
             fontSize: 12,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
             letterSpacing: 1.5,
           ),
         ),
@@ -889,7 +946,7 @@ class _SectionHeader extends StatelessWidget {
           style: const TextStyle(
             fontSize: 42,
             height: 1.06,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
             letterSpacing: -1.2,
             color: EmanExperienceApp.navy,
           ),
@@ -931,7 +988,7 @@ class _Pill extends StatelessWidget {
         children: [
           Icon(icon, size: 18, color: EmanExperienceApp.blue),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Text(text, style: const TextStyle(fontWeight: FontWeight.w500)),
         ],
       ),
     );

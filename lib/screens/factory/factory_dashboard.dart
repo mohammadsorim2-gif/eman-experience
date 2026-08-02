@@ -24,7 +24,7 @@ class FactoryDashboard extends StatelessWidget {
                     'EMAN Factory Command Center',
                     style: TextStyle(
                       fontSize: 40,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w500,
                       color: EmanExperienceApp.navy,
                     ),
                   ),
@@ -48,8 +48,8 @@ class FactoryDashboard extends StatelessWidget {
             final width = constraints.maxWidth >= 1100
                 ? (constraints.maxWidth - 54) / 4
                 : constraints.maxWidth >= 620
-                    ? (constraints.maxWidth - 18) / 2
-                    : constraints.maxWidth;
+                ? (constraints.maxWidth - 18) / 2
+                : constraints.maxWidth;
             return Wrap(
               spacing: 18,
               runSpacing: 18,
@@ -150,7 +150,7 @@ class _FactoryMetric extends StatelessWidget {
               value,
               style: const TextStyle(
                 fontSize: 30,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w500,
                 color: EmanExperienceApp.navy,
               ),
             ),
@@ -159,7 +159,7 @@ class _FactoryMetric extends StatelessWidget {
               note,
               style: const TextStyle(
                 color: Color(0xFF168A61),
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -182,16 +182,36 @@ class _ProductionBoard extends StatelessWidget {
           children: const [
             Text(
               'Live production lines',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 20),
-            _LineRow(name: 'Powder Line A', order: 'Valore Orange 10 g', progress: .78, status: 'Running'),
+            _LineRow(
+              name: 'Powder Line A',
+              order: 'Valore Orange 10 g',
+              progress: .78,
+              status: 'Running',
+            ),
             Divider(),
-            _LineRow(name: 'Powder Line B', order: 'Frio Cups Mango 9 g', progress: .51, status: 'Running'),
+            _LineRow(
+              name: 'Powder Line B',
+              order: 'Frio Cups Mango 9 g',
+              progress: .51,
+              status: 'Running',
+            ),
             Divider(),
-            _LineRow(name: 'Bulk Line', order: 'Roya C Cocktail 2.5 kg', progress: .33, status: 'Setup'),
+            _LineRow(
+              name: 'Bulk Line',
+              order: 'Roya C Cocktail 2.5 kg',
+              progress: .33,
+              status: 'Setup',
+            ),
             Divider(),
-            _LineRow(name: 'Packing Line C', order: 'Full Fresh Strawberry', progress: .92, status: 'Finishing'),
+            _LineRow(
+              name: 'Packing Line C',
+              order: 'Full Fresh Strawberry',
+              progress: .92,
+              status: 'Finishing',
+            ),
           ],
         ),
       ),
@@ -222,7 +242,10 @@ class _LineRow extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(name, style: const TextStyle(fontWeight: FontWeight.w900)),
+                child: Text(
+                  name,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
               ),
               Chip(label: Text(status)),
             ],
@@ -253,15 +276,38 @@ class _FactoryAlerts extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text('Priority alerts', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
+            Text(
+              'Priority alerts',
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+            ),
             SizedBox(height: 18),
-            _AlertTile(icon: Icons.inventory_2_outlined, title: 'Citric acid below safety stock', detail: 'Estimated coverage: 3.5 days', urgent: true),
+            _AlertTile(
+              icon: Icons.inventory_2_outlined,
+              title: 'Citric acid below safety stock',
+              detail: 'Estimated coverage: 3.5 days',
+              urgent: true,
+            ),
             Divider(),
-            _AlertTile(icon: Icons.science_outlined, title: 'Three lots awaiting laboratory release', detail: 'Quality team notified', urgent: false),
+            _AlertTile(
+              icon: Icons.science_outlined,
+              title: 'Three lots awaiting laboratory release',
+              detail: 'Quality team notified',
+              urgent: false,
+            ),
             Divider(),
-            _AlertTile(icon: Icons.build_outlined, title: 'Packing Line B maintenance due', detail: 'Scheduled today at 18:00', urgent: false),
+            _AlertTile(
+              icon: Icons.build_outlined,
+              title: 'Packing Line B maintenance due',
+              detail: 'Scheduled today at 18:00',
+              urgent: false,
+            ),
             Divider(),
-            _AlertTile(icon: Icons.local_shipping_outlined, title: 'Container booking confirmation needed', detail: 'Shipment EX-2048', urgent: true),
+            _AlertTile(
+              icon: Icons.local_shipping_outlined,
+              title: 'Container booking confirmation needed',
+              detail: 'Shipment EX-2048',
+              urgent: true,
+            ),
           ],
         ),
       ),
@@ -270,7 +316,12 @@ class _FactoryAlerts extends StatelessWidget {
 }
 
 class _AlertTile extends StatelessWidget {
-  const _AlertTile({required this.icon, required this.title, required this.detail, required this.urgent});
+  const _AlertTile({
+    required this.icon,
+    required this.title,
+    required this.detail,
+    required this.urgent,
+  });
 
   final IconData icon;
   final String title;
@@ -282,10 +333,15 @@ class _AlertTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
-        backgroundColor: urgent ? const Color(0xFFFFECE8) : const Color(0xFFEAF6FF),
-        child: Icon(icon, color: urgent ? const Color(0xFFD74B33) : EmanExperienceApp.blue),
+        backgroundColor: urgent
+            ? const Color(0xFFFFECE8)
+            : const Color(0xFFEAF6FF),
+        child: Icon(
+          icon,
+          color: urgent ? const Color(0xFFD74B33) : EmanExperienceApp.blue,
+        ),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Text(detail),
     );
   }
@@ -295,21 +351,45 @@ class _OperationsGrid extends StatelessWidget {
   const _OperationsGrid();
 
   static const items = [
-    ('Production planning', Icons.calendar_month_outlined, 'Orders, capacity and shifts'),
-    ('Raw materials', Icons.inventory_outlined, 'Stock, reservations and shortages'),
-    ('Quality & laboratory', Icons.science_outlined, 'Lots, tests and release status'),
-    ('Packaging', Icons.all_inbox_outlined, 'Materials, artwork and line setup'),
+    (
+      'Production planning',
+      Icons.calendar_month_outlined,
+      'Orders, capacity and shifts',
+    ),
+    (
+      'Raw materials',
+      Icons.inventory_outlined,
+      'Stock, reservations and shortages',
+    ),
+    (
+      'Quality & laboratory',
+      Icons.science_outlined,
+      'Lots, tests and release status',
+    ),
+    (
+      'Packaging',
+      Icons.all_inbox_outlined,
+      'Materials, artwork and line setup',
+    ),
     ('Warehouse', Icons.warehouse_outlined, 'Finished goods and locations'),
     ('Maintenance', Icons.handyman_outlined, 'Preventive plans and breakdowns'),
     ('Employees', Icons.badge_outlined, 'Attendance, shifts and productivity'),
-    ('Shipping', Icons.local_shipping_outlined, 'Containers, documents and dispatch'),
+    (
+      'Shipping',
+      Icons.local_shipping_outlined,
+      'Containers, documents and dispatch',
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 1100 ? 4 : constraints.maxWidth >= 650 ? 2 : 1;
+        final columns = constraints.maxWidth >= 1100
+            ? 4
+            : constraints.maxWidth >= 650
+            ? 2
+            : 1;
         final width = (constraints.maxWidth - (columns - 1) * 18) / columns;
         return Wrap(
           spacing: 18,
@@ -328,9 +408,18 @@ class _OperationsGrid extends StatelessWidget {
                       children: [
                         Icon(item.$2, size: 32, color: EmanExperienceApp.blue),
                         const SizedBox(height: 18),
-                        Text(item.$1, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+                        Text(
+                          item.$1,
+                          style: const TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         const SizedBox(height: 7),
-                        Text(item.$3, style: const TextStyle(color: Color(0xFF667985))),
+                        Text(
+                          item.$3,
+                          style: const TextStyle(color: Color(0xFF667985)),
+                        ),
                       ],
                     ),
                   ),
@@ -366,7 +455,10 @@ class _OrderFlow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Connected order lifecycle', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
+            const Text(
+              'Connected order lifecycle',
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 18),
             Wrap(
               spacing: 12,
@@ -374,8 +466,12 @@ class _OrderFlow extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 for (var i = 0; i < steps.length; i++) ...[
-                  Chip(avatar: Icon(steps[i].$2, size: 18), label: Text(steps[i].$1)),
-                  if (i != steps.length - 1) const Icon(Icons.arrow_forward, color: Color(0xFF8FA0AA)),
+                  Chip(
+                    avatar: Icon(steps[i].$2, size: 18),
+                    label: Text(steps[i].$1),
+                  ),
+                  if (i != steps.length - 1)
+                    const Icon(Icons.arrow_forward, color: Color(0xFF8FA0AA)),
                 ],
               ],
             ),

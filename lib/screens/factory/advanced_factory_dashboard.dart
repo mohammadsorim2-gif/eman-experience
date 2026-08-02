@@ -24,43 +24,124 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
       },
       'subtitle': {
         'tr': 'Üretim, kalite, stok, bakım ve sevkiyat tek ekranda.',
-        'en': 'Production, quality, inventory, maintenance and shipping in one view.',
+        'en':
+            'Production, quality, inventory, maintenance and shipping in one view.',
         'ar': 'الإنتاج والجودة والمخزون والصيانة والشحن في شاشة واحدة.',
       },
-      'online': {'tr': 'Fabrika çevrimiçi', 'en': 'Factory online', 'ar': 'المعمل متصل'},
+      'online': {
+        'tr': 'Fabrika çevrimiçi',
+        'en': 'Factory online',
+        'ar': 'المعمل متصل',
+      },
       'overview': {'tr': 'Genel Bakış', 'en': 'Overview', 'ar': 'نظرة عامة'},
       'production': {'tr': 'Üretim', 'en': 'Production', 'ar': 'الإنتاج'},
       'quality': {'tr': 'Kalite', 'en': 'Quality', 'ar': 'الجودة'},
       'warehouse': {'tr': 'Depo', 'en': 'Warehouse', 'ar': 'المستودع'},
       'maintenance': {'tr': 'Bakım', 'en': 'Maintenance', 'ar': 'الصيانة'},
-      'activeOrders': {'tr': 'Aktif üretim emirleri', 'en': 'Active production orders', 'ar': 'أوامر الإنتاج النشطة'},
-      'todayOutput': {'tr': 'Bugünkü üretim', 'en': 'Output today', 'ar': 'إنتاج اليوم'},
-      'qualityRate': {'tr': 'Kalite başarı oranı', 'en': 'Quality pass rate', 'ar': 'نسبة نجاح الجودة'},
-      'readyShip': {'tr': 'Sevkiyata hazır', 'en': 'Ready to ship', 'ar': 'جاهز للشحن'},
-      'dueToday': {'tr': '6 sipariş bugün', 'en': '6 due today', 'ar': '6 طلبات اليوم'},
+      'activeOrders': {
+        'tr': 'Aktif üretim emirleri',
+        'en': 'Active production orders',
+        'ar': 'أوامر الإنتاج النشطة',
+      },
+      'todayOutput': {
+        'tr': 'Bugünkü üretim',
+        'en': 'Output today',
+        'ar': 'إنتاج اليوم',
+      },
+      'qualityRate': {
+        'tr': 'Kalite başarı oranı',
+        'en': 'Quality pass rate',
+        'ar': 'نسبة نجاح الجودة',
+      },
+      'readyShip': {
+        'tr': 'Sevkiyata hazır',
+        'en': 'Ready to ship',
+        'ar': 'جاهز للشحن',
+      },
+      'dueToday': {
+        'tr': '6 sipariş bugün',
+        'en': '6 due today',
+        'ar': '6 طلبات اليوم',
+      },
       'plan': {'tr': 'Planın %94’ü', 'en': '94% of plan', 'ar': '94% من الخطة'},
-      'hold': {'tr': '3 parti beklemede', 'en': '3 lots on hold', 'ar': '3 دفعات معلّقة'},
-      'containers': {'tr': '4 konteyner rezerve', 'en': '4 containers booked', 'ar': '4 حاويات محجوزة'},
-      'liveLines': {'tr': 'Canlı üretim hatları', 'en': 'Live production lines', 'ar': 'خطوط الإنتاج المباشرة'},
-      'priorityAlerts': {'tr': 'Öncelikli uyarılar', 'en': 'Priority alerts', 'ar': 'تنبيهات ذات أولوية'},
-      'operations': {'tr': 'Fabrika modülleri', 'en': 'Factory modules', 'ar': 'وحدات المعمل'},
-      'orderFlow': {'tr': 'Bağlantılı sipariş yaşam döngüsü', 'en': 'Connected order lifecycle', 'ar': 'دورة الطلب المترابطة'},
+      'hold': {
+        'tr': '3 parti beklemede',
+        'en': '3 lots on hold',
+        'ar': '3 دفعات معلّقة',
+      },
+      'containers': {
+        'tr': '4 konteyner rezerve',
+        'en': '4 containers booked',
+        'ar': '4 حاويات محجوزة',
+      },
+      'liveLines': {
+        'tr': 'Canlı üretim hatları',
+        'en': 'Live production lines',
+        'ar': 'خطوط الإنتاج المباشرة',
+      },
+      'priorityAlerts': {
+        'tr': 'Öncelikli uyarılar',
+        'en': 'Priority alerts',
+        'ar': 'تنبيهات ذات أولوية',
+      },
+      'operations': {
+        'tr': 'Fabrika modülleri',
+        'en': 'Factory modules',
+        'ar': 'وحدات المعمل',
+      },
+      'orderFlow': {
+        'tr': 'Bağlantılı sipariş yaşam döngüsü',
+        'en': 'Connected order lifecycle',
+        'ar': 'دورة الطلب المترابطة',
+      },
       'running': {'tr': 'Çalışıyor', 'en': 'Running', 'ar': 'يعمل'},
       'setup': {'tr': 'Hazırlık', 'en': 'Setup', 'ar': 'تجهيز'},
-      'finishing': {'tr': 'Tamamlanıyor', 'en': 'Finishing', 'ar': 'مرحلة نهائية'},
+      'finishing': {
+        'tr': 'Tamamlanıyor',
+        'en': 'Finishing',
+        'ar': 'مرحلة نهائية',
+      },
       'complete': {'tr': 'tamamlandı', 'en': 'complete', 'ar': 'مكتمل'},
-      'materials': {'tr': 'Hammadde', 'en': 'Raw materials', 'ar': 'المواد الخام'},
+      'materials': {
+        'tr': 'Hammadde',
+        'en': 'Raw materials',
+        'ar': 'المواد الخام',
+      },
       'packaging': {'tr': 'Paketleme', 'en': 'Packaging', 'ar': 'التعبئة'},
       'employees': {'tr': 'Çalışanlar', 'en': 'Employees', 'ar': 'الموظفون'},
       'shipping': {'tr': 'Sevkiyat', 'en': 'Shipping', 'ar': 'الشحن'},
-      'planning': {'tr': 'Üretim planlama', 'en': 'Production planning', 'ar': 'تخطيط الإنتاج'},
-      'lab': {'tr': 'Kalite ve laboratuvar', 'en': 'Quality & laboratory', 'ar': 'الجودة والمختبر'},
+      'planning': {
+        'tr': 'Üretim planlama',
+        'en': 'Production planning',
+        'ar': 'تخطيط الإنتاج',
+      },
+      'lab': {
+        'tr': 'Kalite ve laboratuvar',
+        'en': 'Quality & laboratory',
+        'ar': 'الجودة والمختبر',
+      },
       'deal': {'tr': 'Satış onayı', 'en': 'Deal won', 'ar': 'اعتماد الصفقة'},
-      'manufacturing': {'tr': 'Üretim emri', 'en': 'Manufacturing order', 'ar': 'أمر تصنيع'},
-      'reserved': {'tr': 'Malzeme rezervasyonu', 'en': 'Materials reserved', 'ar': 'حجز المواد'},
-      'release': {'tr': 'Kalite onayı', 'en': 'Quality release', 'ar': 'اعتماد الجودة'},
+      'manufacturing': {
+        'tr': 'Üretim emri',
+        'en': 'Manufacturing order',
+        'ar': 'أمر تصنيع',
+      },
+      'reserved': {
+        'tr': 'Malzeme rezervasyonu',
+        'en': 'Materials reserved',
+        'ar': 'حجز المواد',
+      },
+      'release': {
+        'tr': 'Kalite onayı',
+        'en': 'Quality release',
+        'ar': 'اعتماد الجودة',
+      },
       'shipment': {'tr': 'Sevkiyat', 'en': 'Shipment', 'ar': 'الشحن'},
-      'commission': {'tr': 'Partner komisyonu', 'en': 'Partner commission', 'ar': 'عمولة الشريك'},
+      'commission': {
+        'tr': 'Partner komisyonu',
+        'en': 'Partner commission',
+        'ar': 'عمولة الشريك',
+      },
     };
     final item = values[key];
     return item?[code] ?? item?['tr'] ?? key;
@@ -85,7 +166,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                     tx(context, 'title'),
                     style: const TextStyle(
                       fontSize: 40,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w500,
                       color: EmanExperienceApp.navy,
                     ),
                   ),
@@ -180,10 +261,30 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
 
   Widget _metrics(BuildContext context) {
     final items = [
-      (tx(context, 'activeOrders'), '18', tx(context, 'dueToday'), Icons.assignment_outlined),
-      (tx(context, 'todayOutput'), '42.8 t', tx(context, 'plan'), Icons.insights_outlined),
-      (tx(context, 'qualityRate'), '98.7%', tx(context, 'hold'), Icons.verified_outlined),
-      (tx(context, 'readyShip'), '11', tx(context, 'containers'), Icons.local_shipping_outlined),
+      (
+        tx(context, 'activeOrders'),
+        '18',
+        tx(context, 'dueToday'),
+        Icons.assignment_outlined,
+      ),
+      (
+        tx(context, 'todayOutput'),
+        '42.8 t',
+        tx(context, 'plan'),
+        Icons.insights_outlined,
+      ),
+      (
+        tx(context, 'qualityRate'),
+        '98.7%',
+        tx(context, 'hold'),
+        Icons.verified_outlined,
+      ),
+      (
+        tx(context, 'readyShip'),
+        '11',
+        tx(context, 'containers'),
+        Icons.local_shipping_outlined,
+      ),
     ];
 
     return LayoutBuilder(
@@ -191,8 +292,8 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
         final columns = constraints.maxWidth >= 1100
             ? 4
             : constraints.maxWidth >= 620
-                ? 2
-                : 1;
+            ? 2
+            : 1;
         final width = (constraints.maxWidth - (columns - 1) * 18) / columns;
         return Wrap(
           spacing: 18,
@@ -221,7 +322,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                             item.$2,
                             style: const TextStyle(
                               fontSize: 30,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: EmanExperienceApp.navy,
                             ),
                           ),
@@ -230,7 +331,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                             item.$3,
                             style: const TextStyle(
                               color: Color(0xFF168A61),
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -250,7 +351,12 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
       ('Powder Line A', 'Valore Orange 10 g', .78, tx(context, 'running')),
       ('Powder Line B', 'Frio Cups Mango 9 g', .51, tx(context, 'running')),
       ('Bulk Line', 'Roya C Cocktail 2.5 kg', .33, tx(context, 'setup')),
-      ('Packing Line C', 'Full Fresh Strawberry', .92, tx(context, 'finishing')),
+      (
+        'Packing Line C',
+        'Full Fresh Strawberry',
+        .92,
+        tx(context, 'finishing'),
+      ),
     ];
 
     return Card(
@@ -261,7 +367,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
           children: [
             Text(
               tx(context, 'liveLines'),
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 18),
             ...lines.map(
@@ -275,7 +381,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                         Expanded(
                           child: Text(
                             line.$1,
-                            style: const TextStyle(fontWeight: FontWeight.w900),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ),
                         Chip(label: Text(line.$4)),
@@ -292,7 +398,9 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     const SizedBox(height: 5),
-                    Text('${(line.$3 * 100).round()}% ${tx(context, 'complete')}'),
+                    Text(
+                      '${(line.$3 * 100).round()}% ${tx(context, 'complete')}',
+                    ),
                     const Divider(height: 24),
                   ],
                 ),
@@ -306,10 +414,25 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
 
   Widget _alerts(BuildContext context) {
     final alerts = [
-      (Icons.inventory_2_outlined, 'Citric acid below safety stock', '3.5 days', true),
-      (Icons.science_outlined, 'Three lots awaiting laboratory release', 'Quality team notified', false),
+      (
+        Icons.inventory_2_outlined,
+        'Citric acid below safety stock',
+        '3.5 days',
+        true,
+      ),
+      (
+        Icons.science_outlined,
+        'Three lots awaiting laboratory release',
+        'Quality team notified',
+        false,
+      ),
       (Icons.build_outlined, 'Packing Line B maintenance due', '18:00', false),
-      (Icons.local_shipping_outlined, 'Container confirmation required', 'EX-2048', true),
+      (
+        Icons.local_shipping_outlined,
+        'Container confirmation required',
+        'EX-2048',
+        true,
+      ),
     ];
 
     return Card(
@@ -320,7 +443,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
           children: [
             Text(
               tx(context, 'priorityAlerts'),
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 14),
             ...alerts.map(
@@ -339,7 +462,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                 ),
                 title: Text(
                   item.$2,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(item.$3),
               ),
@@ -367,7 +490,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
       children: [
         Text(
           tx(context, 'operations'),
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 16),
         LayoutBuilder(
@@ -375,10 +498,9 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
             final columns = constraints.maxWidth >= 1100
                 ? 4
                 : constraints.maxWidth >= 650
-                    ? 2
-                    : 1;
-            final width =
-                (constraints.maxWidth - (columns - 1) * 18) / columns;
+                ? 2
+                : 1;
+            final width = (constraints.maxWidth - (columns - 1) * 18) / columns;
             return Wrap(
               spacing: 18,
               runSpacing: 18,
@@ -405,7 +527,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                                     item.$1,
                                     style: const TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
@@ -445,7 +567,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
           children: [
             Text(
               tx(context, 'orderFlow'),
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 18),
             Wrap(
@@ -459,10 +581,7 @@ class _AdvancedFactoryDashboardState extends State<AdvancedFactoryDashboard> {
                     label: Text(steps[i].$1),
                   ),
                   if (i != steps.length - 1)
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Color(0xFF8FA0AA),
-                    ),
+                    const Icon(Icons.arrow_forward, color: Color(0xFF8FA0AA)),
                 ],
               ],
             ),

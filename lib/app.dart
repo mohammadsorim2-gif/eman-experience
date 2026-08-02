@@ -73,7 +73,7 @@ class _PlatformHomeState extends State<PlatformHome> {
                   height: 55,
                   errorBuilder: (_, __, ___) => const Text(
                     'EMAN',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -167,7 +167,7 @@ class PublicHome extends StatelessWidget {
                 height: 54,
                 errorBuilder: (_, __, ___) => const Text(
                   'EMAN',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
                 ),
               ),
               const Spacer(),
@@ -201,7 +201,7 @@ class PublicHome extends StatelessWidget {
                         'EMAN GLOBAL PARTNER',
                         style: TextStyle(
                           color: EmanExperienceApp.blue,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w500,
                           letterSpacing: 2,
                         ),
                       ),
@@ -211,7 +211,7 @@ class PublicHome extends StatelessWidget {
                         style: TextStyle(
                           fontSize: compact ? 46 : 70,
                           height: .98,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w500,
                           color: EmanExperienceApp.navy,
                         ),
                       ),
@@ -381,7 +381,7 @@ class ProductsPage extends StatelessWidget {
           'Interactive Product Catalog',
           style: TextStyle(
             fontSize: 38,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
             color: EmanExperienceApp.navy,
           ),
         ),
@@ -449,7 +449,7 @@ class ProductsPage extends StatelessWidget {
                             product.$2,
                             style: const TextStyle(
                               color: EmanExperienceApp.blue,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -457,7 +457,7 @@ class ProductsPage extends StatelessWidget {
                             '${product.$1} Powder Drink',
                             style: const TextStyle(
                               fontSize: 21,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w500,
                               color: EmanExperienceApp.navy,
                             ),
                           ),
@@ -518,7 +518,7 @@ class _BecomePartnerPageState extends State<BecomePartnerPage> {
                   'Become an EMAN Sales Partner',
                   style: TextStyle(
                     fontSize: 40,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w500,
                     color: EmanExperienceApp.navy,
                   ),
                 ),
@@ -651,7 +651,7 @@ class PartnerDashboard extends StatelessWidget {
           'Partner Dashboard',
           style: TextStyle(
             fontSize: 40,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
             color: EmanExperienceApp.navy,
           ),
         ),
@@ -714,7 +714,7 @@ class PartnerDashboard extends StatelessWidget {
               children: [
                 const Text(
                   'Your Referral Link',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 14),
                 Container(
@@ -728,7 +728,7 @@ class PartnerDashboard extends StatelessWidget {
                       const Expanded(
                         child: SelectableText(
                           'https://emanagro.com/partner/EMAN-MH-2026',
-                          style: TextStyle(fontWeight: FontWeight.w700),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
                       IconButton(
@@ -756,7 +756,7 @@ class PartnerDashboard extends StatelessWidget {
               children: [
                 const Text(
                   'Recent Leads',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 18),
                 const _LeadRow(
@@ -800,7 +800,7 @@ class AdminPreviewPage extends StatelessWidget {
           'EMAN Administration Preview',
           style: TextStyle(
             fontSize: 40,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w500,
             color: EmanExperienceApp.navy,
           ),
         ),
@@ -854,7 +854,7 @@ class AdminPreviewPage extends StatelessWidget {
               children: [
                 const Text(
                   'Commission Approvals',
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 18),
                 _ApprovalRow(
@@ -897,7 +897,7 @@ class _HowItWorks extends StatelessWidget {
                 'How the partner network works',
                 style: TextStyle(
                   fontSize: 38,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                   color: EmanExperienceApp.navy,
                 ),
               ),
@@ -969,7 +969,7 @@ class _Proof extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: EmanExperienceApp.blue),
         const SizedBox(width: 8),
-        Text(text, style: const TextStyle(fontWeight: FontWeight.w700)),
+        Text(text, style: const TextStyle(fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -1007,7 +1007,7 @@ class _MiniBadge extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 19,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
@@ -1059,7 +1059,7 @@ class _StepCard extends StatelessWidget {
                     style: const TextStyle(
                       color: Color(0xFFB8C5CE),
                       fontSize: 25,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -1069,7 +1069,7 @@ class _StepCard extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   fontSize: 21,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                   color: EmanExperienceApp.navy,
                 ),
               ),
@@ -1116,7 +1116,7 @@ class _DashboardStat extends StatelessWidget {
                 value,
                 style: const TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                   color: EmanExperienceApp.navy,
                 ),
               ),
@@ -1125,7 +1125,7 @@ class _DashboardStat extends StatelessWidget {
                 trend,
                 style: const TextStyle(
                   color: Color(0xFF149567),
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -1154,7 +1154,7 @@ class _LeadRow extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: const CircleAvatar(child: Icon(Icons.business)),
-      title: Text(company, style: const TextStyle(fontWeight: FontWeight.w800)),
+      title: Text(company, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Text(country),
       trailing: Wrap(
         spacing: 16,
@@ -1166,7 +1166,7 @@ class _LeadRow extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: const TextStyle(fontWeight: FontWeight.w900),
+              style: const TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -1214,7 +1214,7 @@ class _AdminCard extends StatelessWidget {
                       value,
                       style: const TextStyle(
                         fontSize: 28,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
@@ -1250,13 +1250,13 @@ class _ApprovalRow extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: const CircleAvatar(child: Icon(Icons.person)),
-      title: Text(partner, style: const TextStyle(fontWeight: FontWeight.w800)),
+      title: Text(partner, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Text('$country · Deal $deal'),
       trailing: Wrap(
         spacing: 10,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text(commission, style: const TextStyle(fontWeight: FontWeight.w900)),
+          Text(commission, style: const TextStyle(fontWeight: FontWeight.w500)),
           FilledButton(onPressed: () {}, child: const Text('Approve')),
         ],
       ),
