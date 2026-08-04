@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../admin/backup_management_screen.dart';
+import '../admin/system_status_screen.dart';
+import '../analytics/dashboard_layout_settings_screen.dart';
 import '../distribution/sales_representatives_screen.dart';
 import '../executive/executive_factory_dashboard.dart';
 import '../intelligence/demand_forecast_screen.dart';
@@ -113,6 +115,18 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         subtitle: _tx('توقع الطلب واقتراح الدفعات واحتياجات الشراء', 'Talep tahmini, parti önerileri ve satın alma ihtiyaçları', 'Forecast demand, suggest batches and purchasing needs'),
         icon: Icons.auto_awesome_rounded,
         builder: () => DemandForecastScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
+        title: _tx('حالة النظام', 'Sistem durumu', 'System status'),
+        subtitle: _tx('مراقبة خدمات تسجيل الدخول وقاعدة البيانات والتخزين والتنبيهات', 'Kimlik doğrulama, veritabanı, depolama ve uyarı servislerini izleyin', 'Monitor authentication, database, storage and notification services'),
+        icon: Icons.health_and_safety_rounded,
+        builder: () => SystemStatusScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
+        title: _tx('تخصيص لوحة التحكم', 'Kontrol paneli düzeni', 'Dashboard layout'),
+        subtitle: _tx('ترتيب البطاقات وإظهارها وإخفاؤها مع الحفظ التلقائي', 'Kartları sıralayın, gösterin veya gizleyin ve otomatik kaydedin', 'Reorder, show or hide dashboard cards with automatic saving'),
+        icon: Icons.dashboard_customize_rounded,
+        builder: () => DashboardLayoutSettingsScreen(languageCode: languageCode),
       ),
       _FactoryModule(
         title: _tx('النسخ الاحتياطية', 'Yedekleme yönetimi', 'Backup management'),
