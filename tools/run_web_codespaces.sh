@@ -9,7 +9,14 @@ pkill -f "python3 -m http.server ${PORT}" 2>/dev/null || true
 flutter clean
 flutter pub get
 flutter analyze --no-fatal-infos
-flutter build web --release
+
+rm -rf build/web
+flutter build web --release --no-wasm-dry-run
+
+if [ ! -f build/web/main.dart.js ]; then
+  echo "Build failed: build/web/main.dart.js was not generated." >&2
+  exit 1
+fi
 
 printf '\nServing build/web on http://0.0.0.0:%s\n' "$PORT"
 exec python3 -m http.server "$PORT" --bind 0.0.0.0 --directory build/web
