@@ -16,32 +16,42 @@ def main() -> None:
 
     source = ensure_import(
         source,
-        "import 'screens/admin/admin_control_center.dart';",
+        "import 'screens/admin/guided_admin_control_center.dart';",
         "import 'screens/executive/advanced_executive_dashboard.dart';",
     )
 
-    old_page = "    LocalizedAdminDashboard(),"
-    new_page = "    AdminControlCenter(languageCode: 'en'),"
+    source = source.replace(
+        "import 'screens/admin/admin_control_center.dart';\n",
+        "",
+    )
 
-    if old_page in source:
-        source = source.replace(old_page, new_page, 1)
-    elif "AdminControlCenter(" not in source:
+    old_pages = (
+        "    LocalizedAdminDashboard(),",
+        "    AdminControlCenter(languageCode: 'en'),",
+        "    AdminControlCenter(languageCode: widget.language.code),",
+    )
+    replacement = (
+        "    GuidedAdminControlCenter(languageCode: widget.language.code),"
+    )
+
+    replaced = False
+    for old_page in old_pages:
+        if old_page in source:
+            source = source.replace(old_page, replacement, 1)
+            replaced = True
+            break
+
+    if not replaced and "GuidedAdminControlCenter(" not in source:
         raise SystemExit("Admin dashboard entry was not found in lib/main.dart")
 
-    # Make the admin page language-aware instead of using a static const page list.
     source = source.replace(
         "  static const pages = [",
         "  List<Widget> get pages => [",
         1,
     )
-    source = source.replace(
-        "    AdminControlCenter(languageCode: 'en'),",
-        "    AdminControlCenter(languageCode: widget.language.code),",
-        1,
-    )
 
     MAIN.write_text(source, encoding="utf-8")
-    print("Admin control center activated in lib/main.dart")
+    print("Guided admin control center activated in lib/main.dart")
 
 
 if __name__ == "__main__":
