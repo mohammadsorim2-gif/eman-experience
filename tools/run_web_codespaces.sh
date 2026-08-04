@@ -6,6 +6,8 @@ PORT="${1:-3000}"
 pkill -f "flutter.*web-server" 2>/dev/null || true
 pkill -f "python3 -m http.server ${PORT}" 2>/dev/null || true
 
+python3 tools/activate_instant_drink_factory_hub.py
+
 flutter clean
 flutter pub get
 flutter analyze --no-fatal-infos
