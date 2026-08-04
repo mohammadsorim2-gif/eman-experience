@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../analytics/dashboard_layout_settings_screen.dart';
+import '../auth/firebase_login_screen.dart';
 import 'backup_management_screen.dart';
 import 'login_audit_screen.dart';
 import 'system_status_screen.dart';
@@ -16,6 +17,12 @@ class AdminToolsHub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tools = <_AdminTool>[
+      _AdminTool(
+        title: tx(ar: 'تسجيل الدخول الحقيقي', tr: 'Gerçek giriş', en: 'Real sign in'),
+        subtitle: tx(ar: 'اختبار Firebase Auth وقراءة دور المستخدم من Firestore', tr: 'Firebase Auth ve Firestore kullanıcı rolünü test edin', en: 'Test Firebase Auth and load the user role from Firestore'),
+        icon: Icons.login_rounded,
+        builder: () => FirebaseLoginScreen(languageCode: languageCode),
+      ),
       _AdminTool(
         title: tx(ar: 'حالة النظام', tr: 'Sistem durumu', en: 'System status'),
         subtitle: tx(ar: 'مراقبة الخدمات والاتصالات والتنبيهات', tr: 'Servisleri, bağlantıları ve uyarıları izleyin', en: 'Monitor services, connectivity and alerts'),
