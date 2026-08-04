@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../admin/backup_management_screen.dart';
 import '../distribution/sales_representatives_screen.dart';
 import '../executive/executive_factory_dashboard.dart';
 import '../intelligence/demand_forecast_screen.dart';
 import '../inventory/instant_drink_materials_screen.dart';
 import '../maintenance/preventive_maintenance_screen.dart';
+import '../operations/department_hub_screen.dart';
 import '../operations/finished_goods_shipping_screen.dart';
 import '../operations/instant_drink_recipe_screen.dart';
 import '../operations/machine_fleet_screen.dart';
@@ -33,6 +35,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         subtitle: _tx('الإنتاج والكفاءة والمبيعات والتنبيهات المباشرة', 'Üretim, verimlilik, satış ve canlı uyarılar', 'Production, efficiency, sales and live alerts'),
         icon: Icons.insights_rounded,
         builder: () => ExecutiveFactoryDashboard(languageCode: languageCode),
+      ),
+      _FactoryModule(
+        title: _tx('مركز الأقسام', 'Bölüm merkezi', 'Department hub'),
+        subtitle: _tx('لوحات موحدة للمبيعات والإنتاج والجودة والمستودع وبقية الأقسام', 'Satış, üretim, kalite, depo ve diğer bölümler için birleşik paneller', 'Unified workspaces for sales, production, quality, warehouse and other departments'),
+        icon: Icons.account_tree_outlined,
+        builder: () => DepartmentHubScreen(languageCode: languageCode),
       ),
       _FactoryModule(
         title: _tx('خطوط ومحطات الإنتاج', 'Üretim hatları', 'Production lines'),
@@ -105,6 +113,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         subtitle: _tx('توقع الطلب واقتراح الدفعات واحتياجات الشراء', 'Talep tahmini, parti önerileri ve satın alma ihtiyaçları', 'Forecast demand, suggest batches and purchasing needs'),
         icon: Icons.auto_awesome_rounded,
         builder: () => DemandForecastScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
+        title: _tx('النسخ الاحتياطية', 'Yedekleme yönetimi', 'Backup management'),
+        subtitle: _tx('إنشاء النسخ التلقائية واستعادة وتنزيل النسخ السابقة', 'Otomatik yedekleme, geri yükleme ve indirme', 'Automatic backups, restore and download previous copies'),
+        icon: Icons.cloud_sync_rounded,
+        builder: () => BackupManagementScreen(languageCode: languageCode),
       ),
     ];
 
