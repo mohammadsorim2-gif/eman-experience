@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../admin/access_control_screen.dart';
 import '../admin/admin_tools_hub.dart';
 import '../distribution/sales_representatives_screen.dart';
 import '../executive/executive_factory_dashboard.dart';
@@ -32,6 +33,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         tx('الإنتاج والكفاءة والمبيعات والتنبيهات المباشرة', 'Üretim, verimlilik, satış ve canlı uyarılar', 'Production, efficiency, sales and live alerts'),
         Icons.insights_rounded,
         () => ExecutiveFactoryDashboard(languageCode: languageCode),
+      ),
+      module(
+        tx('المستخدمون والصلاحيات', 'Kullanıcılar ve yetkiler', 'Users & permissions'),
+        tx('إدارة المستخدمين والأدوار والتفعيل ومصفوفة الصلاحيات', 'Kullanıcıları, rolleri, durumu ve yetki matrisini yönetin', 'Manage users, roles, activation and the permission matrix'),
+        Icons.manage_accounts_rounded,
+        () => AccessControlScreen(languageCode: languageCode),
       ),
       module(
         tx('مركز إدارة النظام', 'Sistem yönetim merkezi', 'System administration center'),
