@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../distribution/sales_representatives_screen.dart';
 import '../executive/executive_factory_dashboard.dart';
+import '../intelligence/demand_forecast_screen.dart';
 import '../inventory/instant_drink_materials_screen.dart';
 import '../maintenance/preventive_maintenance_screen.dart';
 import '../operations/finished_goods_shipping_screen.dart';
@@ -9,6 +11,7 @@ import '../operations/machine_fleet_screen.dart';
 import '../operations/sales_orders_screen.dart';
 import '../production/instant_drink_batch_screen.dart';
 import '../quality/instant_drink_quality_screen.dart';
+import '../traceability/batch_traceability_screen.dart';
 import '../warehouse/barcode_warehouse_screen.dart';
 
 class InstantDrinkFactoryHub extends StatelessWidget {
@@ -44,6 +47,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         builder: () => InstantDrinkBatchScreen(languageCode: languageCode),
       ),
       _FactoryModule(
+        title: _tx('تتبع الدفعة واللوط', 'Parti ve lot izlenebilirliği', 'Batch & lot traceability'),
+        subtitle: _tx('تتبع المواد الخام والخلط والجودة والتغليف والشحن', 'Hammadde, karıştırma, kalite, paketleme ve sevkiyat takibi', 'Trace raw materials, mixing, quality, packing and shipping'),
+        icon: Icons.account_tree_rounded,
+        builder: () => BatchTraceabilityScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
         title: _tx('الوصفات والتركيبات', 'Reçeteler', 'Recipes and formulas'),
         subtitle: _tx('إدارة النكهات والأوزان وتركيبة كل دفعة', 'Aroma, gramaj ve formül yönetimi', 'Manage flavors, weights and batch formulas'),
         icon: Icons.science_rounded,
@@ -74,6 +83,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         builder: () => SalesOrdersScreen(languageCode: languageCode),
       ),
       _FactoryModule(
+        title: _tx('المندوبون وخطوط السير', 'Satış temsilcileri ve rotalar', 'Sales representatives & routes'),
+        subtitle: _tx('الأهداف والزيارات والتحصيل والمناطق والمسارات', 'Hedefler, ziyaretler, tahsilat, bölgeler ve rotalar', 'Targets, visits, collections, territories and routes'),
+        icon: Icons.route_rounded,
+        builder: () => SalesRepresentativesScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
         title: _tx('المنتج النهائي والشحن', 'Bitmiş ürün ve sevkiyat', 'Finished goods and shipping'),
         subtitle: _tx('اللوطات والكراتين والطبليات والتحميل', 'Lot, koli, palet ve yükleme', 'Lots, cartons, pallets and loading'),
         icon: Icons.local_shipping_rounded,
@@ -84,6 +99,12 @@ class InstantDrinkFactoryHub extends StatelessWidget {
         subtitle: _tx('مهام الصيانة والاستحقاقات والأولويات وحالة الإنجاز', 'Bakım görevleri, tarihler, öncelikler ve durum', 'Maintenance tasks, due dates, priorities and completion'),
         icon: Icons.build_circle_rounded,
         builder: () => PreventiveMaintenanceScreen(languageCode: languageCode),
+      ),
+      _FactoryModule(
+        title: _tx('التنبؤ بالطلب وخطة الإنتاج', 'Talep tahmini ve üretim planı', 'Demand forecast & production plan'),
+        subtitle: _tx('توقع الطلب واقتراح الدفعات واحتياجات الشراء', 'Talep tahmini, parti önerileri ve satın alma ihtiyaçları', 'Forecast demand, suggest batches and purchasing needs'),
+        icon: Icons.auto_awesome_rounded,
+        builder: () => DemandForecastScreen(languageCode: languageCode),
       ),
     ];
 
