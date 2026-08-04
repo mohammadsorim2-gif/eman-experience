@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../notifications/notification_center_screen.dart';
+import 'audit_log_screen.dart';
+import 'company_settings_screen.dart';
+import 'module_management_screen.dart';
 import 'role_permission_matrix_screen.dart';
 import 'user_management_screen.dart';
 
@@ -26,7 +30,7 @@ class AdminControlCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sections = [
+    final sections = <_AdminSection>[
       _AdminSection(
         title: _tx(tr: 'Kullanıcılar', ar: 'المستخدمون', en: 'Users'),
         subtitle: _tx(
@@ -42,7 +46,11 @@ class AdminControlCenter extends StatelessWidget {
         ),
       ),
       _AdminSection(
-        title: _tx(tr: 'Roller ve yetkiler', ar: 'الرتب والصلاحيات', en: 'Roles and permissions'),
+        title: _tx(
+          tr: 'Roller ve yetkiler',
+          ar: 'الرتب والصلاحيات',
+          en: 'Roles and permissions',
+        ),
         subtitle: _tx(
           tr: 'Her rol için erişim matrisini düzenleyin',
           ar: 'تعديل مصفوفة الوصول لكل رتبة',
@@ -56,7 +64,11 @@ class AdminControlCenter extends StatelessWidget {
         ),
       ),
       _AdminSection(
-        title: _tx(tr: 'Şirket ayarları', ar: 'إعدادات الشركة', en: 'Company settings'),
+        title: _tx(
+          tr: 'Şirket ayarları',
+          ar: 'إعدادات الشركة',
+          en: 'Company settings',
+        ),
         subtitle: _tx(
           tr: 'Kimlik, iletişim ve operasyon ayarları',
           ar: 'الهوية وبيانات التواصل وإعدادات التشغيل',
@@ -64,18 +76,24 @@ class AdminControlCenter extends StatelessWidget {
         ),
         icon: Icons.business_rounded,
         accent: const Color(0xFF159776),
-        onTap: () => _showComingSoon(context),
+        onTap: () => _open(
+          context,
+          CompanySettingsScreen(languageCode: languageCode),
+        ),
       ),
       _AdminSection(
         title: _tx(tr: 'Bildirimler', ar: 'الإشعارات', en: 'Notifications'),
         subtitle: _tx(
-          tr: 'Kurallar, kanallar ve uyarı tercihleri',
-          ar: 'القواعد والقنوات وتفضيلات التنبيه',
-          en: 'Rules, channels and alert preferences',
+          tr: 'Canlı uyarıları ve önemli olayları izleyin',
+          ar: 'متابعة التنبيهات المباشرة والأحداث المهمة',
+          en: 'Review live alerts and important events',
         ),
         icon: Icons.notifications_active_rounded,
         accent: const Color(0xFFE87A35),
-        onTap: () => _showComingSoon(context),
+        onTap: () => _open(
+          context,
+          NotificationCenterScreen(languageCode: languageCode),
+        ),
       ),
       _AdminSection(
         title: _tx(tr: 'Modüller', ar: 'الوحدات', en: 'Modules'),
@@ -86,10 +104,17 @@ class AdminControlCenter extends StatelessWidget {
         ),
         icon: Icons.widgets_rounded,
         accent: const Color(0xFFD94F70),
-        onTap: () => _showComingSoon(context),
+        onTap: () => _open(
+          context,
+          ModuleManagementScreen(languageCode: languageCode),
+        ),
       ),
       _AdminSection(
-        title: _tx(tr: 'İşlem geçmişi', ar: 'سجل العمليات', en: 'Audit log'),
+        title: _tx(
+          tr: 'İşlem geçmişi',
+          ar: 'سجل العمليات',
+          en: 'Audit log',
+        ),
         subtitle: _tx(
           tr: 'Kritik değişiklikleri ve kullanıcı hareketlerini izleyin',
           ar: 'متابعة التغييرات المهمة ونشاط المستخدمين',
@@ -97,7 +122,10 @@ class AdminControlCenter extends StatelessWidget {
         ),
         icon: Icons.history_rounded,
         accent: const Color(0xFF536773),
-        onTap: () => _showComingSoon(context),
+        onTap: () => _open(
+          context,
+          AuditLogScreen(languageCode: languageCode),
+        ),
       ),
     ];
 
@@ -114,14 +142,6 @@ class AdminControlCenter extends StatelessWidget {
                 en: 'Admin control center',
               ),
             ),
-            actions: [
-              IconButton(
-                tooltip: _tx(tr: 'Ara', ar: 'بحث', en: 'Search'),
-                onPressed: () {},
-                icon: const Icon(Icons.search_rounded),
-              ),
-              const SizedBox(width: 8),
-            ],
           ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
@@ -145,15 +165,19 @@ class AdminControlCenter extends StatelessWidget {
                         : constraints.maxWidth >= 720
                             ? 2
                             : 1;
-                    final spacing = 16.0;
+                    const spacing = 16.0;
                     final width =
-                        (constraints.maxWidth - spacing * (columns - 1)) / columns;
+                        (constraints.maxWidth - spacing * (columns - 1)) /
+                            columns;
                     return Wrap(
                       spacing: spacing,
                       runSpacing: spacing,
                       children: [
                         for (final section in sections)
-                          SizedBox(width: width, child: _AdminCard(section: section)),
+                          SizedBox(
+                            width: width,
+                            child: _AdminCard(section: section),
+                          ),
                       ],
                     );
                   },
@@ -162,20 +186,6 @@ class AdminControlCenter extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          _tx(
-            tr: 'Bu bölüm bir sonraki geliştirme paketinde etkinleştirilecek.',
-            ar: 'سيتم تفعيل هذا القسم في حزمة التطوير التالية.',
-            en: 'This section will be enabled in the next development package.',
-          ),
-        ),
       ),
     );
   }
@@ -246,33 +256,35 @@ class _HeroPanel extends StatelessWidget {
                   ],
                 ),
               ),
-              const _SystemHealth(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      color: Color(0xFF7CE0B6),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _tx(
+                        tr: 'Sistem çalışıyor',
+                        ar: 'النظام يعمل بشكل طبيعي',
+                        en: 'System operational',
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SystemHealth extends StatelessWidget {
-  const _SystemHealth();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check_circle_rounded, color: Color(0xFF7CE0B6)),
-          SizedBox(width: 10),
-          Text('System operational', style: TextStyle(color: Colors.white)),
-        ],
       ),
     );
   }
@@ -338,7 +350,10 @@ class _AdminCardState extends State<_AdminCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(section.title, style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          section.title,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         const SizedBox(height: 5),
                         Text(
                           section.subtitle,
