@@ -49,6 +49,14 @@
       ]
     },
     {
+      "collectionGroup": "batches",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "code", "order": "ASCENDING"},
+        {"fieldPath": "status", "order": "ASCENDING"}
+      ]
+    },
+    {
       "collectionGroup": "qualityInspections",
       "queryScope": "COLLECTION",
       "fields": [
