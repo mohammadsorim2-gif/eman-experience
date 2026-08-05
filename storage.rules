@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function userDoc() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid));
+    }
+    function activeUser() {
+      return signedIn() && userDoc().data.active == true;
+    }
+    function hasRole(roles) {
+      return activeUser() && userDoc().data.role in roles;
+    }
+    function isAdmin() {
+      return hasRole(['owner', 'admin', 'general_manager']);
+    }
+
+    match /products/{productId}/{fileName} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'production_manager', 'quality_manager'])
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /quality/{batchId}/{fileName} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'quality_manager'])
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+
+    match /shipments/{shipmentId}/{fileName} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'shipping_manager', 'warehouse_manager'])
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+
+    match /system/{filePath=**} {
+      allow read, write: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
