@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function activeUser() {
+      return signedIn() && userDoc().data.active == true;
+    }
+
+    function hasRole(roles) {
+      return activeUser() && userDoc().data.role in roles;
+    }
+
+    function isAdmin() {
+      return hasRole(['owner', 'admin', 'general_manager']);
+    }
+
+    function canOperateFactory() {
+      return hasRole([
+        'owner', 'admin', 'general_manager', 'production_manager',
+        'warehouse_manager', 'quality_manager', 'shipping_manager'
+      ]);
+    }
+
+    match /users/{userId} {
+      allow read: if activeUser() && (request.auth.uid == userId || isAdmin());
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /dashboard/{document=**} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+
+    match /activityLog/{document=**} {
+      allow read: if activeUser();
+      allow create: if canOperateFactory();
+      allow update, delete: if isAdmin();
+    }
+
+    match /factoryAlerts/{alertId} {
+      allow read: if activeUser();
+      allow create: if canOperateFactory();
+      allow update: if canOperateFactory();
+      allow delete: if isAdmin();
+    }
+
+    match /products/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'production_manager', 'quality_manager']);
+    }
+
+    match /recipes/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'production_manager', 'quality_manager']);
+    }
+
+    match /rawMaterials/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'warehouse_manager', 'production_manager']);
+    }
+
+    match /inventory/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'warehouse_manager', 'production_manager']);
+    }
+
+    match /productionOrders/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'production_manager']);
+    }
+
+    match /batches/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'production_manager', 'quality_manager']);
+    }
+
+    match /qualityInspections/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'quality_manager']);
+    }
+
+    match /shipments/{document=**} {
+      allow read: if activeUser();
+      allow write: if hasRole(['owner', 'admin', 'general_manager', 'shipping_manager', 'warehouse_manager']);
+    }
+
+    match /system/{document=**} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
