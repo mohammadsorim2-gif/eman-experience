@@ -1,0 +1,94 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isEnabled() {
+      return signedIn()
+        && userDoc().exists()
+        && userDoc().data.enabled != false
+        && userDoc().data.active != false;
+    }
+
+    function role() {
+      return isEnabled() && userDoc().data.role is string
+        ? userDoc().data.role
+        : 'worker';
+    }
+
+    function hasFullAccess() {
+      return role() in ['owner', 'generalManager'];
+    }
+
+    function hasAnyRole(roles) {
+      return isEnabled() && role() in roles;
+    }
+
+    match /users/{userId} {
+      allow read: if isEnabled() && (request.auth.uid == userId || hasFullAccess());
+      allow create, update, delete: if hasFullAccess();
+    }
+
+    match /loginAudit/{auditId} {
+      allow create: if signedIn();
+      allow read: if hasFullAccess();
+      allow update, delete: if false;
+    }
+
+    match /recipes/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'production', 'quality']);
+    }
+
+    match /materials/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'warehouse', 'purchasing', 'production']);
+    }
+
+    match /inventoryMovements/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'warehouse', 'production', 'logistics']);
+    }
+
+    match /salesOrders/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'sales', 'production', 'accounting']);
+    }
+
+    match /productionOrders/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'production', 'quality', 'warehouse']);
+    }
+
+    match /batches/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'production', 'quality', 'warehouse']);
+    }
+
+    match /qualityChecks/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'quality']);
+    }
+
+    match /shipments/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'warehouse', 'logistics', 'sales']);
+    }
+
+    match /maintenanceTasks/{document=**} {
+      allow read: if isEnabled();
+      allow write: if hasAnyRole(['owner', 'generalManager', 'maintenance', 'production']);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
