@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'app.dart';
+import 'erp_app.dart';
 
 void main() {
-  runApp(const EmanExperienceApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const EmanErpApp());
 }
