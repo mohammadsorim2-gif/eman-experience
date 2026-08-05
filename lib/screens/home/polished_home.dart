@@ -8,353 +8,454 @@ class PolishedHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: const Color(0xFFF6F8FB),
-      child: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-            sliver: SliverToBoxAdapter(child: _Header(context: context)),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-            sliver: SliverToBoxAdapter(child: _Metrics(context: context)),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-            sliver: SliverToBoxAdapter(child: _QuickActions(context: context)),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
-            sliver: SliverToBoxAdapter(child: _Workspace(context: context)),
-          ),
+    return SelectionArea(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: const [
+          _HeroSection(),
+          _MetricStrip(),
+          _FeatureGrid(),
+          _FactoryPreview(),
+          _BottomBanner(),
         ],
       ),
     );
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.context});
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final compact = constraints.maxWidth < 760;
-        final title = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.t('home.eyebrow'),
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: EmanExperienceApp.blue,
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              context.t('home.heroTitle'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -.5,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 680),
-              child: Text(
-                context.t('home.heroSubtitle'),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      height: 1.55,
-                    ),
-              ),
-            ),
-          ],
-        );
-
-        final actions = Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            FilledButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add_rounded, size: 18),
-              label: Text(context.t('home.exploreProducts')),
-            ),
-            OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.person_add_alt_1_outlined, size: 18),
-              label: Text(context.t('home.becomePartner')),
-            ),
-          ],
-        );
-
-        return Container(
-          padding: EdgeInsets.all(compact ? 20 : 26),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFE4E9F0)),
-          ),
-          child: compact
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [title, const SizedBox(height: 20), actions],
-                )
-              : Row(
-                  children: [
-                    Expanded(child: title),
-                    const SizedBox(width: 24),
-                    actions,
-                  ],
-                ),
-        );
-      },
-    );
-  }
-}
-
-class _Metrics extends StatelessWidget {
-  const _Metrics({required this.context});
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      _Metric('24', context.t('home.cardFactoryTitle'), Icons.factory_outlined, const Color(0xFF7C3AED), '+8%'),
-      _Metric('18', context.t('home.cardWholesaleTitle'), Icons.receipt_long_outlined, const Color(0xFF2563EB), '+12%'),
-      _Metric('96.4%', context.t('home.cardExecutiveTitle'), Icons.insights_outlined, const Color(0xFF059669), '+2.1%'),
-      _Metric('7', context.t('home.cardPartnerTitle'), Icons.notifications_none_rounded, const Color(0xFFF97316), '3 critical'),
-    ];
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 1050 ? 4 : constraints.maxWidth >= 600 ? 2 : 1;
-        final width = (constraints.maxWidth - (columns - 1) * 12) / columns;
-        return Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: items.map((item) => SizedBox(width: width, child: _MetricCard(item: item))).toList(),
-        );
-      },
-    );
-  }
-}
-
-class _QuickActions extends StatelessWidget {
-  const _QuickActions({required this.context});
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      (Icons.add_box_outlined, context.t('home.cardWholesaleTitle'), const Color(0xFF2563EB)),
-      (Icons.precision_manufacturing_outlined, context.t('home.cardFactoryTitle'), const Color(0xFF7C3AED)),
-      (Icons.inventory_2_outlined, context.t('home.proofFactory'), const Color(0xFF059669)),
-      (Icons.manage_search_rounded, context.t('home.exploreProducts'), const Color(0xFFF97316)),
-    ];
-
-    return _Section(
-      title: context.t('app.platform'),
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: items
-            .map(
-              (item) => _ActionChip(icon: item.$1, label: item.$2, color: item.$3),
-            )
-            .toList(),
-      ),
-    );
-  }
-}
-
-class _Workspace extends StatelessWidget {
-  const _Workspace({required this.context});
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final stacked = constraints.maxWidth < 900;
-        final activity = _Section(
-          title: context.t('home.capabilitiesTitle'),
-          child: Column(
-            children: const [
-              _Activity(icon: Icons.factory_outlined, title: 'Batch EM-24018', subtitle: 'Mixing completed • 8 minutes ago', color: Color(0xFF7C3AED)),
-              _Activity(icon: Icons.verified_outlined, title: 'Quality approved', subtitle: 'LOT-240805-07 • 22 minutes ago', color: Color(0xFF059669)),
-              _Activity(icon: Icons.local_shipping_outlined, title: 'Shipment prepared', subtitle: 'Order SO-1842 • 41 minutes ago', color: Color(0xFF2563EB)),
-            ],
-          ),
-        );
-        final overview = _Section(
-          title: context.t('home.cardExecutiveTitle'),
-          child: const Column(
-            children: [
-              _Progress(label: 'Production plan', value: .82),
-              SizedBox(height: 18),
-              _Progress(label: 'Warehouse readiness', value: .71),
-              SizedBox(height: 18),
-              _Progress(label: 'Order fulfillment', value: .93),
-            ],
-          ),
-        );
-
-        if (stacked) {
-          return Column(children: [activity, const SizedBox(height: 12), overview]);
-        }
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Expanded(flex: 6, child: activity), const SizedBox(width: 12), Expanded(flex: 4, child: overview)],
-        );
-      },
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
-  final String title;
-  final Widget child;
+class _HeroSection extends StatelessWidget {
+  const _HeroSection();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE4E9F0)),
+      padding: const EdgeInsets.fromLTRB(28, 72, 28, 86),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF031B2D), Color(0xFF075A89)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
-          const SizedBox(height: 16),
-          child,
-        ],
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1240),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxWidth < 900;
+              final copy = Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Pill(icon: Icons.public_rounded, label: context.t('home.eyebrow')),
+                  const SizedBox(height: 22),
+                  Text(
+                    context.t('home.heroTitle'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: compact ? 42 : 64,
+                      height: 1.04,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 620),
+                    child: Text(
+                      context.t('home.heroSubtitle'),
+                      style: const TextStyle(
+                        color: Color(0xFFD7E9F3),
+                        fontSize: 16,
+                        height: 1.7,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: EmanExperienceApp.navy,
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.grid_view_rounded, size: 17),
+                        label: Text(context.t('home.exploreProducts')),
+                      ),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Color(0x66FFFFFF)),
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.handshake_outlined, size: 17),
+                        label: Text(context.t('home.becomePartner')),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+
+              final visual = Container(
+                height: compact ? 340 : 430,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: .08),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: Colors.white.withValues(alpha: .14)),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      top: 24,
+                      right: 24,
+                      child: _GlassBadge(
+                        icon: Icons.verified_rounded,
+                        text: context.t('home.proofFactory'),
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/products/friocups/9g-orange-flavored-powder-drink-friocups.png',
+                      height: compact ? 240 : 320,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => const Icon(
+                        Icons.local_drink_rounded,
+                        size: 96,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Positioned(
+                      left: 24,
+                      bottom: 24,
+                      child: _GlassBadge(
+                        icon: Icons.language_rounded,
+                        text: context.t('home.proofGlobal'),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+
+              if (compact) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [copy, const SizedBox(height: 34), visual],
+                );
+              }
+              return Row(
+                children: [
+                  Expanded(flex: 11, child: copy),
+                  const SizedBox(width: 54),
+                  Expanded(flex: 9, child: visual),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 }
 
-class _MetricCard extends StatefulWidget {
-  const _MetricCard({required this.item});
-  final _Metric item;
-  @override
-  State<_MetricCard> createState() => _MetricCardState();
-}
+class _MetricStrip extends StatelessWidget {
+  const _MetricStrip();
 
-class _MetricCardState extends State<_MetricCard> {
-  bool hovered = false;
   @override
   Widget build(BuildContext context) {
-    final item = widget.item;
-    return MouseRegion(
-      cursor: SystemMouseCursors.basic,
-      onEnter: (_) => setState(() => hovered = true),
-      onExit: (_) => setState(() => hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        transform: Matrix4.translationValues(0, hovered ? -3 : 0, 0),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: hovered ? item.color.withValues(alpha: .35) : const Color(0xFFE4E9F0)),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: hovered ? .06 : .025), blurRadius: hovered ? 18 : 8, offset: const Offset(0, 6))],
+    final items = [
+      ('40+', context.t('home.badgeCountriesLabel'), Icons.public_rounded),
+      ('250+', context.t('home.cardWholesaleTitle'), Icons.inventory_2_outlined),
+      ('24/7', context.t('home.cardFactoryTitle'), Icons.factory_outlined),
+      ('1', context.t('app.platform'), Icons.hub_outlined),
+    ];
+    return Container(
+      color: const Color(0xFFF4F8FB),
+      padding: const EdgeInsets.fromLTRB(28, 28, 28, 18),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1180),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 760 ? 4 : 2;
+              final width = (constraints.maxWidth - (columns - 1) * 12) / columns;
+              return Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: items
+                    .map((item) => SizedBox(
+                          width: width,
+                          child: _MetricCard(value: item.$1, label: item.$2, icon: item.$3),
+                        ))
+                    .toList(),
+              );
+            },
+          ),
         ),
-        child: Row(
-          children: [
-            Container(width: 34, height: 34, decoration: BoxDecoration(color: item.color.withValues(alpha: .1), borderRadius: BorderRadius.circular(10)), child: Icon(item.icon, size: 18, color: item.color)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(item.value, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-                const SizedBox(height: 2),
-                Text(item.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-              ]),
+      ),
+    );
+  }
+}
+
+class _FeatureGrid extends StatelessWidget {
+  const _FeatureGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    final features = [
+      (Icons.storefront_outlined, 'home.cardWholesaleTitle', 'home.cardWholesaleText', const Color(0xFF0879B8)),
+      (Icons.handshake_outlined, 'home.cardPartnerTitle', 'home.cardPartnerText', const Color(0xFF7657D9)),
+      (Icons.precision_manufacturing_outlined, 'home.cardFactoryTitle', 'home.cardFactoryText', const Color(0xFFE87A35)),
+      (Icons.insights_outlined, 'home.cardExecutiveTitle', 'home.cardExecutiveText', const Color(0xFF159776)),
+    ];
+    return Container(
+      color: const Color(0xFFF4F8FB),
+      padding: const EdgeInsets.fromLTRB(28, 42, 28, 84),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1240),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.t('home.capabilitiesTitle'),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                context.t('home.capabilitiesSubtitle'),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xFF687A86)),
+              ),
+              const SizedBox(height: 28),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final columns = constraints.maxWidth >= 1040 ? 4 : constraints.maxWidth >= 620 ? 2 : 1;
+                  final width = (constraints.maxWidth - (columns - 1) * 14) / columns;
+                  return Wrap(
+                    spacing: 14,
+                    runSpacing: 14,
+                    children: features
+                        .map((item) => SizedBox(
+                              width: width,
+                              child: _FeatureCard(
+                                icon: item.$1,
+                                title: context.t(item.$2),
+                                body: context.t(item.$3),
+                                color: item.$4,
+                              ),
+                            ))
+                        .toList(),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FactoryPreview extends StatelessWidget {
+  const _FactoryPreview();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 82),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1240),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxWidth < 860;
+              final text = Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.t('home.cardFactoryTitle'),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    context.t('home.cardFactoryText'),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xFF687A86), height: 1.6),
+                  ),
+                  const SizedBox(height: 22),
+                  const Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _MiniChip(icon: Icons.inventory_2_outlined, text: 'Inventory'),
+                      _MiniChip(icon: Icons.science_outlined, text: 'Recipes'),
+                      _MiniChip(icon: Icons.verified_outlined, text: 'Quality'),
+                      _MiniChip(icon: Icons.local_shipping_outlined, text: 'Shipping'),
+                    ],
+                  ),
+                ],
+              );
+              final panel = Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7FAFC),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: const Color(0xFFE2EAF0)),
+                ),
+                child: const Column(
+                  children: [
+                    _ProgressRow(label: 'Production plan', value: .82),
+                    SizedBox(height: 16),
+                    _ProgressRow(label: 'Warehouse readiness', value: .71),
+                    SizedBox(height: 16),
+                    _ProgressRow(label: 'Order fulfillment', value: .93),
+                  ],
+                ),
+              );
+              if (compact) {
+                return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [text, const SizedBox(height: 28), panel]);
+              }
+              return Row(children: [Expanded(child: text), const SizedBox(width: 48), Expanded(child: panel)]);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomBanner extends StatelessWidget {
+  const _BottomBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(28, 0, 28, 56),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1240),
+          child: Container(
+            padding: const EdgeInsets.all(34),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: const LinearGradient(colors: [Color(0xFF04253D), Color(0xFF0870A5)]),
             ),
-            Text(item.delta, style: Theme.of(context).textTheme.labelSmall?.copyWith(color: item.color, fontWeight: FontWeight.w700)),
-          ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final compact = constraints.maxWidth < 700;
+                final copy = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.t('home.partnerBannerTitle'),
+                      style: TextStyle(color: Colors.white, fontSize: compact ? 28 : 38, fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      context.t('home.partnerBannerText'),
+                      style: const TextStyle(color: Color(0xFFD7E9F3), height: 1.6),
+                    ),
+                  ],
+                );
+                final button = FilledButton.icon(
+                  style: FilledButton.styleFrom(backgroundColor: EmanExperienceApp.gold, foregroundColor: EmanExperienceApp.navy),
+                  onPressed: () {},
+                  icon: const Icon(Icons.north_east_rounded, size: 17),
+                  label: Text(context.t('home.partnerBannerButton')),
+                );
+                if (compact) {
+                  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [copy, const SizedBox(height: 20), button]);
+                }
+                return Row(children: [Expanded(child: copy), const SizedBox(width: 24), button]);
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-class _ActionChip extends StatefulWidget {
-  const _ActionChip({required this.icon, required this.label, required this.color});
+class _Pill extends StatelessWidget {
+  const _Pill({required this.icon, required this.label});
   final IconData icon;
   final String label;
-  final Color color;
   @override
-  State<_ActionChip> createState() => _ActionChipState();
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: .09),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: Colors.white.withValues(alpha: .14)),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(icon, size: 15, color: const Color(0xFFFFD477)), const SizedBox(width: 7), Text(label, style: const TextStyle(color: Colors.white, fontSize: 12))]),
+      );
 }
 
-class _ActionChipState extends State<_ActionChip> {
-  bool hovered = false;
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => hovered = true),
-      onExit: (_) => setState(() => hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(color: hovered ? widget.color.withValues(alpha: .1) : const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(12), border: Border.all(color: hovered ? widget.color.withValues(alpha: .28) : const Color(0xFFE4E9F0))),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(widget.icon, size: 17, color: widget.color), const SizedBox(width: 8), Text(widget.label, style: Theme.of(context).textTheme.labelLarge)]),
-      ),
-    );
-  }
-}
-
-class _Activity extends StatelessWidget {
-  const _Activity({required this.icon, required this.title, required this.subtitle, required this.color});
+class _GlassBadge extends StatelessWidget {
+  const _GlassBadge({required this.icon, required this.text});
   final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
+  final String text;
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(children: [
-        Container(width: 32, height: 32, decoration: BoxDecoration(color: color.withValues(alpha: .1), borderRadius: BorderRadius.circular(9)), child: Icon(icon, size: 17, color: color)),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)), const SizedBox(height: 2), Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant))])),
-        const Icon(Icons.chevron_right_rounded, size: 18),
-      ]),
-    );
-  }
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: .12), borderRadius: BorderRadius.circular(12)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(icon, size: 15, color: Colors.white), const SizedBox(width: 7), Text(text, style: const TextStyle(color: Colors.white, fontSize: 12))]),
+      );
 }
 
-class _Progress extends StatelessWidget {
-  const _Progress({required this.label, required this.value});
-  final String label;
-  final double value;
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium)), Text('${(value * 100).round()}%', style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800))]),
-      const SizedBox(height: 8),
-      ClipRRect(borderRadius: BorderRadius.circular(999), child: LinearProgressIndicator(value: value, minHeight: 8, backgroundColor: const Color(0xFFEAF0F5))),
-    ]);
-  }
-}
-
-class _Metric {
-  const _Metric(this.value, this.label, this.icon, this.color, this.delta);
+class _MetricCard extends StatelessWidget {
+  const _MetricCard({required this.value, required this.label, required this.icon});
   final String value;
   final String label;
   final IconData icon;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: const Color(0xFFE2EAF0))),
+        child: Row(children: [Container(width: 34, height: 34, decoration: BoxDecoration(color: const Color(0xFFEAF4FA), borderRadius: BorderRadius.circular(10)), child: Icon(icon, size: 17, color: const Color(0xFF0879B8))), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)), Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: Color(0xFF687A86)))]) )]),
+      );
+}
+
+class _FeatureCard extends StatefulWidget {
+  const _FeatureCard({required this.icon, required this.title, required this.body, required this.color});
+  final IconData icon;
+  final String title;
+  final String body;
   final Color color;
-  final String delta;
+  @override
+  State<_FeatureCard> createState() => _FeatureCardState();
+}
+
+class _FeatureCardState extends State<_FeatureCard> {
+  bool hover = false;
+  @override
+  Widget build(BuildContext context) => MouseRegion(
+        onEnter: (_) => setState(() => hover = true),
+        onExit: (_) => setState(() => hover = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          transform: Matrix4.translationValues(0, hover ? -4 : 0, 0),
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: hover ? widget.color.withValues(alpha: .35) : const Color(0xFFE2EAF0)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: hover ? .06 : .025), blurRadius: hover ? 18 : 8, offset: const Offset(0, 6))]),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Container(width: 34, height: 34, decoration: BoxDecoration(color: widget.color.withValues(alpha: .10), borderRadius: BorderRadius.circular(10)), child: Icon(widget.icon, size: 18, color: widget.color)), const SizedBox(height: 18), Text(widget.title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)), const SizedBox(height: 7), Text(widget.body, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xFF687A86), height: 1.5))]),
+        ),
+      );
+}
+
+class _MiniChip extends StatelessWidget {
+  const _MiniChip({required this.icon, required this.text});
+  final IconData icon;
+  final String text;
+  @override
+  Widget build(BuildContext context) => Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7), decoration: BoxDecoration(color: const Color(0xFFF4F8FB), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFFE2EAF0))), child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(icon, size: 15, color: const Color(0xFF0879B8)), const SizedBox(width: 6), Text(text, style: const TextStyle(fontSize: 12))]));
+}
+
+class _ProgressRow extends StatelessWidget {
+  const _ProgressRow({required this.label, required this.value});
+  final String label;
+  final double value;
+  @override
+  Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(children: [Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600))), Text('${(value * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.w700))]), const SizedBox(height: 8), ClipRRect(borderRadius: BorderRadius.circular(99), child: LinearProgressIndicator(value: value, minHeight: 8))]);
 }
