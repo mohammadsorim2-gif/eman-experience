@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../admin/access_control_screen.dart';
 import '../admin/admin_tools_hub.dart';
+import '../auth/firebase_auth_gate.dart';
 import '../distribution/sales_representatives_screen.dart';
 import '../executive/executive_factory_dashboard.dart';
 import '../intelligence/demand_forecast_screen.dart';
@@ -27,49 +28,195 @@ class InstantDrinkFactoryHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final session = AppSessionScope.maybeOf(context);
+    final role = (session?.role ?? 'worker').trim().toLowerCase();
     final modules = <_FactoryModule>[
-      _FactoryModule(tx('لوحة المدير التنفيذي', 'Yönetici paneli', 'Executive dashboard'), tx('الإنتاج والكفاءة والمبيعات والتنبيهات', 'Üretim, verimlilik, satış ve uyarılar', 'Production, efficiency, sales and alerts'), Icons.insights_outlined, const Color(0xFF0F9D78), () => ExecutiveFactoryDashboard(languageCode: languageCode)),
-      _FactoryModule(tx('المستخدمون والصلاحيات', 'Kullanıcılar ve yetkiler', 'Users & permissions'), tx('إدارة المستخدمين والأدوار والصلاحيات', 'Kullanıcıları, rolleri ve yetkileri yönetin', 'Manage users, roles and permissions'), Icons.group_outlined, const Color(0xFF2563EB), () => AccessControlScreen(languageCode: languageCode)),
-      _FactoryModule(tx('مركز إدارة النظام', 'Sistem yönetim merkezi', 'System administration'), tx('حالة النظام والسجلات والنسخ الاحتياطية', 'Sistem durumu, kayıtlar ve yedekler', 'System status, audit and backups'), Icons.tune_rounded, const Color(0xFF4F46E5), () => AdminToolsHub(languageCode: languageCode)),
-      _FactoryModule(tx('مركز الأقسام', 'Bölüm merkezi', 'Department hub'), tx('وصول موحد إلى جميع الأقسام', 'Tüm bölümlere birleşik erişim', 'Unified access to all departments'), Icons.grid_view_rounded, const Color(0xFF0891B2), () => DepartmentHubScreen(languageCode: languageCode)),
-      _FactoryModule(tx('خطوط ومحطات الإنتاج', 'Üretim hatları', 'Production lines'), tx('الخلط والتعبئة والتغليف وحالة التشغيل', 'Karıştırma, dolum ve paketleme', 'Mixing, filling, packing and status'), Icons.precision_manufacturing_outlined, const Color(0xFF9333EA), () => MachineFleetScreen(languageCode: languageCode)),
-      _FactoryModule(tx('دفعات الإنتاج', 'Üretim partileri', 'Production batches'), tx('متابعة نسب الإنجاز ومراحل التشغيل', 'İlerleme ve üretim aşamaları', 'Progress and production stages'), Icons.inventory_2_outlined, const Color(0xFFF97316), () => InstantDrinkBatchScreen(languageCode: languageCode)),
-      _FactoryModule(tx('تتبع الدفعة واللوط', 'Parti ve lot takibi', 'Batch & lot traceability'), tx('من المواد الخام حتى العميل والشحن', 'Hammaddeden müşteriye ve sevkiyata', 'From raw materials to shipping'), Icons.hub_outlined, const Color(0xFF7C3AED), () => BatchTraceabilityScreen(languageCode: languageCode)),
-      _FactoryModule(tx('الوصفات والتركيبات', 'Reçeteler', 'Recipes and formulas'), tx('النكهات والأوزان وتركيبة كل دفعة', 'Aroma, gramaj ve parti formülleri', 'Flavors, weights and formulas'), Icons.science_outlined, const Color(0xFFDB2777), () => InstantDrinkRecipeScreen(languageCode: languageCode)),
-      _FactoryModule(tx('الجودة والمختبر', 'Kalite ve laboratuvar', 'Quality and laboratory'), tx('فحص الطعم واللون والوزن والذوبان', 'Tat, renk, ağırlık ve çözünürlük', 'Taste, color, weight and solubility'), Icons.verified_outlined, const Color(0xFF16A34A), () => InstantDrinkQualityScreen(languageCode: languageCode)),
-      _FactoryModule(tx('مخزون المواد', 'Malzeme stoğu', 'Materials inventory'), tx('المواد الخام والتغليف والتنبيهات', 'Hammadde, ambalaj ve uyarılar', 'Raw materials, packaging and alerts'), Icons.warehouse_outlined, const Color(0xFF0D9488), () => InstantDrinkMaterialsScreen(languageCode: languageCode)),
-      _FactoryModule(tx('مستودع الباركود', 'Barkod deposu', 'Barcode warehouse'), tx('الاستلام والصرف والجرد والشحن', 'Giriş, çıkış, sayım ve sevkiyat', 'Receive, issue, count and ship'), Icons.qr_code_scanner_rounded, const Color(0xFF0284C7), () => BarcodeWarehouseScreen(languageCode: languageCode)),
-      _FactoryModule(tx('طلبات المبيعات', 'Satış siparişleri', 'Sales orders'), tx('ربط طلبات العملاء بالإنتاج والجاهزية', 'Siparişleri üretimle bağlayın', 'Connect orders to production'), Icons.receipt_long_outlined, const Color(0xFFEA580C), () => SalesOrdersScreen(languageCode: languageCode)),
-      _FactoryModule(tx('المندوبون وخطوط السير', 'Satış temsilcileri', 'Sales representatives'), tx('الأهداف والزيارات والتحصيل والمسارات', 'Hedefler, ziyaretler ve rotalar', 'Targets, visits and routes'), Icons.route_outlined, const Color(0xFF059669), () => SalesRepresentativesScreen(languageCode: languageCode)),
-      _FactoryModule(tx('المنتج النهائي والشحن', 'Bitmiş ürün ve sevkiyat', 'Finished goods & shipping'), tx('اللوطات والكراتين والطبليات والتحميل', 'Lotlar, koliler, paletler ve yükleme', 'Lots, cartons, pallets and loading'), Icons.local_shipping_outlined, const Color(0xFF2563EB), () => FinishedGoodsShippingScreen(languageCode: languageCode)),
-      _FactoryModule(tx('الصيانة الوقائية', 'Önleyici bakım', 'Preventive maintenance'), tx('المهام والاستحقاقات والأولويات', 'Görevler, tarihler ve öncelikler', 'Tasks, due dates and priorities'), Icons.build_outlined, const Color(0xFF64748B), () => PreventiveMaintenanceScreen(languageCode: languageCode)),
-      _FactoryModule(tx('التنبؤ بالطلب وخطة الإنتاج', 'Talep tahmini', 'Demand forecast'), tx('توقع الطلب واقتراح الدفعات والشراء', 'Talep, parti ve satın alma önerileri', 'Demand, batch and purchase suggestions'), Icons.auto_graph_rounded, const Color(0xFF7C3AED), () => DemandForecastScreen(languageCode: languageCode)),
-    ];
+      _FactoryModule(
+        tx('لوحة المدير التنفيذي', 'Yönetici paneli', 'Executive dashboard'),
+        tx('الإنتاج والكفاءة والمبيعات والتنبيهات', 'Üretim, verimlilik, satış ve uyarılar', 'Production, efficiency, sales and alerts'),
+        Icons.insights_outlined,
+        const Color(0xFF0F9D78),
+        () => ExecutiveFactoryDashboard(languageCode: languageCode),
+        roles: const {'owner', 'general_manager'},
+      ),
+      _FactoryModule(
+        tx('المستخدمون والصلاحيات', 'Kullanıcılar ve yetkiler', 'Users & permissions'),
+        tx('إدارة المستخدمين والأدوار والصلاحيات', 'Kullanıcıları, rolleri ve yetkileri yönetin', 'Manage users, roles and permissions'),
+        Icons.group_outlined,
+        const Color(0xFF2563EB),
+        () => AccessControlScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager'},
+      ),
+      _FactoryModule(
+        tx('مركز إدارة النظام', 'Sistem yönetim merkezi', 'System administration'),
+        tx('حالة النظام والسجلات والنسخ الاحتياطية', 'Sistem durumu, kayıtlar ve yedekler', 'System status, audit and backups'),
+        Icons.tune_rounded,
+        const Color(0xFF4F46E5),
+        () => AdminToolsHub(languageCode: languageCode),
+        roles: const {'owner', 'general_manager'},
+      ),
+      _FactoryModule(
+        tx('مركز الأقسام', 'Bölüm merkezi', 'Department hub'),
+        tx('وصول موحد إلى جميع الأقسام', 'Tüm bölümlere birleşik erişim', 'Unified access to all departments'),
+        Icons.grid_view_rounded,
+        const Color(0xFF0891B2),
+        () => DepartmentHubScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager'},
+      ),
+      _FactoryModule(
+        tx('خطوط ومحطات الإنتاج', 'Üretim hatları', 'Production lines'),
+        tx('الخلط والتعبئة والتغليف وحالة التشغيل', 'Karıştırma, dolum ve paketleme', 'Mixing, filling, packing and status'),
+        Icons.precision_manufacturing_outlined,
+        const Color(0xFF9333EA),
+        () => MachineFleetScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'production', 'quality', 'maintenance', 'worker'},
+      ),
+      _FactoryModule(
+        tx('دفعات الإنتاج', 'Üretim partileri', 'Production batches'),
+        tx('متابعة نسب الإنجاز ومراحل التشغيل', 'İlerleme ve üretim aşamaları', 'Progress and production stages'),
+        Icons.inventory_2_outlined,
+        const Color(0xFFF97316),
+        () => InstantDrinkBatchScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'production', 'quality', 'warehouse', 'worker'},
+      ),
+      _FactoryModule(
+        tx('تتبع الدفعة واللوط', 'Parti ve lot takibi', 'Batch & lot traceability'),
+        tx('من المواد الخام حتى العميل والشحن', 'Hammaddeden müşteriye ve sevkiyata', 'From raw materials to shipping'),
+        Icons.hub_outlined,
+        const Color(0xFF7C3AED),
+        () => BatchTraceabilityScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'production', 'quality', 'warehouse', 'logistics', 'sales'},
+      ),
+      _FactoryModule(
+        tx('الوصفات والتركيبات', 'Reçeteler', 'Recipes and formulas'),
+        tx('النكهات والأوزان وتركيبة كل دفعة', 'Aroma, gramaj ve parti formülleri', 'Flavors, weights and formulas'),
+        Icons.science_outlined,
+        const Color(0xFFDB2777),
+        () => InstantDrinkRecipeScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'production', 'quality', 'purchasing'},
+      ),
+      _FactoryModule(
+        tx('الجودة والمختبر', 'Kalite ve laboratuvar', 'Quality and laboratory'),
+        tx('فحص الطعم واللون والوزن والذوبان', 'Tat, renk, ağırlık ve çözünürlük', 'Taste, color, weight and solubility'),
+        Icons.verified_outlined,
+        const Color(0xFF16A34A),
+        () => InstantDrinkQualityScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'quality', 'production'},
+      ),
+      _FactoryModule(
+        tx('مخزون المواد', 'Malzeme stoğu', 'Materials inventory'),
+        tx('المواد الخام والتغليف والتنبيهات', 'Hammadde, ambalaj ve uyarılar', 'Raw materials, packaging and alerts'),
+        Icons.warehouse_outlined,
+        const Color(0xFF0D9488),
+        () => InstantDrinkMaterialsScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'warehouse', 'production', 'purchasing', 'accounting'},
+      ),
+      _FactoryModule(
+        tx('مستودع الباركود', 'Barkod deposu', 'Barcode warehouse'),
+        tx('الاستلام والصرف والجرد والشحن', 'Giriş, çıkış, sayım ve sevkiyat', 'Receive, issue, count and ship'),
+        Icons.qr_code_scanner_rounded,
+        const Color(0xFF0284C7),
+        () => BarcodeWarehouseScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'warehouse', 'logistics'},
+      ),
+      _FactoryModule(
+        tx('طلبات المبيعات', 'Satış siparişleri', 'Sales orders'),
+        tx('ربط طلبات العملاء بالإنتاج والجاهزية', 'Siparişleri üretimle bağlayın', 'Connect orders to production'),
+        Icons.receipt_long_outlined,
+        const Color(0xFFEA580C),
+        () => SalesOrdersScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'sales', 'production', 'accounting'},
+      ),
+      _FactoryModule(
+        tx('المندوبون وخطوط السير', 'Satış temsilcileri', 'Sales representatives'),
+        tx('الأهداف والزيارات والتحصيل والمسارات', 'Hedefler, ziyaretler ve rotalar', 'Targets, visits and routes'),
+        Icons.route_outlined,
+        const Color(0xFF059669),
+        () => SalesRepresentativesScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'sales', 'accounting'},
+      ),
+      _FactoryModule(
+        tx('المنتج النهائي والشحن', 'Bitmiş ürün ve sevkiyat', 'Finished goods & shipping'),
+        tx('اللوطات والكراتين والطبليات والتحميل', 'Lotlar, koliler, paletler ve yükleme', 'Lots, cartons, pallets and loading'),
+        Icons.local_shipping_outlined,
+        const Color(0xFF2563EB),
+        () => FinishedGoodsShippingScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'warehouse', 'logistics', 'sales', 'production'},
+      ),
+      _FactoryModule(
+        tx('الصيانة الوقائية', 'Önleyici bakım', 'Preventive maintenance'),
+        tx('المهام والاستحقاقات والأولويات', 'Görevler, tarihler ve öncelikler', 'Tasks, due dates and priorities'),
+        Icons.build_outlined,
+        const Color(0xFF64748B),
+        () => PreventiveMaintenanceScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'maintenance', 'production'},
+      ),
+      _FactoryModule(
+        tx('التنبؤ بالطلب وخطة الإنتاج', 'Talep tahmini', 'Demand forecast'),
+        tx('توقع الطلب واقتراح الدفعات والشراء', 'Talep, parti ve satın alma önerileri', 'Demand, batch and purchase suggestions'),
+        Icons.auto_graph_rounded,
+        const Color(0xFF7C3AED),
+        () => DemandForecastScreen(languageCode: languageCode),
+        roles: const {'owner', 'general_manager', 'sales', 'production', 'purchasing'},
+      ),
+    ].where((module) => module.roles.contains(role)).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(tx('نظام إدارة معمل العصير', 'İçecek fabrikası yönetimi', 'Instant drink factory management')),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 360,
-          mainAxisExtent: 156,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: modules.length,
-        itemBuilder: (context, index) {
-          final item = modules[index];
-          return _ModuleCard(
-            item: item,
-            openLabel: tx('فتح', 'Aç', 'Open'),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => item.builder()),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(30),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(start: 18, end: 18, bottom: 8),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                tx('الدور الحالي: $role', 'Geçerli rol: $role', 'Current role: $role'),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
             ),
-          );
-        },
+          ),
+        ),
       ),
+      body: modules.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.lock_outline_rounded, size: 44),
+                    const SizedBox(height: 12),
+                    Text(
+                      tx('لا توجد وحدات متاحة لهذا الدور', 'Bu rol için kullanılabilir modül yok', 'No modules are available for this role'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 28),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 360,
+                mainAxisExtent: 156,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemCount: modules.length,
+              itemBuilder: (context, index) {
+                final item = modules[index];
+                return _ModuleCard(
+                  item: item,
+                  openLabel: tx('فتح', 'Aç', 'Open'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => item.builder()),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
@@ -189,10 +336,19 @@ class _ModuleCardState extends State<_ModuleCard> {
 }
 
 class _FactoryModule {
-  const _FactoryModule(this.title, this.subtitle, this.icon, this.color, this.builder);
+  const _FactoryModule(
+    this.title,
+    this.subtitle,
+    this.icon,
+    this.color,
+    this.builder, {
+    required this.roles,
+  });
+
   final String title;
   final String subtitle;
   final IconData icon;
   final Color color;
   final Widget Function() builder;
+  final Set<String> roles;
 }
