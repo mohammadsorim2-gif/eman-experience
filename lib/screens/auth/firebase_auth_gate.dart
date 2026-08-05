@@ -4,6 +4,37 @@ import '../../core/auth/firebase_auth_service.dart';
 import '../../core/firebase/firebase_runtime.dart';
 import 'firebase_login_screen.dart';
 
+class AppSessionScope extends InheritedWidget {
+  const AppSessionScope({
+    required this.session,
+    required super.child,
+    super.key,
+  });
+
+  final AppUserSession session;
+
+  static AppUserSession? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<AppSessionScope>()
+        ?.session;
+  }
+
+  static AppUserSession of(BuildContext context) {
+    final session = maybeOf(context);
+    assert(session != null, 'No AppSessionScope found in context.');
+    return session!;
+  }
+
+  @override
+  bool updateShouldNotify(AppSessionScope oldWidget) {
+    return session.uid != oldWidget.session.uid ||
+        session.role != oldWidget.session.role ||
+        session.active != oldWidget.session.active ||
+        session.name != oldWidget.session.name ||
+        session.email != oldWidget.session.email;
+  }
+}
+
 class FirebaseAuthGate extends StatefulWidget {
   const FirebaseAuthGate({
     required this.languageCode,
@@ -91,9 +122,9 @@ class _FirebaseAuthGateState extends State<FirebaseAuthGate> {
                     const SizedBox(height: 10),
                     Text(
                       tx(
-                        'شغّل التطبيق مع متغيرات Firebase المطلوبة حتى تصبح شاشة الدخول فعالة.',
-                        'Giriş ekranını etkinleştirmek için uygulamayı gerekli Firebase değişkenleriyle çalıştırın.',
-                        'Run the app with the required Firebase variables to activate sign in.',
+                        'تعذر تهيئة اتصال Firebase. أعد تحميل التطبيق أو تحقق من إعدادات المشروع.',
+                        'Firebase bağlantısı başlatılamadı. Uygulamayı yenileyin veya proje ayarlarını kontrol edin.',
+                        'Firebase could not be initialized. Reload the app or check the project configuration.',
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -113,11 +144,15 @@ class _FirebaseAuthGateState extends State<FirebaseAuthGate> {
       );
     }
 
-    return _AuthenticatedFrame(
-      session: session!,
-      languageCode: widget.languageCode,
-      onSignOut: signOut,
-      child: widget.authenticatedBuilder(session!),
+    final currentSession = session!;
+    return AppSessionScope(
+      session: currentSession,
+      child: _AuthenticatedFrame(
+        session: currentSession,
+        languageCode: widget.languageCode,
+        onSignOut: signOut,
+        child: widget.authenticatedBuilder(currentSession),
+      ),
     );
   }
 }
@@ -165,7 +200,10 @@ class _AuthenticatedFrame extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(session.name ?? session.email),
-                        Text(session.role, style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          session.role,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),
@@ -181,9 +219,13 @@ class _AuthenticatedFrame extends StatelessWidget {
                   ),
                 ],
                 child: CircleAvatar(
-                  child: Text((session.name ?? session.email).trim().isEmpty
-                      ? '?'
-                      : (session.name ?? session.email).trim()[0].toUpperCase()),
+                  child: Text(
+                    (session.name ?? session.email).trim().isEmpty
+                        ? '?'
+                        : (session.name ?? session.email)
+                            .trim()[0]
+                            .toUpperCase(),
+                  ),
                 ),
               ),
             ),
