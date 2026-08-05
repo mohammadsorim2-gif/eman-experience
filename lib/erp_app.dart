@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'features/admin/presentation/users_roles_screen.dart';
+import 'features/auth/presentation/auth_gate.dart';
 import 'features/factory_cycle/presentation/factory_cycle_screen.dart';
+import 'features/reports/presentation/reports_screen.dart';
 
 class EmanErpApp extends StatelessWidget {
   const EmanErpApp({super.key});
@@ -21,7 +25,7 @@ class EmanErpApp extends StatelessWidget {
           ),
           cardTheme: const CardThemeData(elevation: 0, margin: EdgeInsets.zero, color: Colors.white),
         ),
-        home: const ErpShell(),
+        home: const AuthGate(child: ErpShell()),
       );
 }
 
@@ -79,12 +83,15 @@ class _ErpShellState extends State<ErpShell> {
     if (selectedIndex == 0) return _Dashboard(onNavigate: _select);
     if (selectedIndex == 1) return const FactoryCycleScreen();
     if (selectedIndex >= 6 && selectedIndex <= 9) return FactoryCycleScreen(initialTab: selectedIndex - 6);
+    if (selectedIndex == 10) return const ReportsScreen();
+    if (selectedIndex == 11) return const UsersRolesScreen();
     return _ModulePlaceholder(title: items[selectedIndex].label, icon: items[selectedIndex].icon);
   }
 
   void _select(int index) {
     setState(() => selectedIndex = index);
-    if (Scaffold.maybeOf(context)?.isDrawerOpen ?? false) Navigator.of(context).pop();
+    final scaffold = Scaffold.maybeOf(context);
+    if (scaffold?.isDrawerOpen ?? false) Navigator.of(context).pop();
   }
 }
 
@@ -141,19 +148,32 @@ class _Sidebar extends StatelessWidget {
               );
             },
           )),
-          if (!collapsed)
-            Container(
-              margin: const EdgeInsets.all(14),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: const Color(0xFF143D35), borderRadius: BorderRadius.circular(16)),
-              child: const Row(children: [
-                CircleAvatar(radius: 18, backgroundColor: Color(0xFF2BC497), child: Text('EA', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
-                SizedBox(width: 10),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Factory Admin', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)), Text('Eman Experience', style: TextStyle(color: Color(0xFF9EC8BC), fontSize: 11))])),
-              ]),
-            ),
+          if (!collapsed) const _SignedInUserCard(),
         ]),
       );
+}
+
+class _SignedInUserCard extends StatelessWidget {
+  const _SignedInUserCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    return Container(
+      margin: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: const Color(0xFF143D35), borderRadius: BorderRadius.circular(16)),
+      child: Row(children: [
+        CircleAvatar(radius: 18, backgroundColor: const Color(0xFF2BC497), child: Text((user?.email?.isNotEmpty ?? false) ? user!.email![0].toUpperCase() : 'E', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+        const SizedBox(width: 10),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(user?.email?.split('@').first ?? 'ERP User', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
+          Text(user?.email ?? 'Eman Experience', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xFF9EC8BC), fontSize: 10)),
+        ])),
+        IconButton(tooltip: 'Sign out', onPressed: FirebaseAuth.instance.signOut, icon: const Icon(Icons.logout_rounded, color: Color(0xFF9EC8BC), size: 19)),
+      ]),
+    );
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -176,8 +196,20 @@ class _Header extends StatelessWidget {
           ])),
           if (!mobile) SizedBox(width: 260, child: TextField(decoration: const InputDecoration(isDense: true, hintText: 'Search ERP...', prefixIcon: Icon(Icons.search_rounded, size: 20)))),
           const SizedBox(width: 10),
-          IconButton(onPressed: () {}, icon: const Badge(smallSize: 8, child: Icon(Icons.notifications_none_rounded))),
-          const CircleAvatar(radius: 18, backgroundColor: Color(0xFF173A33), child: Text('E', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: FirebaseFirestore.instance.collection('factoryAlerts').where('resolved', isEqualTo: false).snapshots(),
+            builder: (_, snapshot) => IconButton(
+              tooltip: '${snapshot.data?.size ?? 0} unresolved alerts',
+              onPressed: () {},
+              icon: Badge(isLabelVisible: (snapshot.data?.size ?? 0) > 0, label: Text('${snapshot.data?.size ?? 0}'), child: const Icon(Icons.notifications_none_rounded)),
+            ),
+          ),
+          PopupMenuButton<String>(
+            tooltip: 'Account',
+            onSelected: (value) { if (value == 'logout') FirebaseAuth.instance.signOut(); },
+            itemBuilder: (_) => const [PopupMenuItem(value: 'logout', child: ListTile(leading: Icon(Icons.logout), title: Text('Sign out')))],
+            child: const CircleAvatar(radius: 18, backgroundColor: Color(0xFF173A33), child: Icon(Icons.person_outline, color: Colors.white, size: 19)),
+          ),
         ]),
       );
 }
@@ -241,6 +273,8 @@ class _Dashboard extends StatelessWidget {
                       _QuickAction('Track batches', Icons.qr_code_2_rounded, () => onNavigate(7)),
                       _QuickAction('Quality release', Icons.verified_user_outlined, () => onNavigate(8)),
                       _QuickAction('Schedule shipment', Icons.local_shipping_outlined, () => onNavigate(9)),
+                      _QuickAction('Executive reports', Icons.bar_chart_rounded, () => onNavigate(10)),
+                      _QuickAction('Manage users', Icons.admin_panel_settings_outlined, () => onNavigate(11)),
                     ]),
                   ]),
                 );
