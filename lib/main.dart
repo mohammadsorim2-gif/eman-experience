@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'core/firebase_bootstrap.dart';
 import 'erp_app.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const EmanErpApp());
+  final firebaseReady = await FirebaseBootstrap.initialize();
+  runApp(EmanErpApp(firebaseReady: firebaseReady));
 }
