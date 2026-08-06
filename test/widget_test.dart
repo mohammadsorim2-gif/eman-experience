@@ -1,30 +1,26 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:eman_experience/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:eman_experience/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('renders the premium B2B homepage', (tester) async {
+    await tester.pumpWidget(const EmanExperienceApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('From bold idea\nto global shelf.'), findsOneWidget);
+    expect(find.text('Get in touch'), findsOneWidget);
+    expect(find.text('Build your product'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('opens and validates the partnership form', (tester) async {
+    await tester.pumpWidget(const EmanExperienceApp());
+
+    await tester.tap(find.text('Get in touch'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Start a conversation'), findsOneWidget);
+    final submit = find.text('Send partnership brief');
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Please complete this field'), findsNWidgets(3));
   });
 }

@@ -24,18 +24,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - assets/logos/
-    - assets/hero/
-    - assets/backgrounds/
-    - assets/lifestyle/
-    - assets/certificates/
-    - assets/brands/valore/
-    - assets/brands/friocups/
-    - assets/brands/royac/
-    - assets/brands/fullfresh/
-    - assets/products/valore/
-    - assets/products/friocups/
-    - assets/products/royac/
-    - assets/products/fullfresh/
