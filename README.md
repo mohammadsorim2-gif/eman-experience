@@ -1,17 +1,49 @@
-# eman_experience
+# Eman Experience ERP
 
-A new Flutter project.
+Production ERP for an instant beverage manufacturing plant.
 
-## Getting Started
+## Stack
 
-This project is a starting point for a Flutter application.
+- Flutter
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Firebase Hosting
+- GitHub Actions
 
-A few resources to get you started if this is your first Flutter project:
+## Core modules
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Dashboard and Factory Hub
+- Products and recipes
+- Raw materials and inventory
+- Production orders and batches
+- Quality control
+- Shipping
+- Reports
+- Users, roles and audit trail
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Firebase
+
+The active Firebase project is `eman-experience`.
+
+Web builds receive Firebase configuration through GitHub Actions secrets. Do not commit service-account JSON files or private credentials to this repository.
+
+## Deployment
+
+Production deployment is handled only by `.github/workflows/firebase-hosting-deploy.yml`.
+
+Every push to `main` builds Flutter Web and deploys the result to Firebase Hosting. The workflow can also be started manually from GitHub Actions.
+
+Production URL:
+
+`https://eman-experience.web.app`
+
+## Local development
+
+```bash
+flutter pub get
+flutter analyze
+flutter run -d chrome
+```
+
+For web builds, provide the required Firebase values with `--dart-define` or an equivalent secure environment configuration.
